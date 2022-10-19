@@ -1,0 +1,7 @@
+{
+  "name": "tekvizion-spotlight",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
