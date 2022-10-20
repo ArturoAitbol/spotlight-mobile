@@ -25,9 +25,12 @@ npm-debug.log*
 /.versions
 /.vscode/*
 !/.vscode/extensions.json
-/coverage
 /dist
 /node_modules
 /platforms
 /plugins
 /www
+
+# Ignore test reports
+test-results
+/coverage
