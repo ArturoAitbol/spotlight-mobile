@@ -32,5 +32,22 @@ npm-debug.log*
 /www
 
 # Ignore test reports
-test-results
+/test-results
 /coverage
+
+
+app/.angular
+app/.idea
+app/.ionic
+app/.sass-cache
+app/.sourcemaps
+app/.versions
+app/.vscode/*
+!/app/.vscode/extensions.json
+app/dist
+app/node_modules
+app/platforms
+app/plugins
+app/www
+app/test-results
+app/coverage
