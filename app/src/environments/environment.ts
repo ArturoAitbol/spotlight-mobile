@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiEndpoint: 'http://localhost:7071/v1.0',
+  UI_CLIENT_ID:"e643fc9d-b127-4883-8b80-2927df90e275",
+  AUTHORITY:"https://login.microsoftonline.com/e3a46007-31cb-4529-b8cc-1e59b97ebdbd",
+  REDIRECT_URL_AFTER_LOGIN:window.location.origin + '/login',
+  REDIRECT_URL_AFTER_LOGOUT:window.location.origin + '/login',
+  API_CLIENT_ID: 'abb49487-0434-4a82-85fa-b9be4443d158',
+  API_SCOPE: 'tekvizion.access'
 };
 
 /*
