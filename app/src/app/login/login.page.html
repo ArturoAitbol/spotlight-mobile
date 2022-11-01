@@ -1,9 +1,37 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-button (click)="login()" color="dark">Login</ion-button>
+  <section *ngIf="!loading_status; else loading_div" class="ion-text-center loginBg">
+  <div class="loading-shade" *ngIf="waitingForMsAuth">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div class="container">
+    <div>
+      <img class="ion-margin-bottom" src="assets/images/logo_1.png" alt="logo.png">
+      <div class="auth-box">
+        <h1 class="signInTitle">tekVizion 360 Portal</h1>
+        <br>
+        <ion-button (click)="login()" expand="block"
+          class="loginButton ion-text-center">
+          Login
+        </ion-button>
+        <br>
+        <div class="disclaimer">
+          By clicking Login, I agree to the
+          <a target="_blank" style="cursor:pointer"
+            onclick="javascript:var w = window.open('privacy.html', 'Print preview : Privacy Policy', 'width=750,height=720,scrollbars=yes,top=0,left=0');w.focus();">
+            <b><i>Privacy and Acceptable Use Policy</i></b>
+          </a>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+      <p id="copyright">&#169; 2022 tekVizion PVS inc. All Rights Reserved</p>
+      </div>
+    </div>
+  </section>
+
+  <ng-template #loading_div>
+    <app-loading></app-loading>
+  </ng-template>
+  
 </ion-content>

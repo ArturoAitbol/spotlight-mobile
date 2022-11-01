@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-tabnav',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TabnavPage implements OnInit {
 
-  constructor() { }
+  constructor(private msalService: MsalService) { }
 
   ngOnInit() {
+  }
+
+  logout(){
+    if (this.msalService.instance.getActiveAccount() != null) {
+      try {
+          this.msalService.logoutRedirect();
+      } catch (error) {
+          console.error('error while logout: ', error);
+      }
+  }
   }
 
 }
