@@ -20,7 +20,7 @@ public class Main {
     public void simpleTest() throws IOException {
         AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
         mia2.initializeIfNeeded();
-//        mia2.clickElementByXpath("//android.widget.TextView[@content-desc=\"Clock\"]");
         mia2.takeScreenshot();
+        mia2.clickElementByXpath("//android.widget.TextView[@content-desc=\"Clock\"]");
     }
 }
