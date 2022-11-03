@@ -19,8 +19,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       auth: {
         clientId: environment.UI_CLIENT_ID,
         authority: environment.AUTHORITY,
-        redirectUri: environment.REDIRECT_URL_AFTER_LOGIN,
-        postLogoutRedirectUri: environment.REDIRECT_URL_AFTER_LOGOUT
+        redirectUri: environment.REDIRECT_URL_AFTER_LOGIN
       },
       cache: {
         cacheLocation: "localStorage"

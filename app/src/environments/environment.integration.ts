@@ -9,6 +9,6 @@ export const environment = {
   API_SCOPE: 'tekvizion.access',
   
   // BASE URL
-  REDIRECT_URL_AFTER_LOGIN:window.location.origin + '/login',
-  REDIRECT_URL_AFTER_LOGOUT:window.location.origin + '/login',
+  REDIRECT_URL_AFTER_LOGIN:'http://localhost/login',
+  REDIRECT_URL_APP: window.location.origin +'/msal-back-to-login',
 };

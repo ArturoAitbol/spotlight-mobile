@@ -1,6 +1,7 @@
 import { NavigationClient } from "@azure/msal-browser";
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { Capacitor } from "@capacitor/core";
+import { environment } from "src/environments/environment";
 
 export class CustomNavigationClient extends NavigationClient {
     constructor(private iab: InAppBrowser) {
@@ -18,12 +19,16 @@ export class CustomNavigationClient extends NavigationClient {
                                           hideurlbar: 'yes',
                                           fullscreen: 'yes'});
           browser.on('loadstart').subscribe(event => {
-            if (event.url.includes('#code') || event.url.includes('logoutsession')) {
+            if (event.url.includes('#code')) {
               //Go back to the app view with the parameters returned by microsoft
               browser.close();
               const urlDomain = event.url.split('#')[0];
-              const url = event.url.replace(urlDomain,'http://localhost/msal-back-to-login');
+              const url = event.url.replace(urlDomain,environment.REDIRECT_URL_APP);
               window.location.href = url;
+            }
+            if (event.url.includes('logoutsession')) {
+              browser.close();
+              window.location.href = environment.REDIRECT_URL_APP;
             }
           });
         } else {
