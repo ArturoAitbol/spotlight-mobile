@@ -50,7 +50,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: cd tests & mvn test -PRegression
+          script: cd tests & mvn test -PRegression -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3

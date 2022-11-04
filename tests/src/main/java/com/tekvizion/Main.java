@@ -17,10 +17,12 @@ public class Main {
         }
     }*/
     @Test
-    public void simpleTest() throws IOException {
+    public void simpleTest() throws IOException, InterruptedException {
         AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
         mia2.initializeIfNeeded();
+    //        mia2.clickElementByAccessId("Messages");
+        mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
+        Thread.sleep(5000);
         mia2.takeScreenshot();
-        mia2.clickElementByXpath("//android.widget.TextView[@content-desc=\"Clock\"]");
     }
 }
