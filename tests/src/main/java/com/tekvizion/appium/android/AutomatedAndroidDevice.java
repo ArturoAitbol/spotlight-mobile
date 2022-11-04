@@ -45,10 +45,10 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
     public void tearDown() {
         System.out.println("Starting tear down for serial number: " + this.getSerialNumber());
         try {
-            if (this.androidDriver != null)
+            if (this.androidDriver != null){
                 this.androidDriver.quit();
-            if (this.service != null)
                 this.service.stop();
+            }
             this.androidDriver = null;
         }
         catch (Exception exception) {
