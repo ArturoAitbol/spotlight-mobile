@@ -6,23 +6,18 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 public class Main {
-/*    public static void main(String[] args) {
-        try (AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("420088406aca34b1")) {
+    @Test
+    public void simpleTest() throws IOException, InterruptedException {
+        try {
+            AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
             mia2.initializeIfNeeded();
-            mia2.clickElementByXpath("//android.widget.TextView[@content-desc=\"Clock\"]");
+            mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
+            Thread.sleep(5000);
+            mia2.takeScreenshot();
         }
         catch (Exception exception){
             System.out.println(exception.getMessage());
             exception.printStackTrace();
         }
-    }*/
-    @Test
-    public void simpleTest() throws IOException, InterruptedException {
-        AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
-        mia2.initializeIfNeeded();
-    //        mia2.clickElementByAccessId("Messages");
-        mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
-        Thread.sleep(5000);
-        mia2.takeScreenshot();
     }
 }
