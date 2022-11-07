@@ -1,9 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { MsalBroadcastService, MsalGuardConfiguration, MsalService, MSAL_GUARD_CONFIG } from '@azure/msal-angular';
 import { EventMessage, EventType, RedirectRequest } from '@azure/msal-browser';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +22,9 @@ export class LoginPage implements OnInit, OnDestroy {
   constructor(private router: Router,
               private msalService: MsalService, 
               private msalBroadcastService: MsalBroadcastService,
-              @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration) { 
+              @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+              private iab: InAppBrowser,
+              private file: File) { 
   }
 
   ngOnInit(): void {
@@ -51,6 +56,21 @@ export class LoginPage implements OnInit, OnDestroy {
       this.msalService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
     } else {
       this.msalService.loginRedirect();
+    }
+  }
+
+  async openPrivacyFile(){
+    if(Capacitor.isNativePlatform()){
+      this.iab.create(this.file.applicationDirectory+"public/assets/privacy.html", '_blank', {
+        location: 'yes',
+        clearcache: 'yes',
+        clearsessioncache: 'yes',
+        hidenavigationbuttons: 'yes',
+        hideurlbar: 'yes',
+        fullscreen: 'yes'});
+    }else{
+      var w = window.open('assets/privacy.html', 'Print preview : Privacy Policy', 'width=750,height=720,scrollbars=yes,top=0,left=0');
+      w.focus();
     }
   }
 
