@@ -1,0 +1,62 @@
+.loginBg {
+    background-image: url("../../assets/images/bg.png");
+    height: 100vh;
+    /* background-repeat: no-repeat; */
+    background-size: 100%;
+}
+
+.signInTitle {
+    text-align: center;
+    font-family: "Open Sans", Semibold;
+    font-size: 30px;
+    font-weight: bolder;
+    margin: 0 0 16px;
+}
+
+.container{
+    height: 100%;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.disclaimer {
+font-size: 12px;
+font-family: "Titillium Web";
+color: rgb(57, 79, 117);
+line-height: 1.167;
+}
+
+
+.loginButton {
+--border-radius: 7px;
+--background: rgb(32, 60, 102);
+}
+
+#copyright{
+    color:#5d858d;
+    text-align:center;
+    clear:both;
+    margin:0 auto;
+    font-size: 14px;
+}
+
+.auth-box {
+background-color: white;
+border-radius: 10px;
+padding: 30px;
+}
+
+.loading-shade {
+bottom: 0px;
+}
+
+ion-spinner {
+    transform: scale(3);
+    color: rgb(57, 79, 117);
+}
+
+ion-grid,ion-row{
+    height: 100%;
+}
