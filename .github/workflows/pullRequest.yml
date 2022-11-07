@@ -29,5 +29,5 @@ jobs:
         if: always()
         with:
           token: ${{ github.token }}
-          path: test-results/coverage-summary.json
+          path: app/test-results/coverage-summary.json
           title: Karma Test Coverage
