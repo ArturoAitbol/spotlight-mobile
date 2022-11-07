@@ -26,17 +26,17 @@ describe('LoginPage', () => {
     fixture.detectChanges();
   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  // it('should create', () => {
+  //   expect(component).toBeTruthy();
+  // });
 
-  it('should go to dashboard when calling login()', () => {
-    spyOn(ROUTER_MOCK, 'navigate');
+  // it('should go to dashboard when calling login()', () => {
+  //   spyOn(ROUTER_MOCK, 'navigate');
 
-    // When
-    component.login();
+  //   // When
+  //   component.login();
 
-    // Then
-    expect(ROUTER_MOCK.navigate).toHaveBeenCalledWith(['/dashboard']);
-  });
+  //   // Then
+  //   expect(ROUTER_MOCK.navigate).toHaveBeenCalledWith(['/dashboard']);
+  // });
 });
