@@ -41,7 +41,7 @@ describe('DashboardPage', () => {
 
     const datePipe = new DatePipe('en-US');
     expect(lastDate.textContent).toBe('Since '+ datePipe.transform(component.date,'mediumDate'));
-});
+  });
 
 
   it('should return "Five-9" as graphs header if metrics match the corresponding conditions when calling getGraphsHeader()', () => {

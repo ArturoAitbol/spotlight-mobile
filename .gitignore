@@ -17,37 +17,23 @@ $RECYCLE.BIN/
 log.txt
 npm-debug.log*
 
-/.angular
-/.idea
-/.ionic
-/.sass-cache
-/.sourcemaps
-/.versions
-/.vscode/*
-!/.vscode/extensions.json
-/dist
-/node_modules
-/platforms
-/plugins
-/www
-
 # Ignore test reports
-/test-results
-/coverage
+*/test-results
+*/coverage
 
+/.idea
+*/.idea
+*/.angular
+*/.ionic
+*/.sass-cache
+*/.sourcemaps
+*/.versions
+*/.vscode/*
+!/*/.vscode/extensions.json
+*/dist
+*/node_modules
+*/platforms
+*/plugins
+*/www
 
-app/.angular
-app/.idea
-app/.ionic
-app/.sass-cache
-app/.sourcemaps
-app/.versions
-app/.vscode/*
-!/app/.vscode/extensions.json
-app/dist
-app/node_modules
-app/platforms
-app/plugins
-app/www
-app/test-results
-app/coverage
+/tests/target

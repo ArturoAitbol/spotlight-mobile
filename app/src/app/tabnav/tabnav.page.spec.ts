@@ -1,8 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { ROUTER_MOCK } from 'src/test/components/utils/router.mock';
 
 import { TabnavPage } from './tabnav.page';
 
