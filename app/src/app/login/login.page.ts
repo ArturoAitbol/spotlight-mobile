@@ -44,7 +44,6 @@ export class LoginPage implements OnInit, OnDestroy {
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_START),
       takeUntil(this._destroying$))
       .subscribe((result: EventMessage)=>{
-        console.debug('login start...');
         this.waitingForMsAuth = false;
       })
   }
