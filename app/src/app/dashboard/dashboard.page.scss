@@ -1,11 +1,8 @@
 #container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
 }
 
 #container strong {
@@ -24,4 +21,30 @@
 
 #container a {
   text-decoration: none;
+}
+
+#service-description{
+  padding: 20px;
+  font-style: bold;
+  font-size: 1em;
+}
+#service-description strong{
+  font-size: 1.2em;
+}
+
+.graphs ion-card {
+  box-shadow: none;
+  border-radius: 30px;
+}
+
+ion-card{
+  border-radius: 20px;
+}
+
+.graphs-title div{
+  font-size: 1.5em;
+}
+ion-button{
+  color:#203c66;
+  text-transform: none;
 }
