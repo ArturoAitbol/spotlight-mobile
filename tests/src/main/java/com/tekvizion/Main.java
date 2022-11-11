@@ -11,7 +11,7 @@ public class Main {
         try {
             AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
             mia2.initializeIfNeeded();
-            mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
+//            mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
             Thread.sleep(5000);
             mia2.takeScreenshot();
         }
