@@ -1,3 +1,40 @@
 <ion-app>
-  <ion-router-outlet *ngIf="!isIframe"></ion-router-outlet>
+  <ion-header id="toolbar" *ngIf="isLoggedIn()">
+    <ion-toolbar>
+          <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <div class="date-time">
+              <!-- <div>{{ dateTime | date:'shortTime' }}</div> -->
+              <div id="current-date">{{dateTime | date:'mediumDate'}}</div>
+            </div>
+          </ion-col>
+          <ion-col size="auto">
+              <span title="tekVizion">
+                <img id="logo-image" src="assets/images/logo_1.png" alt="" srcset="">
+              </span>
+          </ion-col>
+          <ion-col>
+            <div (click)="presentPopover($event)" id="username">
+              <ion-label>{{salutation}}, {{getUserName()}}</ion-label>
+              <ion-icon size="small" name="caret-down-outline"></ion-icon>
+            </div>
+            <ion-popover  #popover [isOpen]="isPopoverOpen" (didDismiss)="isPopoverOpen = false" [dismissOnSelect]="true">
+              <ng-template>
+                <ion-content>
+                  <ion-button (click)="logout()" color="dark" expand="full" fill="clear">
+                    <ion-icon slot="start" name="log-out-outline"></ion-icon>
+                    Logout
+                  </ion-button>
+                </ion-content>
+              </ng-template>
+            </ion-popover>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-router-outlet *ngIf="!isIframe"></ion-router-outlet>
+  </ion-content>
 </ion-app>

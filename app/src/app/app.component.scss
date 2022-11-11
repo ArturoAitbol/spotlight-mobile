@@ -1,0 +1,31 @@
+ion-toolbar {
+    --background:#203c66;
+    --color: white;
+}
+
+img {
+    max-width: 100px;
+}
+#username{
+    font-size: 13px;
+    text-transform: capitalize;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    text-align: right;
+}
+
+#username ion-icon {
+    margin-left: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+ion-chip {
+    --color: white;
+}
+.date-time{
+    padding: 5px;
+    text-align: left;
+    font-size: 13px;
+}
