@@ -85,6 +85,15 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         this.getDriver().findElement(By.xpath(xpath)).sendKeys(keys);
     }
 
+    public void takeScreenshot() throws IOException {
+        String screenshotBase64 = this.getDriver().getScreenshotAs(OutputType.BASE64);
+        String replaceBase64 = screenshotBase64.replaceAll("\n","");
+        byte[] decodedImg = Base64.getDecoder()
+                .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
+        Path destinationFile = Paths.get(System.getProperty("user.dir"), "myImage.jpg");
+        Files.write(destinationFile, decodedImg);
+    }
+
     public void initializeIfNeeded() {
         if(this.getDriver() != null)
             return;
@@ -116,7 +125,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(this.platformName);
         desiredCapabilities.add(this.platformVersion);
         desiredCapabilities.add(this.udid);
-        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
+//        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
         return desiredCapabilities;

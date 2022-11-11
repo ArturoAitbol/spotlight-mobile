@@ -1,3 +1,5 @@
+package com.tekvizion;
+
 import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import org.testng.annotations.Test;
 
