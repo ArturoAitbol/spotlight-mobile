@@ -1,4 +1,7 @@
 <ion-content>
+  <ion-refresher slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
       <div id="service-description">
@@ -6,53 +9,13 @@
         <div class="ion-text-center">for</div>
         <strong class="ion-text-center">{{appName}}</strong>
       </div>
-      <div *ngIf="graphsHeader" class="graphs-title ion-text-center">
+      <div *ngIf="chartsHeader" class="charts-title ion-text-center">
         <p>You are a</p>
-        <div>{{graphsHeader}}</div>
+        <div>{{chartsHeader}}</div>
       </div>
-      <div class="graphs">
-        <ion-card color="light" class="ion-margin-bottom">
-          <ion-card-header>
-            <ion-card-title id="timelapse">Last {{timelapse}}</ion-card-title>
-          </ion-card-header>
-  
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <h2>100%</h2>
-                  Percentage graph here!
-                </ion-col>
-                <ion-col>
-                  <h2>4.72</h2>
-                  Average score here!
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
-  
-    
-        <ion-card color="light" class="ion-margin-bottom">
-          <ion-card-header>
-            <ion-card-title id="last-date">Since {{date | date:'mediumDate'}}</ion-card-title>
-          </ion-card-header>
-  
-          <ion-card-content>
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <h2>100%</h2>
-                  Percentage graph here!
-                </ion-col>
-                <ion-col>
-                  <h2>||||||||||||||||</h2>
-                  Some other graph here!
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-content>
-        </ion-card>
+      <div class="charts">
+        <image-card [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
+        <image-card [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
       </div>
       <ion-card>
         <ion-card-content>
