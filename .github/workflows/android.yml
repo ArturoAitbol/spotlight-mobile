@@ -48,7 +48,7 @@ jobs:
           avd-name: Pixel
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
+          disable-animations: false
           script: mvn test -PRegression -f ./tests/pom.xml -q
 
       - name: Archive test results
