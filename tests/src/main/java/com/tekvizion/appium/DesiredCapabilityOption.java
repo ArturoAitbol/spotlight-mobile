@@ -21,7 +21,8 @@ public enum DesiredCapabilityOption {
     APP_PACKAGE("appPackage"),
     APP_PACKAGE_WAIT_TIMEOUT("appWaitDuration"),
     SYSTEM_PORT("systemPort"),
-    NEW_WDA("useNewWDA");
+    NEW_WDA("useNewWDA"),
+    APP_NAME("app");
 
     private final String name;
 
