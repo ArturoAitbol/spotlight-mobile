@@ -53,7 +53,18 @@ describe('DashboardPage', () => {
   });
 
   it('should refresh the chart images when calling handleRefresh()',()=>{
+    const customEvent = {target:{complete:()=>{}}};
+    component.firstChart = null;
+    component.secondChart = null;
+    component.timelapse = null;
+    component.date = null;
 
+    component.handleRefresh(customEvent);
+
+    expect(component.firstChart).not.toBeNull();
+    expect(component.secondChart).not.toBeNull();
+    expect(component.timelapse).not.toBeNull();
+    expect(component.date).not.toBeNull();
   })
 
 
