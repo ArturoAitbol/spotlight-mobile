@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { FakeChartImageService } from '../services/fakeChartImage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,19 +11,42 @@ export class DashboardPage implements OnInit {
 
   serviceName:string;
   appName:string;
-  graphsHeader:string;
+  chartsHeader:string;
   timelapse:string;
   date:Date;
-  constructor() {}
+  firstChart:string;
+  secondChart:string;
+  constructor(private fakeChartImageService: FakeChartImageService) {}
   ngOnInit(): void {
     this.serviceName = 'SpotLight';
     this.appName = 'Microsoft Teams';
-    this.graphsHeader = this.getGraphsHeader(91,91);
-    this.timelapse = '24 Hours';
-    this.date = new Date('9/2/2022');
+    this.chartsHeader = this.getChartsHeader(91,91);
+    this.getCharts();
   }
 
-  getGraphsHeader(metricA:number,metricB:number):string{
+  handleRefresh(event) {
+    this.getCharts(event);
+   };
+
+  getCharts(event?: any){
+    this.firstChart = null;
+    this.secondChart = null;
+    this.timelapse = null;
+    this.date = null;
+    forkJoin([
+      this.fakeChartImageService.getChartImage('first'),
+      this.fakeChartImageService.getChartImage('second')
+    ]).subscribe((res:any[]) =>{
+      this.firstChart = res[0].url;
+      this.secondChart = res[1].url;
+      this.timelapse = '24 Hours'
+      this.date = new Date('9/2/2022');
+      if(event)
+        event.target.complete();
+    })
+  }
+
+  getChartsHeader(metricA:number,metricB:number):string{
 
     const thirdThreshold = 90;
 

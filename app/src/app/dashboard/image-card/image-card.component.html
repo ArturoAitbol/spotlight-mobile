@@ -1,0 +1,17 @@
+<ion-card color="light" class="ion-margin-bottom">
+    <ion-card-header>
+      <ion-card-title [id]="titleId">{{imageTitle}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <img *ngIf="imageUrl else spinner;" [src]="imageUrl"/>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+</ion-card>
+<ng-template #spinner>
+  <ion-spinner name="dots"></ion-spinner>
+</ng-template>
