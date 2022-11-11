@@ -53,7 +53,7 @@ jobs:
           sdcard-path-or-size: 100M
           avd-name: Pixel
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window 
           disable-animations: true
           script: mvn test -PRegression -f ./tests/pom.xml -q
 
