@@ -23,6 +23,8 @@ public enum DesiredCapabilityOption {
     SYSTEM_PORT("systemPort"),
     NEW_WDA("useNewWDA"),
     APP_WAIT("appWaitForLaunch"),
+    ANDROID_TIMEOUT("androidInstallTimeout"),
+    SERVER_TIMEOUT("uiautomator2ServerInstallTimeout"),
     APP_NAME("app");
 
     private final String name;
