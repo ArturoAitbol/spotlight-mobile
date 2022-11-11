@@ -3,7 +3,7 @@
 <suite name="All Test Suite">
     <test thread-count="5" name="LongPress">
         <classes>
-            <class name="com.tekvizion.Main"/>
+            <class name="com.tekvizion.LoginTest"/>
         </classes>
     </test>
 </suite>

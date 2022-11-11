@@ -30,7 +30,7 @@ import java.util.List;
 public class AutomatedAndroidDevice extends AutomatedMobileDevice implements AutoCloseable {
 
     private AndroidDriver androidDriver;
-    AppiumDriverLocalService service;
+    AppiumDriverLocalService service = null;
 
     public AutomatedAndroidDevice(String udid) {
         super(
@@ -61,6 +61,10 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         return this.androidDriver;
     }
 
+    public AppiumDriverLocalService getService() {
+        return this.service;
+    }
+
     public void setDriver(AppiumDriver appiumDriver) {
         this.androidDriver = (AndroidDriver) appiumDriver;
     }
@@ -79,15 +83,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
 
     public void sendKeysToElementByXpath(String keys, String xpath) {
         this.getDriver().findElement(By.xpath(xpath)).sendKeys(keys);
-    }
-
-    public void takeScreenshot() throws IOException {
-        String screenshotBase64 = this.getDriver().getScreenshotAs(OutputType.BASE64);
-        String replaceBase64 = screenshotBase64.replaceAll("\n","");
-        byte[] decodedImg = Base64.getDecoder()
-                .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
-        Path destinationFile = Paths.get(System.getProperty("user.dir"), "myImage.jpg");
-        Files.write(destinationFile, decodedImg);
     }
 
     public void initializeIfNeeded() {
@@ -121,9 +116,22 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(this.platformName);
         desiredCapabilities.add(this.platformVersion);
         desiredCapabilities.add(this.udid);
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
         return desiredCapabilities;
+    }
+
+    public String getAppPath(){
+        String path = System.getProperty("user.dir");
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            path =  path + "\\src\\test\\java\\resources\\General-Store.apk";
+        else if (os.contains("nix") || os.contains("nux") || os.contains("aix"))
+            path =  path + "/src/test/java/resources/General-Store.apk";
+        else if (os.contains("mac"))
+            path =  path + "/src/test/java/resources/General-Store.apk";
+        return path;
     }
 
     @Override
