@@ -4,7 +4,7 @@
     <test thread-count="5" name="LongPress">
     <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>
-            <class name="com.tekvizion.Main"/>
+            <class name="com.tekvizion.LoginTest"/>
         </classes>
     </test>
 </suite>
