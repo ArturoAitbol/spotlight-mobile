@@ -36,7 +36,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         super(
                 Constants.UI_AUTOMATOR_2,
                 Constants.ANDROID_PLATFORM_NAME,
-                "",
+                "9",
                 udid,
                 Constants.DEFAULT_APPIUM_SERVER_URL
         );
@@ -128,6 +128,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, "false"));
         return desiredCapabilities;
     }
 
