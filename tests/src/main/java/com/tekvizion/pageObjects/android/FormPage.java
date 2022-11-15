@@ -57,4 +57,8 @@ public class FormPage extends AndroidActions {
         shopButton.click();
         takeScreenshot();
     }
+
+    public String getErrorToast() {
+        return driver.findElement(By.xpath("(//android.widget.Toast)[1]")).getAttribute("name");
+    }
 }

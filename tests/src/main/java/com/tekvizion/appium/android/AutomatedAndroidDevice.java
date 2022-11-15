@@ -30,7 +30,6 @@ import java.util.List;
 public class AutomatedAndroidDevice extends AutomatedMobileDevice implements AutoCloseable {
 
     private AndroidDriver androidDriver;
-    AppiumDriverLocalService service = null;
 
     public AutomatedAndroidDevice(String udid) {
         super(
@@ -47,7 +46,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         try {
             if (this.androidDriver != null){
                 this.androidDriver.quit();
-                this.service.stop();
             }
             this.androidDriver = null;
         }
@@ -59,10 +57,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
 
     public AndroidDriver getDriver(){
         return this.androidDriver;
-    }
-
-    public AppiumDriverLocalService getService() {
-        return this.service;
     }
 
     public void setDriver(AppiumDriver appiumDriver) {
@@ -97,12 +91,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
     public void initializeIfNeeded() {
         if(this.getDriver() != null)
             return;
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac")){
-            this.service = new AppiumServiceBuilder().withAppiumJS(new File("/usr/local/lib/node_modules/appium/build/lib/main.js"))
-                    .withIPAddress("127.0.0.1").usingPort(4723).build();
-            this.service.start();
-        }
         DesiredCapabilities androidDeviceDesiredCapabilities = new DesiredCapabilities();
         List<DesiredCapability> desiredCapabilitiesList = getDesiredCapabilities();
         for (DesiredCapability desiredCapability : desiredCapabilitiesList) {
@@ -140,11 +128,11 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         String path = System.getProperty("user.dir");
         String os = System.getProperty("os.name").toLowerCase();
         if(os.contains("win"))
-            path =  path + "\\src\\test\\java\\resources\\General-Store.apk";
+            path =  path + "\\src\\test\\resources\\General-Store.apk";
         else if (os.contains("nix") || os.contains("nux") || os.contains("aix"))
-            path =  path + "/src/test/java/resources/General-Store.apk";
+            path =  path + "/src/test/resources/General-Store.apk";
         else if (os.contains("mac"))
-            path =  path + "/src/test/java/resources/General-Store.apk";
+            path =  path + "/src/test/resources/General-Store.apk";
         return path;
     }
 
