@@ -35,7 +35,7 @@ public class LoginTest extends AndroidBaseTest {
             FormPage formPage = new FormPage(driver);
             formPage.submitForm();
             String error = formPage.getErrorToast();
-            Assert.assertEquals(error, "Please enter name");
+            Assert.assertEquals(error, "Please enter your name");
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
             exception.printStackTrace();
