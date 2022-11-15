@@ -55,8 +55,7 @@ public class FormPage extends AndroidActions {
 
     public void submitForm() throws IOException, InterruptedException {
         shopButton.click();
-        Thread.sleep(5000);
-        takeScreenshot();
+//        Thread.sleep(5000);
     }
 
     public String getErrorToast() {

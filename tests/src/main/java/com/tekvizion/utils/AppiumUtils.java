@@ -6,6 +6,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,7 +14,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +60,26 @@ public class AppiumUtils {
             path =  path + "\\src\\" + directory + "\\resources\\" + resource;
         else if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac"))
             path =  path + "/src/" + directory + "/resources/" + resource;
+        return path;
+    }
+
+    public String takeScreenshot(String testCaseName, AppiumDriver driver) throws IOException {
+        String screenshotBase64 = driver.getScreenshotAs(OutputType.BASE64);
+        String replaceBase64 = screenshotBase64.replaceAll("\n","");
+        byte[] decodedImg = Base64.getDecoder()
+                .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
+        Path destinationFile = Paths.get(getReportPath(), testCaseName + ".jpg");
+        Files.write(destinationFile, decodedImg);
+        return destinationFile.toString();
+    }
+
+    public String getReportPath(){
+        String path = System.getProperty("user.dir");
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            path =  path + "\\reports\\";
+        else if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac"))
+            path =  path + "//reports//";
         return path;
     }
 

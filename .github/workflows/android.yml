@@ -59,7 +59,7 @@ jobs:
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
-        if: success()
+        if: success() || failure()
         with:
-          name: result
-          path: tests/myImage.jpg
+          name: functional-test-report
+          path: tests/reports

@@ -17,10 +17,6 @@ $RECYCLE.BIN/
 log.txt
 npm-debug.log*
 
-# Ignore test reports
-*/test-results
-*/coverage
-
 /.idea
 */.idea
 */.angular
@@ -36,4 +32,8 @@ npm-debug.log*
 */plugins
 */www
 
+# Ignore test reports
+*/test-results
+*/coverage
+*/reports
 /tests/target
