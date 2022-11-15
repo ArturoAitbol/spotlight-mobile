@@ -28,7 +28,7 @@ jobs:
           name: android-integration-released-version
           path: ./app/
           search_artifacts: true
-          workflow_conclusion: success
+          workflow_conclusion: ""
           if_no_artifact_found: ignore
 
       - name: Check file existence
