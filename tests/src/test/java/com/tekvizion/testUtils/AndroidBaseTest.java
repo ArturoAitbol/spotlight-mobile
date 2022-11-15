@@ -34,9 +34,9 @@ public class AndroidBaseTest extends AppiumUtils {
         String port = properties.getProperty("port");
         service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
-        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("420088406aca34b1");
+//        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("420088406aca34b1");
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(properties.getProperty("androidDeviceName"));
-//        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
+        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
         androidDevice.initializeIfNeeded();
         this.driver = androidDevice.getDriver();
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
