@@ -23,7 +23,7 @@ public class LoginTest extends AndroidBaseTest {
             formPage.selectCountry("Argentina");
             formPage.submitForm();
 //            this.driver.findElement(By.xpath("//android.widget.TextView[@content-desc='Messages']")).click();
-            Thread.sleep(5000);
+//            Thread.sleep(5000);
         }
         catch (Exception exception){
             System.out.println(exception.getMessage());
@@ -31,7 +31,7 @@ public class LoginTest extends AndroidBaseTest {
         }
     }
 
-    @Test
+/*    @Test
     public void fillForm_errorToast() {
         try {
             FormPage formPage = new FormPage(driver);
@@ -42,5 +42,5 @@ public class LoginTest extends AndroidBaseTest {
             System.out.println(exception.getMessage());
             exception.printStackTrace();
         }
-    }
+    }*/
 }

@@ -53,8 +53,9 @@ public class FormPage extends AndroidActions {
         driver.findElement(By.xpath("//android.widget.TextView[@text='"+countryName+"']")).click();
     }
 
-    public void submitForm() throws IOException {
+    public void submitForm() throws IOException, InterruptedException {
         shopButton.click();
+        Thread.sleep(5000);
         takeScreenshot();
     }
 
