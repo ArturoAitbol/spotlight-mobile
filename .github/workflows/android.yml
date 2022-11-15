@@ -20,21 +20,21 @@ jobs:
             ~/.android/adb*
           key: avd-26
 
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 26
-          target: google_apis
-          arch: x86_64
-          profile: pixel_xl
-          avd-name: Pixel
-          cores: 2
-          sdcard-path-or-size: 1000M
-          force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
+      # - name: Create AVD and generate snapshot for caching
+      #   if: steps.avd-cache.outputs.cache-hit != 'true'
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 26
+      #     target: google_apis
+      #     arch: x86_64
+      #     profile: pixel_xl
+      #     avd-name: Pixel
+      #     cores: 2
+      #     sdcard-path-or-size: 1000M
+      #     force-avd-creation: false
+      #     emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
+      #     disable-animations: false
+      #     script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -45,7 +45,7 @@ jobs:
           profile: pixel_xl
           cores: 2
           ram-size: 2048M
-          sdcard-path-or-size: 100M
+          sdcard-path-or-size: 1000M
           avd-name: Pixel
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
