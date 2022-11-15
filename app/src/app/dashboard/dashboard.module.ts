@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DashboardPage } from './dashboard.page';
 
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
+import { ImageCardComponent } from './image-card/image-card.component';
 
 
 @NgModule({
@@ -14,6 +15,6 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
     IonicModule,
     DashboardPageRoutingModule
   ],
-  declarations: [DashboardPage]
+  declarations: [DashboardPage,ImageCardComponent]
 })
 export class DashboardPageModule {}

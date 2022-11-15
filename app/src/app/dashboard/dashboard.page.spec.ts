@@ -1,8 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
+import { of } from 'rxjs';
+import { FakeChartImageService } from '../services/fakeChartImage.service';
 
 import { DashboardPage } from './dashboard.page';
+import { ImageCardComponent } from './image-card/image-card.component';
 
 describe('DashboardPage', () => {
   let component: DashboardPage;
@@ -10,8 +13,14 @@ describe('DashboardPage', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ DashboardPage,ImageCardComponent ],
+      imports: [IonicModule.forRoot()],
+      providers: [{
+        provide: FakeChartImageService,
+        useValue:{
+          getChartImage:(parameter:any)=>{return of({url:'some url'})}
+        }
+      }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardPage);
@@ -26,7 +35,7 @@ describe('DashboardPage', () => {
   it('should display essential UI and components', () => {
     fixture.detectChanges();
     const serviceDescription: HTMLElement = fixture.nativeElement.querySelector('#service-description');
-    const graphsTitle: HTMLElement = fixture.nativeElement.querySelector('.graphs-title');
+    const chartsTitle: HTMLElement = fixture.nativeElement.querySelector('.charts-title');
     const timelapse: HTMLElement = fixture.nativeElement.querySelector('#timelapse');
     const lastDate: HTMLElement = fixture.nativeElement.querySelector('#last-date');
 
@@ -34,8 +43,8 @@ describe('DashboardPage', () => {
     expect(serviceDescription.firstChild.textContent).toBe(component.serviceName);
     expect(serviceDescription.lastChild.textContent).toBe(component.appName);
 
-    expect(graphsTitle.firstChild.textContent).toBe('You are a');
-    expect(graphsTitle.lastChild.textContent).toBe(component.graphsHeader);
+    expect(chartsTitle.firstChild.textContent).toBe('You are a');
+    expect(chartsTitle.lastChild.textContent).toBe(component.chartsHeader);
 
     expect(timelapse.textContent).toBe('Last '+ component.timelapse);
 
@@ -43,34 +52,49 @@ describe('DashboardPage', () => {
     expect(lastDate.textContent).toBe('Since '+ datePipe.transform(component.date,'mediumDate'));
   });
 
+  it('should refresh the chart images when calling handleRefresh()',()=>{
+    const customEvent = {target:{complete:()=>{}}};
+    component.firstChart = null;
+    component.secondChart = null;
+    component.timelapse = null;
+    component.date = null;
 
-  it('should return "Five-9" as graphs header if metrics match the corresponding conditions when calling getGraphsHeader()', () => {
+    component.handleRefresh(customEvent);
+
+    expect(component.firstChart).not.toBeNull();
+    expect(component.secondChart).not.toBeNull();
+    expect(component.timelapse).not.toBeNull();
+    expect(component.date).not.toBeNull();
+  })
+
+
+  it('should return "Five-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
     //current condition: both metrics beyond 90
-    const graphsHeader = component.getGraphsHeader(91,91);
-    expect(graphsHeader).toBe('Five-9');
+    const chartsHeader = component.getChartsHeader(91,91);
+    expect(chartsHeader).toBe('Five-9');
   });
 
-  it('should return "Four-9" as graphs header if metrics match the corresponding conditions when calling getGraphsHeader()', () => {
+  it('should return "Four-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
     //current condition: both metrics above 80 and at least one of them between 81 and 85
-    let graphsHeader = component.getGraphsHeader(82,86);
-    expect(graphsHeader).toBe('Four-9');
+    let chartsHeader = component.getChartsHeader(82,86);
+    expect(chartsHeader).toBe('Four-9');
 
-    graphsHeader = component.getGraphsHeader(86,82);
-    expect(graphsHeader).toBe('Four-9');
+    chartsHeader = component.getChartsHeader(86,82);
+    expect(chartsHeader).toBe('Four-9');
   });
 
-  it('should return "Three-9" as graphs header if metrics match the corresponding conditions when calling getGraphsHeader()', () => {
+  it('should return "Three-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
     //current condition: both metrics above 50 and at least one of them between 51 and 70
-    let graphsHeader = component.getGraphsHeader(51,72);
-    expect(graphsHeader).toBe('Three-9');
+    let chartsHeader = component.getChartsHeader(51,72);
+    expect(chartsHeader).toBe('Three-9');
 
-    graphsHeader = component.getGraphsHeader(72,51);
-    expect(graphsHeader).toBe('Three-9');
+    chartsHeader = component.getChartsHeader(72,51);
+    expect(chartsHeader).toBe('Three-9');
   });
 
-  it('should return an empty string as graphs header if metrics does not match any condition  when calling getGraphsHeader()', () => {
-    const graphsHeader = component.getGraphsHeader(0,0);
-    expect(graphsHeader).toBe('');
+  it('should return an empty string as charts header if metrics does not match any condition  when calling getChartsHeader()', () => {
+    const chartsHeader = component.getChartsHeader(0,0);
+    expect(chartsHeader).toBe('');
   });
 
 });
