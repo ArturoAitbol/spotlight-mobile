@@ -25,10 +25,10 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: release.yml
+          workflow: main.yml
           name: android-integration-released-version
           path: ./app/
-          search_artifacts: false
+          search_artifacts: true
           workflow_conclusion: ""
           if_no_artifact_found: ignore
 
