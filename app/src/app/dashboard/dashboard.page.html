@@ -17,11 +17,22 @@
         <image-card [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
         <image-card [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
       </div>
-      <ion-card>
-        <ion-card-content>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis nam deserunt porro minus reiciendis aliquam et libero alias
-        </ion-card-content>
+      <ion-card class="ion-text-left" *ngIf="latestNote else emptyCard">
+        <ion-card-header>
+          <ion-card-subtitle>
+            <small id="note-author">{{latestNote.reporter}}</small><small>{{latestNote.dateTime | date:"medium"}}</small>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>{{latestNote.message}}</ion-card-content>
       </ion-card>
+      <ng-template #emptyCard>
+        <ion-card>
+          <ion-card-content>
+            <ion-icon size="large" name="document-text-outline"></ion-icon>
+            <div>No Notes yet.</div>
+          </ion-card-content>
+        </ion-card>
+      </ng-template>
       <ion-button fill="clear">
         Request Dev Contact Me
         <ion-icon slot="end" name="information-circle-outline"></ion-icon>

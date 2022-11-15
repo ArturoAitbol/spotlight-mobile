@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { FakeChartImageService } from '../services/fakeChartImage.service';
+import { FakeNotesService } from '../services/fakeNotes.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,17 +17,30 @@ export class DashboardPage implements OnInit {
   date:Date;
   firstChart:string;
   secondChart:string;
-  constructor(private fakeChartImageService: FakeChartImageService) {}
+  latestNote:any;
+  constructor(private fakeChartImageService: FakeChartImageService,private fakeNotesService: FakeNotesService) {}
   ngOnInit(): void {
     this.serviceName = 'SpotLight';
     this.appName = 'Microsoft Teams';
     this.chartsHeader = this.getChartsHeader(91,91);
     this.getCharts();
+    this.getLatestNote();
   }
 
   handleRefresh(event) {
     this.getCharts(event);
+    this.getLatestNote();
    };
+
+   getLatestNote(){
+    this.fakeNotesService.getNote("abc123").subscribe(res=>{
+      console.log(res);
+      if(res!=null){
+        this.latestNote = res;
+        this.latestNote.dateTime = new Date(this.latestNote.dateTime);
+      }
+    });
+   }
 
   getCharts(event?: any){
     this.firstChart = null;
