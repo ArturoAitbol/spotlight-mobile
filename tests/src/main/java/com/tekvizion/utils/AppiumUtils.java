@@ -68,9 +68,10 @@ public class AppiumUtils {
         String replaceBase64 = screenshotBase64.replaceAll("\n","");
         byte[] decodedImg = Base64.getDecoder()
                 .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
-        Path destinationFile = Paths.get(getReportPath(), testCaseName + ".jpg");
+        String imageName = testCaseName + ".jpg";
+        Path destinationFile = Paths.get(getReportPath(), imageName);
         Files.write(destinationFile, decodedImg);
-        return destinationFile.toString();
+        return imageName;
     }
 
     public String getReportPath(){
