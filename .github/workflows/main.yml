@@ -28,7 +28,7 @@ jobs:
           workflow: release.yml
           name: android-integration-released-version
           path: ./app/
-          search_artifacts: true
+          search_artifacts: false
           workflow_conclusion: ""
           if_no_artifact_found: ignore
 
