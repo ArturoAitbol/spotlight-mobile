@@ -23,21 +23,21 @@ jobs:
           npm install -g appium@next
           appium driver install uiautomator2
 
-      - name: create AVD and generate snapshot for caching
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 26
-          target: google_apis
-          arch: x86_64
-          profile: pixel_xl
-          cores: 2
-          ram-size: 5120M 
-          sdcard-path-or-size: 2000M
-          avd-name: Pixel
-          force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
+      # - name: create AVD and generate snapshot for caching
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 26
+      #     target: google_apis
+      #     arch: x86_64
+      #     profile: pixel_xl
+      #     cores: 2
+      #     ram-size: 5120M 
+      #     sdcard-path-or-size: 2000M
+      #     avd-name: Pixel
+      #     force-avd-creation: false
+      #     emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none
+      #     disable-animations: false
+      #     script: echo "Generated AVD snapshot for caching."
         
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -47,7 +47,7 @@ jobs:
           arch: x86_64
           profile: pixel_xl
           cores: 2
-          ram-size: 5120M 
+          ram-size: 8192M 
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
