@@ -249,7 +249,7 @@ jobs:
         with:
           info-plist-path: "app/ios/App/App/Info.plist"
           bundle-version: "${{steps.updated_ios_version.outputs.result}}"
-          bundle-short-version: "1.0.${{steps.updated_ios_version.outputs.result}}"
+          bundle-short-version-string: "1.0.${{steps.updated_ios_version.outputs.result}}"
           print-file: true
 
       - name: Install Ionic
