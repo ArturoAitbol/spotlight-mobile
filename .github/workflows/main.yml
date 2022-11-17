@@ -7,7 +7,7 @@ on:
 env:
   JAVA_VERSION: "11"
   WORKING_DIR: "./app"
-  android_version_code: 0
+  android_version_code: 2
   ios_version_code: 0
 
 jobs:
@@ -49,10 +49,7 @@ jobs:
   android:
     # needs: android-test
     name: Build and Release APK
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
+    runs-on: macos-latest    
 
     steps:
       - name: Checkout repository
@@ -74,12 +71,9 @@ jobs:
         uses: andstor/file-existence-action@v2
         with:
           files: "./app/AndroidVersionCode.txt"
-      
-      - name: File exists
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: echo "ios_version_code=$(cat iOSVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
 
       - name: File exists
+        working-directory: ${{ env.WORKING_DIR }}
         if: steps.check_files.outputs.files_exists == 'true'
         run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
 
@@ -104,7 +98,7 @@ jobs:
       - name: Update gradle version for Android
         uses: damienaicheh/update-android-version-gradle-action@v1.0.0
         with:
-          build-gradle-path: "app/android/app/build.gradle"
+          build-gradle-path: "./app/android/app/build.gradle"
           version-code: "${{steps.updated_version.outputs.result}}"
           version-name: "1.0.${{steps.updated_version.outputs.result}}"
           print-file: true
@@ -116,37 +110,42 @@ jobs:
         run: npm install
 
       - name: Build App
+        working-directory: ${{ env.WORKING_DIR }}
         run: npm run build
 
       - name: Capacitor copy
+        working-directory: ${{ env.WORKING_DIR }}
         run: npx cap copy && npx cap sync
 
       - name: Build Android
+        working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release
       
       # - name: Build Android Prod
       #   run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release --prod
 
       - name: Build app APK
-        run: cd android && gradle assemble
+        working-directory: ${{ env.WORKING_DIR }}/android
+        run: gradle assemble
 
       - name: Extract Android signing key from env
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE }}" > ./android/release.jks.base64
           base64 -d ./android/release.jks.base64 > ./android/release.decrypted.jks
 
       - name: Align APK
-        run: zipalign -f -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk ./android/app/build/outputs/apk/release/app-release-aligned.apk
+        run: $ANDROID_HOME/build-tools/30.0.3/zipalign -f -v 4 ./app/android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/android/app/build/outputs/apk/release/app-release-aligned.apk
 
       - name: Sign build        
-        run: apksigner sign --ks-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --key-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --ks ./android/release.decrypted.jks --ks-key-alias release --in ./android/app/build/outputs/apk/release/app-release-aligned.apk --out ./android/app/build/outputs/apk/release/app-release.apk
+        run: $ANDROID_HOME/build-tools/30.0.3/apksigner sign --ks-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --key-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --ks ./app/android/release.decrypted.jks --ks-key-alias release --in ./app/android/app/build/outputs/apk/release/app-release-aligned.apk --out ./app/android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK to TestApp.io
         uses: testappio/github-action@v5
         with:
           api_token: ${{secrets.TESTAPPIO_API_TOKEN}}
           app_id: ${{secrets.TESTAPPIO_APP_ID}}
-          file: app/android/app/build/outputs/apk/release/app-release.apk
+          file: ./app/android/app/build/outputs/apk/release/app-release.apk
           release_notes: "Testing manual release notes..."
           git_release_notes: false
           include_git_commit_id: false
@@ -154,7 +153,7 @@ jobs:
 
       - name: Print deployed Release Version
         run: |
-          echo "Build-${{steps.updated_version.outputs.result}}" > ./AndroidVersionCode.txt
+          echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
 
       - name: Archive Android Code Version
         uses: actions/upload-artifact@v3
