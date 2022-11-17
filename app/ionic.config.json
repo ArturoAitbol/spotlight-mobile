@@ -1,7 +1,12 @@
 {
-  "name": "tekvizion-spotlight",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
+  "defaultProject": "spotlight-mobile",
+  "projects": {
+    "spotlight-mobile": {
+      "name": "spotlight-mobile",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
 }
