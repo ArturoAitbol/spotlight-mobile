@@ -12,43 +12,43 @@ env:
   ios_version_code: 0
 
 jobs:
-  # android-test:
-  #   runs-on: macos-latest
+  android-test:
+    runs-on: macos-latest
 
-  #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v3
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
 
-  #     - name: Install Appium
-  #       run: |
-  #         npm install -g appium@next
-  #         appium driver install uiautomator2
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install uiautomator2
         
-  #     - name: Run tests
-  #       uses: reactivecircus/android-emulator-runner@v2
-  #       with:
-  #         api-level: 26
-  #         target: google_apis
-  #         arch: x86_64
-  #         profile: pixel_xl
-  #         cores: 2
-  #         ram-size: 5120M 
-  #         sdcard-path-or-size: 2000M
-  #         avd-name: Pixel
-  #         force-avd-creation: false
-  #         emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
-  #         disable-animations: true
-  #         script: mvn test -PRegression -f ./tests/pom.xml -q
+      - name: Run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 26
+          target: google_apis
+          arch: x86_64
+          profile: pixel_xl
+          cores: 2
+          ram-size: 4096M 
+          sdcard-path-or-size: 2000M
+          avd-name: Pixel
+          force-avd-creation: false
+          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+          disable-animations: true
+          script: mvn test -PRegression -f ./tests/pom.xml -q
 
-  #     - name: Archive test results
-  #       uses: actions/upload-artifact@v3
-  #       if: success() || failure()
-  #       with:
-  #         name: functional-test-report
-  #         path: tests/reports
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: functional-test-report
+          path: tests/reports
 
   android:
-    # needs: android-test
+    needs: android-test
     name: Build and Release APK
     runs-on: macos-latest    
 
