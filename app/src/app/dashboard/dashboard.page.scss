@@ -48,7 +48,36 @@ ion-button{
   color:#203c66;
   text-transform: none;
 }
+
 #note-author{
   font-weight: bolder;
-  margin-right: 5px;
+}
+
+ion-icon{
+  cursor: pointer;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  margin-top: -7px;
+  border-radius: 50%;
+}
+
+.card-footer{
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0px;
+}
+
+#previous-notes{
+  margin-top: 3px;
+  color: #969696;
 }
