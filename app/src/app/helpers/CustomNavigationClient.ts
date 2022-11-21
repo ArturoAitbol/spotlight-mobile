@@ -2,6 +2,7 @@ import { NavigationClient } from "@azure/msal-browser";
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { Capacitor } from "@capacitor/core";
 import { environment } from "src/environments/environment";
+import { Constants } from "./constants";
 
 export class CustomNavigationClient extends NavigationClient {
     constructor(private iab: InAppBrowser) {
@@ -9,7 +10,7 @@ export class CustomNavigationClient extends NavigationClient {
     }
 
     async navigateExternal(url: string, options: any) {
-        localStorage.setItem("msal-operation","start");
+        localStorage.setItem(Constants.MSAL_OPERATION,"start");
         if (Capacitor.isNativePlatform()) {
           const browser = this.iab.create(url, '_blank', {
                                           location: 'yes',

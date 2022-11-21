@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { Capacitor } from '@capacitor/core';
+import { Constants } from '../helpers/constants';
 
 @Component({
   selector: 'app-login',
@@ -32,12 +33,12 @@ export class LoginPage implements OnInit, OnDestroy {
       this.router.navigate(['/']);
     }
 
-    if(localStorage.getItem("msal-operation")){
+    if(localStorage.getItem(Constants.MSAL_OPERATION)){
       this.loading_status = true;
       setTimeout(() => {
         this.loading_status = false;
       }, 3000);
-      localStorage.removeItem("msal-operation");
+      localStorage.removeItem(Constants.MSAL_OPERATION);
     }
 
      this.msalBroadcastService.msalSubject$
