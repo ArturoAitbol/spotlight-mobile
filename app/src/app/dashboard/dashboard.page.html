@@ -17,15 +17,40 @@
         <image-card [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
         <image-card [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
       </div>
-      <ion-card>
-        <ion-card-content>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis nam deserunt porro minus reiciendis aliquam et libero alias
-        </ion-card-content>
+      <ion-card class="ion-text-left" *ngIf="notes.length && !noteDataIsLoading else emptyCard">
+          <ion-card-header>
+            <ion-card-subtitle>
+              <span>{{latestNote.openDate | date:"medium"}}</span>
+              <span class="ion-activatable ripple-parent circle ion-float-end">
+                <ion-ripple-effect></ion-ripple-effect>
+                <ion-icon (click)="deleteNote()" size="small" name="close-circle-outline"></ion-icon>
+              </span>
+              
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            {{latestNote.content}}
+          </ion-card-content>
+          <ion-card-content class="card-footer">
+            <span id="note-author">arasguido@tekvizion.com</span>
+            <small id="previous-notes" *ngIf="previousNotes>0">{{previousNotes}} more <ion-icon name="documents-outline"></ion-icon></small>
+          </ion-card-content>
       </ion-card>
-      <ion-button fill="clear">
+      <ng-template #emptyCard>
+        <ion-card>
+            <ion-card-content class="ion-text-center">
+              <ion-spinner *ngIf="noteDataIsLoading else noDataMessage" name="dots"></ion-spinner>
+              <ng-template #noDataMessage>
+                <ion-icon size="large" name="document-text-outline"></ion-icon>
+                <div>No Notes yet.</div>
+              </ng-template>             
+            </ion-card-content>
+        </ion-card>
+      </ng-template>
+      <!-- <ion-button fill="clear">
         Request Dev Contact Me
         <ion-icon slot="end" name="information-circle-outline"></ion-icon>
-      </ion-button>
+      </ion-button> -->
     </div>    
   </div>
 </ion-content>
