@@ -1,8 +1,15 @@
 import { DatePipe } from '@angular/common';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { of } from 'rxjs';
+import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ActionSheetController, IonicModule } from '@ionic/angular';
+import { of, throwError } from 'rxjs';
+import { ACTION_SHEET_CONTROLLER_MOCK } from 'src/test/components/utils/action-sheet-controller.mock';
+import { ION_TOAST_SERVICE } from 'src/test/services/ionToast.service.mock';
+import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
+import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
 import { FakeChartImageService } from '../services/fakeChartImage.service';
+import { IonToastService } from '../services/ionToast.service';
+import { NoteService } from '../services/note.service';
+import { SubaccountService } from '../services/subaccount.service';
 
 import { DashboardPage } from './dashboard.page';
 import { ImageCardComponent } from './image-card/image-card.component';
@@ -15,7 +22,24 @@ describe('DashboardPage', () => {
     TestBed.configureTestingModule({
       declarations: [ DashboardPage,ImageCardComponent ],
       imports: [IonicModule.forRoot()],
-      providers: [{
+      providers: [
+        {
+          provide: SubaccountService,
+          useValue: SUBACCOUNT_SERVICE_MOCK
+        },
+        {
+          provide: NoteService,
+          useValue: NOTE_SERVICE_MOCK
+        },
+        {
+          provide: ActionSheetController,
+          useValue: ACTION_SHEET_CONTROLLER_MOCK
+        },
+        {
+          provide: IonToastService,
+          useValue: ION_TOAST_SERVICE
+        },
+        {
         provide: FakeChartImageService,
         useValue:{
           getChartImage:(parameter:any)=>{return of({url:'some url'})}
@@ -52,7 +76,7 @@ describe('DashboardPage', () => {
     expect(lastDate.textContent).toBe('Since '+ datePipe.transform(component.date,'mediumDate'));
   });
 
-  it('should refresh the chart images when calling handleRefresh()',()=>{
+  it('should refresh the chart images when calling getCharts()',()=>{
     const customEvent = {target:{complete:()=>{}}};
     component.firstChart = null;
     component.secondChart = null;
@@ -66,6 +90,48 @@ describe('DashboardPage', () => {
     expect(component.timelapse).not.toBeNull();
     expect(component.date).not.toBeNull();
   })
+
+  it('should refresh the notes data when calling getLatestNote()',()=>{
+    component.notes = [];
+    component.latestNote = undefined;
+    component.previousNotes = undefined;
+
+    component.getLatestNote();
+
+    expect(component.notes.length).toBeGreaterThan(0);
+    expect(component.latestNote).not.toBeUndefined();
+    expect(component.previousNotes).not.toBeUndefined();
+  })
+
+  it('should refresh the chart images and the notes data when calling handleRefresh()',()=>{
+    spyOn(component,'getLatestNote');
+    spyOn(component,'getCharts');
+    component.handleRefresh({});
+
+    expect(component.getLatestNote).toHaveBeenCalled();
+    expect(component.getCharts).toHaveBeenCalled();
+  })
+
+  it('should delete the note that is being shown when deleteNote() is called and the user confirm the action',fakeAsync(()=>{
+    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(component,'getLatestNote');
+    fixture.detectChanges();
+    component.deleteNote();
+    flush();
+    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith('Subaccount deleted successfully!');
+    expect(component.getLatestNote).toHaveBeenCalled();
+  }))
+
+  it('should show an error when deleteNote() is called and the user does not confirm the action',fakeAsync(()=>{
+    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(NOTE_SERVICE_MOCK,'deleteNote').and.returnValue(throwError("some error"));
+    spyOn(component,'getLatestNote');
+    fixture.detectChanges();
+    component.deleteNote();
+    flush();
+    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith('Error deleting a note');
+    expect(component.getLatestNote).not.toHaveBeenCalled();
+  }))
 
 
   it('should return "Five-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {

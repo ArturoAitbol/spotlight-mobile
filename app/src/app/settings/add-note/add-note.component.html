@@ -3,17 +3,17 @@
 </div>
 <ion-content class="ion-padding">
   <form [formGroup]="noteForm" (ngSubmit)="addNote()">
-    <ion-item counter="true">
+    <ion-item id="note-message" counter="true">
         <ion-label position="stacked">Note message</ion-label>
         <ion-textarea maxlength="80" (click)="modal.setCurrentBreakpoint(0.75)" formControlName="message" placeholder="Type a message here" [autoGrow]="true"></ion-textarea>
     </ion-item>
     <ion-grid>
       <ion-row class="ion-justify-content-between">
         <ion-col>
-          <ion-button color="light" (click)="cancel()">Cancel</ion-button>
+          <ion-button id="cancel-button" color="light" (click)="cancel()">Cancel</ion-button>
         </ion-col>
         <ion-col>
-          <ion-button class="ion-float-right" [disabled]="noteForm.invalid" type="submit">Add Note</ion-button>
+          <ion-button id="add-button" class="ion-float-right" [disabled]="noteForm.invalid" type="submit">Add Note</ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

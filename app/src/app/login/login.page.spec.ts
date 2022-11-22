@@ -11,7 +11,7 @@ import { MsalBroadcastServiceMock } from 'src/test/services/msal-broadcast.servi
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { Capacitor } from '@capacitor/core';
-import { IN_APP_BROWSER_MOCK } from 'src/test/services/in-app-browser.service.mock';
+import { IN_APP_BROWSER_MOCK } from 'src/test/components/utils/in-app-browser.mock';
 import { Component } from '@angular/core';
 import { Constants } from '../helpers/constants';
 

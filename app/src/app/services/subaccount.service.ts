@@ -24,12 +24,12 @@ export class SubaccountService {
     return (this.selectedSubAccount) ? this.selectedSubAccount : JSON.parse(localStorage.getItem(Constants.SELECTED_SUBACCOUNT));
   }
 
-    /**
-   * fetch SubAccount details list
-   * @returns: Observable 
-   */
-     public getSubAccountList() {
-      return this.httpClient.get<any>(this.API_URL);
-    }
+  /**
+  * fetch SubAccount details list
+  * @returns: Observable
+  */
+  getSubAccountList() {
+    return this.httpClient.get<any>(this.API_URL);
+  }
 
 }

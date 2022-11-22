@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
+import { Note } from '../model/note.model';
 import { FakeChartImageService } from '../services/fakeChartImage.service';
 import { IonToastService } from '../services/ionToast.service';
 import { NoteService } from '../services/note.service';
@@ -20,8 +21,8 @@ export class DashboardPage implements OnInit {
   date:Date;
   firstChart:string;
   secondChart:string;
-  notes: any[] = [];
-  latestNote:any;
+  notes: Note[] = [];
+  latestNote:Note;
   previousNotes:number;
   subaccountId:string;
   noteDataIsLoading: boolean = false;
@@ -40,7 +41,7 @@ export class DashboardPage implements OnInit {
 
   getData(){
     this.subaccountService.getSubAccountList().subscribe((res)=>{
-      if(res?.subaccounts.length>0){
+      if(res.subaccounts.length>0){
         this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.getCharts();
@@ -58,7 +59,6 @@ export class DashboardPage implements OnInit {
     this.notes = [];
     this.noteDataIsLoading=true;
     this.noteService.getNoteList(this.subaccountId,'Open').subscribe((res:any)=>{
-      console.log("res note list: ", res);
       this.noteDataIsLoading=false;
       if(res!=null && res.notes.length>0){
         this.notes = res.notes;
@@ -110,7 +110,7 @@ export class DashboardPage implements OnInit {
     ]).subscribe((res:any[]) =>{
       this.firstChart = res[0].url;
       this.secondChart = res[1].url;
-      this.timelapse = '24 Hours'
+      this.timelapse = '24 Hours';
       this.date = new Date('9/2/2022');
       if(event)
         event.target.complete();
