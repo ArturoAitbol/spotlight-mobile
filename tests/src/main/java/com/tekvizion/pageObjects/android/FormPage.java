@@ -53,8 +53,12 @@ public class FormPage extends AndroidActions {
         driver.findElement(By.xpath("//android.widget.TextView[@text='"+countryName+"']")).click();
     }
 
-    public void submitForm() throws IOException {
+    public void submitForm() throws IOException, InterruptedException {
         shopButton.click();
-        takeScreenshot();
+//        Thread.sleep(5000);
+    }
+
+    public String getErrorToast() {
+        return driver.findElement(By.xpath("(//android.widget.Toast)[1]")).getAttribute("name");
     }
 }
