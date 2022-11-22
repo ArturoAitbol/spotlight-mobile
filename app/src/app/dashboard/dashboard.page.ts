@@ -90,7 +90,7 @@ export class DashboardPage implements OnInit {
 
     if(role === 'destructive'){
       this.noteService.deleteNote(this.latestNote.id).subscribe((res)=>{
-        this.ionToastService.presentToast('Subaccount deleted successfully!');
+        this.ionToastService.presentToast('Note deleted successfully!');
         this.getLatestNote();
       },(err)=>{
         console.log(err);
