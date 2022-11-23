@@ -21,19 +21,19 @@ export class LoginPage implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
 
   constructor(private router: Router,
-              private msalService: MsalService, 
-              private msalBroadcastService: MsalBroadcastService,
-              @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-              private iab: InAppBrowser,
-              private file: File) { 
+    private msalService: MsalService,
+    private msalBroadcastService: MsalBroadcastService,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    private iab: InAppBrowser,
+    private file: File) {
   }
 
   ngOnInit(): void {
-    if(this.msalService.instance.getActiveAccount() != null){
+    if (this.msalService.instance.getActiveAccount() != null) {
       this.router.navigate(['/']);
     }
 
-    if(localStorage.getItem(Constants.MSAL_OPERATION)){
+    if (localStorage.getItem(Constants.MSAL_OPERATION)) {
       this.loading_status = true;
       setTimeout(() => {
         this.loading_status = false;
@@ -41,10 +41,10 @@ export class LoginPage implements OnInit, OnDestroy {
       localStorage.removeItem(Constants.MSAL_OPERATION);
     }
 
-     this.msalBroadcastService.msalSubject$
+    this.msalBroadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_START),
-      takeUntil(this._destroying$))
-      .subscribe((result: EventMessage)=>{
+        takeUntil(this._destroying$))
+      .subscribe((result: EventMessage) => {
         this.waitingForMsAuth = false;
       })
   }
@@ -52,23 +52,24 @@ export class LoginPage implements OnInit, OnDestroy {
   login() {
     sessionStorage.clear();
     this.waitingForMsAuth = true;
-    if (this.msalGuardConfig.authRequest){
-      this.msalService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
+    if (this.msalGuardConfig.authRequest) {
+      this.msalService.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
     } else {
       this.msalService.loginRedirect();
     }
   }
 
-  async openPrivacyFile(){
-    if(Capacitor.isNativePlatform()){
-      this.iab.create(this.file.applicationDirectory+"public/assets/privacy.html", '_blank', {
-        location: 'yes',
+  async openPrivacyFile() {
+    if (Capacitor.isNativePlatform()) {
+      this.iab.create(this.file.applicationDirectory + "public/assets/privacy.html", '_blank', {
+        location: 'no',
         clearcache: 'yes',
         clearsessioncache: 'yes',
         hidenavigationbuttons: 'yes',
         hideurlbar: 'yes',
-        fullscreen: 'yes'});
-    }else{
+        fullscreen: 'yes'
+      });
+    } else {
       var w = window.open('assets/privacy.html', 'Print preview : Privacy Policy', 'width=750,height=720,scrollbars=yes,top=0,left=0');
       w.focus();
     }
