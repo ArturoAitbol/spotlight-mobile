@@ -15,8 +15,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError( err => {
                 console.error(err);
-                const error = err.statusText=="Unknown Error"? err.statusText : (err.error.error || err.statusText);
-                this.ionToastService.presentToast(error,'Error');
+                const error = err.error.error? err.error : err.statusText;
+                this.ionToastService.presentToast(error.error || error,'Error');
                 return throwError(error);
             })
         );

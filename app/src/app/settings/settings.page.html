@@ -1,6 +1,6 @@
 <ion-content>
     <ion-list>
-        <ion-item detail="false" (click)="openAddNoteModal()" expand="block" button lines="inset">
+        <ion-item *lcAccessControl="'addNote'" detail="false" (click)="openAddNoteModal()" expand="block" button lines="inset">
             <ion-label>Add a note</ion-label>
             <ion-icon slot="end" name="add-circle-outline"></ion-icon>
         </ion-item>

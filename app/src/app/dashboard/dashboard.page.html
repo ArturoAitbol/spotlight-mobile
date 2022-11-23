@@ -27,7 +27,7 @@
           <ion-card-header>
             <ion-card-subtitle>
               <span>{{latestNote.openDate | date:"medium"}}</span>
-              <span class="ion-activatable ripple-parent circle ion-float-end">
+              <span *lcAccessControl="'deleteNote'" class="ion-activatable ripple-parent circle ion-float-end">
                 <ion-ripple-effect></ion-ripple-effect>
                 <ion-icon (click)="deleteNote()" size="small" name="close-circle-outline"></ion-icon>
               </span>

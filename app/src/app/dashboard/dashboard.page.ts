@@ -24,7 +24,7 @@ export class DashboardPage implements OnInit {
   notes: Note[] = [];
   latestNote:Note;
   previousNotes:number;
-  subaccountId:string;
+  subaccountId:string = null;
 
   isImageLoading:boolean = true;
   isNoteDataLoading: boolean = true;
