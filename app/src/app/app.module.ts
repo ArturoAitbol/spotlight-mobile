@@ -12,11 +12,12 @@ import { environment } from 'src/environments/environment';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './helpers/error.interceptor';
+import { SharedModule } from './shared/shared.module';
 
-const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule,HttpClientModule, IonicModule.forRoot(), AppRoutingModule,
+  imports: [BrowserModule,HttpClientModule,SharedModule, IonicModule.forRoot(), AppRoutingModule,
     MsalModule.forRoot( new PublicClientApplication({
       auth: {
         clientId: environment.UI_CLIENT_ID,
@@ -41,7 +42,8 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
   ],
   providers: [
     MsalGuard,InAppBrowser,File,
-    { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true }, 
+    { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent, MsalRedirectComponent],

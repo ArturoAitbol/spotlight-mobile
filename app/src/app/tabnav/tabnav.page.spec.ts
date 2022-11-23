@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
 import { IonicModule } from '@ionic/angular';
+import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
+import { SharedModule } from '../shared/shared.module';
 
 import { TabnavPage } from './tabnav.page';
 
@@ -11,11 +14,15 @@ describe('TabnavPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TabnavPage ],
-      imports: [IonicModule.forRoot()],
+      imports: [SharedModule,IonicModule.forRoot()],
       providers:[
         {
           provide: ActivatedRoute,
           useValue: ActivatedRoute
+        },
+        {
+          provide:MsalService,
+          useValue:MSAL_SERVICE_MOCK
         }
       ]
     }).compileComponents();

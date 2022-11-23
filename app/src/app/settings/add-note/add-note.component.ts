@@ -30,6 +30,7 @@ export class AddNoteComponent implements OnInit {
 
   async addNote(){
     this.loading=true;
+    this.modal = await this.modalCtrl.getTop();
     this.modal.canDismiss=false;
     let data = {
       subaccountId:this.subaccountService.getSubAccount().id,
@@ -44,7 +45,7 @@ export class AddNoteComponent implements OnInit {
       console.error(err);
       this.loading=false;
       this.modal.canDismiss = true;
-      this.ionToastService.presentToast("Error creating a note");
+      this.ionToastService.presentToast("Error creating a note",'Error');
     })
     
   }

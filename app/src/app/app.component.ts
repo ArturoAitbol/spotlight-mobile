@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { CustomNavigationClient } from './helpers/CustomNavigationClient';
+import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';

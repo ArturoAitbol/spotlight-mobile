@@ -7,7 +7,7 @@ import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { EventType } from '@azure/msal-browser';
 import { Capacitor } from '@capacitor/core';
 import { routerMock } from 'src/test/components/utils/router.mock';
-import { IN_APP_BROWSER_MOCK } from 'src/test/services/in-app-browser.service.mock';
+import { IN_APP_BROWSER_MOCK } from 'src/test/components/utils/in-app-browser.mock';
 import { MsalBroadcastServiceMock } from 'src/test/services/msal-broadcast.service.mock';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 

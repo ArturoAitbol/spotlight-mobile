@@ -6,12 +6,16 @@
       <ion-grid>
         <ion-row class="ion-align-items-center">
           <ion-col>
-            <img *ngIf="imageUrl else spinner;" [src]="imageUrl"/>
+            <ion-spinner *ngIf="isLoading else content" name="dots"></ion-spinner>
+            <ng-template #content>
+              <img *ngIf="imageUrl" [src]="imageUrl"/>
+              <div *ngIf="!imageUrl">
+                <ion-icon name="warning-outline"></ion-icon>
+                <p class="error-message">Something went wrong</p>
+              </div>
+            </ng-template>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
 </ion-card>
-<ng-template #spinner>
-  <ion-spinner name="dots"></ion-spinner>
-</ng-template>
