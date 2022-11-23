@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
 import { IonToastService } from 'src/app/services/ionToast.service';
 import { NoteService } from 'src/app/services/note.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
-import { ION_TOAST_SERVICE } from 'src/test/services/ionToast.service.mock';
+import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ionToast.service.mock';
 import { MODAL_CONTROLLER_MOCK } from 'src/test/components/utils/modal-controller.mock';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
@@ -37,7 +37,7 @@ describe('AddNoteComponent', () => {
         },
         {
           provide:IonToastService,
-          useValue:ION_TOAST_SERVICE
+          useValue:ION_TOAST_SERVICE_MOCK
         },
         {
           provide:ModalController,
@@ -67,26 +67,26 @@ describe('AddNoteComponent', () => {
 
   it('should create a new note when calling addNote()',async()=>{
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.callThrough();
-    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(MODAL_CONTROLLER_MOCK,'dismiss').and.callThrough();
     fixture.detectChanges();
 
     await component.addNote();
 
     expect(NOTE_SERVICE_MOCK.createNote).toHaveBeenCalled();
-    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith("Note created successfully!");
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Note created successfully!");
     expect(component.loading).toBeFalse();
     expect(MODAL_CONTROLLER_MOCK.dismiss).toHaveBeenCalled();
   })
 
   it('should show a message if an error occurred when calling addNote()',async()=>{
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError({error: "some error"}));
-    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     fixture.detectChanges();
 
     await component.addNote();
 
-    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith("Error creating a note","Error");
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error creating a note","Error");
     expect(component.loading).toBeFalse();
   })
 

@@ -1,15 +1,18 @@
 import { DatePipe } from '@angular/common';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { MsalService } from '@azure/msal-angular';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ACTION_SHEET_CONTROLLER_MOCK } from 'src/test/components/utils/action-sheet-controller.mock';
-import { ION_TOAST_SERVICE } from 'src/test/services/ionToast.service.mock';
+import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ionToast.service.mock';
+import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
 import { FakeChartImageService } from '../services/fakeChartImage.service';
 import { IonToastService } from '../services/ionToast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
+import { SharedModule } from '../shared/shared.module';
 
 import { DashboardPage } from './dashboard.page';
 import { ImageCardComponent } from './image-card/image-card.component';
@@ -25,8 +28,12 @@ describe('DashboardPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DashboardPage,ImageCardComponent ],
-      imports: [IonicModule.forRoot()],
+      imports: [SharedModule,IonicModule.forRoot()],
       providers: [
+        {
+          provide:MsalService,
+          useValue:MSAL_SERVICE_MOCK
+        },
         {
           provide: SubaccountService,
           useValue: SUBACCOUNT_SERVICE_MOCK
@@ -41,7 +48,7 @@ describe('DashboardPage', () => {
         },
         {
           provide: IonToastService,
-          useValue: ION_TOAST_SERVICE
+          useValue: ION_TOAST_SERVICE_MOCK
         },
         {
         provide: FakeChartImageService,
@@ -184,23 +191,23 @@ describe('DashboardPage', () => {
   })
 
   it('should delete the note that is being shown when deleteNote() is called and the user confirm the action',fakeAsync(()=>{
-    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'getLatestNote');
     fixture.detectChanges();
     component.deleteNote();
     flush();
-    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith('Note deleted successfully!');
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note deleted successfully!');
     expect(component.getLatestNote).toHaveBeenCalled();
   }))
 
   it('should show an error when deleteNote() is called and the user does not confirm the action',fakeAsync(()=>{
-    spyOn(ION_TOAST_SERVICE,'presentToast').and.callThrough();
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(NOTE_SERVICE_MOCK,'deleteNote').and.returnValue(throwError("some error"));
     spyOn(component,'getLatestNote');
     fixture.detectChanges();
     component.deleteNote();
     flush();
-    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith('Error deleting a note','Error');
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error deleting a note','Error');
     expect(component.getLatestNote).not.toHaveBeenCalled();
   }))
 
