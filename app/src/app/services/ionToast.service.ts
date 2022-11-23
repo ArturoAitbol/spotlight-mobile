@@ -8,11 +8,16 @@ export class IonToastService {
 
     constructor(private toastController: ToastController){}
 
-    async presentToast(message:string,position?: 'top' | 'middle' | 'bottom',duration?: number) {
+    async presentToast(message:string,dismissButtonText?:string,position?: 'top' | 'middle' | 'bottom',duration?: number) {
         const toast = await this.toastController.create({
           message: message,
-          duration: duration ? duration : 1500,
-          position: position ? position : 'top'
+          cssClass: 'custom-toast',
+          duration: duration ? duration : 2000,
+          position: position ? position : 'top',
+          buttons: dismissButtonText ? [ {
+              text: dismissButtonText,
+              role: 'cancel'
+            }]:null
         });
         await toast.present();
       }

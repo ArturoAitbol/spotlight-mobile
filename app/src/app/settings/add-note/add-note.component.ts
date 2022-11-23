@@ -45,7 +45,7 @@ export class AddNoteComponent implements OnInit {
       console.error(err);
       this.loading=false;
       this.modal.canDismiss = true;
-      this.ionToastService.presentToast("Error creating a note");
+      this.ionToastService.presentToast("Error creating a note",'Error');
     })
     
   }

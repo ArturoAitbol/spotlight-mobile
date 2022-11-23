@@ -14,10 +14,16 @@
         <div>{{chartsHeader}}</div>
       </div>
       <div class="charts">
-        <image-card [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
-        <image-card [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
+        <image-card [isLoading]="isImageLoading" [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
+        <image-card [isLoading]="isImageLoading" [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
       </div>
-      <ion-card class="ion-text-left" *ngIf="notes.length && !noteDataIsLoading else emptyCard">
+      <ion-card *ngIf="isNoteDataLoading else content">
+        <ion-card-content class="ion-text-center">
+          <ion-spinner name="dots"></ion-spinner>     
+        </ion-card-content>
+      </ion-card>
+      <ng-template #content>
+        <ion-card *ngIf="latestNote" class="ion-text-left">
           <ion-card-header>
             <ion-card-subtitle>
               <span>{{latestNote.openDate | date:"medium"}}</span>
@@ -32,19 +38,15 @@
             {{latestNote.content}}
           </ion-card-content>
           <ion-card-content class="card-footer">
-            <span id="note-author">arasguido@tekvizion.com</span>
+            <span id="note-author">{{latestNote.openedBy}}</span>
             <small id="previous-notes" *ngIf="previousNotes>0">{{previousNotes}} more <ion-icon name="documents-outline"></ion-icon></small>
           </ion-card-content>
-      </ion-card>
-      <ng-template #emptyCard>
-        <ion-card>
-            <ion-card-content class="ion-text-center">
-              <ion-spinner *ngIf="noteDataIsLoading else noDataMessage" name="dots"></ion-spinner>
-              <ng-template #noDataMessage>
-                <ion-icon size="large" name="document-text-outline"></ion-icon>
-                <div>No Notes yet.</div>
-              </ng-template>             
-            </ion-card-content>
+        </ion-card>
+        <ion-card *ngIf="!latestNote">
+          <ion-card-content>
+              <ion-icon size="large" name="document-text-outline"></ion-icon>
+              <div>No Notes yet.</div>
+          </ion-card-content>
         </ion-card>
       </ng-template>
       <!-- <ion-button fill="clear">

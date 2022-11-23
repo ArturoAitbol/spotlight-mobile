@@ -86,7 +86,7 @@ describe('AddNoteComponent', () => {
 
     await component.addNote();
 
-    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith("Error creating a note");
+    expect(ION_TOAST_SERVICE.presentToast).toHaveBeenCalledWith("Error creating a note","Error");
     expect(component.loading).toBeFalse();
   })
 
