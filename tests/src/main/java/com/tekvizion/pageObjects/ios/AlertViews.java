@@ -34,7 +34,6 @@ public class AlertViews extends IOSActions {
     public String getConfirmMessage(){
         confirmMenu.click();
         String message = confirmMessage.getText();
-//        confirmButton.click();
         return message;
     }
 }

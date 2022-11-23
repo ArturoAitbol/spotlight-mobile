@@ -10,9 +10,4 @@
             <class name="com.tekvizion.androidTests.LoginTest"/>
         </classes>
     </test>
-    <test thread-count="5" name="LoginTest">
-        <classes>
-            <class name="com.tekvizion.iosTests.BasicTest"/>
-        </classes>
-    </test>
 </suite>
