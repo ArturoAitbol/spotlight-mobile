@@ -1,4 +1,4 @@
-package com.tekvizion;
+package com.tekvizion.androidTests;
 
 import com.tekvizion.pageObjects.android.FormPage;
 import com.tekvizion.testUtils.AndroidBaseTest;
