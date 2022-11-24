@@ -115,17 +115,10 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: npm run build
 
-      # - name: Capacitor copy
-      #   working-directory: ${{ env.WORKING_DIR }}
-      #   run: npx cap copy && npx cap sync
-
       - name: Build Android
         working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --configuration=integration
-      
-      # - name: Build Android Prod
-      #   run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release --prod
-
+    
       - name: Build app APK
         working-directory: ${{ env.WORKING_DIR }}/android
         run: gradle assemble
@@ -262,15 +255,10 @@ jobs:
       - name: Build App
         run: npm run build
 
-      # - name: Capacitor copy
-      #   run: ionic capacitor copy ios && ionic capacitor update ios
 
       - name: Build iOS
         run: ionic capacitor build ios --minifycss --optimizejs --minifyjs --no-open --configuration=integration
       
-      # - name: Build iOS Production
-      #   run: ionic capacitor build ios --minifycss --optimizejs --minifyjs --no-open --release --prod
-
       - name: Build with xCode
         run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App clean archive -configuration Release -sdk iphoneos DEVELOPMENT_TEAM=${{secrets.APPLE_DEV_TEAM}} -archivePath ios/App/App.xcarchive -authenticationKeyIssuerID ${{secrets.AUTH_KEY_ISSUER_ID}} -authenticationKeyID ${{secrets.KEY_ID}} -authenticationKeyPath ${{ env.KEY_PATH }} -allowProvisioningUpdates
 
