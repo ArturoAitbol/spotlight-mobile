@@ -1,0 +1,69 @@
+name: Push Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release Version (use tags/vxx.xx.xx format)"
+        required: true
+        default: "latest"
+
+env:
+  JAVA_VERSION: "11"
+  WORKING_DIR: "./App"
+  android_version_code: 0
+
+jobs:
+  android:
+    name: Build and Release ABB
+    runs-on: macos-latest
+    steps:
+      - name: Retrieve release assets
+        id: release_download
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "${{ github.event.inputs.release_version }}"
+          regex: true
+          file: "LS"
+          target: "./"
+
+      - name: Unzip Release Folder
+        run: unzip -qq *.zip -d Release
+
+      - name: Download Version artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: releaseAndroid.yml
+          name: android-production-released-version
+          search_artifacts: true
+          workflow_conclusion: ""
+          if_no_artifact_found: ignore
+
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "AndroidVersionCode.txt"
+
+      - name: File exists
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Setup Java SDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Update Version Code value
+        id: updated_version
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return parseInt("${{ env.android_version_code }}") + 1
