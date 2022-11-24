@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
+import { Note } from '../model/note.model';
 import { FakeChartImageService } from '../services/fakeChartImage.service';
+import { IonToastService } from '../services/ionToast.service';
+import { NoteService } from '../services/note.service';
+import { SubaccountService } from '../services/subaccount.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,19 +21,101 @@ export class DashboardPage implements OnInit {
   date:Date;
   firstChart:string;
   secondChart:string;
-  constructor(private fakeChartImageService: FakeChartImageService) {}
+  notes: Note[] = [];
+  latestNote:Note;
+  previousNotes:number;
+  subaccountId:string = null;
+
+  isImageLoading:boolean = true;
+  isNoteDataLoading: boolean = true;
+
+  constructor(private fakeChartImageService: FakeChartImageService,
+    private noteService: NoteService,
+    private subaccountService: SubaccountService,
+    private ionToastService: IonToastService,
+    private actionSheetCtrl: ActionSheetController) {}
+  
   ngOnInit(): void {
     this.serviceName = 'SpotLight';
     this.appName = 'Microsoft Teams';
     this.chartsHeader = this.getChartsHeader(91,91);
-    this.getCharts();
+    this.getData();
+  }
+
+  getData(){
+    this.subaccountService.getSubAccountList().subscribe((res)=>{
+      if(res.subaccounts.length>0){
+        this.subaccountService.setSubAccount(res.subaccounts[0]);
+        this.subaccountId = this.subaccountService.getSubAccount().id;
+        this.getCharts();
+        this.getLatestNote();
+      }else{
+        this.isImageLoading=false;
+        this.isNoteDataLoading=false;
+      }
+    },(err)=>{
+      console.error(err);
+      this.isImageLoading=false;
+      this.isNoteDataLoading=false;
+    });
   }
 
   handleRefresh(event) {
     this.getCharts(event);
+    this.getLatestNote();
    };
 
+  getLatestNote(){
+    this.isNoteDataLoading = true;
+    this.notes = [];
+    this.latestNote = null;
+    this.previousNotes = null;
+    this.noteService.getNoteList(this.subaccountId,'Open').subscribe((res:any)=>{
+      if(res!=null && res.notes.length>0){
+        this.notes = res.notes;
+        this.previousNotes = this.notes.length-1;
+        this.latestNote = this.notes[0];
+      }
+      this.isNoteDataLoading=false;
+    },(err)=>{
+      console.error(err);
+      this.isNoteDataLoading=false;
+    });
+  }
+
+   async deleteNote(){
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Are you sure you want to delete this note?',
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'destructive',
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    actionSheet.present();
+
+    const { role } = await actionSheet.onWillDismiss();
+
+    if(role === 'destructive'){
+      this.noteService.deleteNote(this.latestNote.id).subscribe((res)=>{
+        this.ionToastService.presentToast('Note deleted successfully!');
+        this.getLatestNote();
+      },(err)=>{
+        console.error(err);
+        this.ionToastService.presentToast("Error deleting a note","Error");
+      })
+    }
+   }
+
   getCharts(event?: any){
+    this.isImageLoading = true;
     this.firstChart = null;
     this.secondChart = null;
     this.timelapse = null;
@@ -39,10 +126,14 @@ export class DashboardPage implements OnInit {
     ]).subscribe((res:any[]) =>{
       this.firstChart = res[0].url;
       this.secondChart = res[1].url;
-      this.timelapse = '24 Hours'
+      this.timelapse = '24 Hours';
       this.date = new Date('9/2/2022');
+      this.isImageLoading=false;
       if(event)
         event.target.complete();
+    },(err)=>{
+      console.error(err);
+      this.isImageLoading=false;
     })
   }
 
