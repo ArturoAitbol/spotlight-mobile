@@ -27,3 +27,6 @@ jobs:
       - name: emulators list
         run: |
           ionic cap run ios --list
+      
+      - name: Setup tmate session 
+        uses: mxschmitt/action-tmate@v3
