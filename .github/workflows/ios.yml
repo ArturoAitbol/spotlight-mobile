@@ -1,0 +1,29 @@
+name: iOS appium tests
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  build_with_signing:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "This job's status is ${{ job.status }}."
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Install ionic
+        run: |
+          npm install -g @ionic/cli
+      # - name: Install Appium
+      #   run: |
+      #     npm install -g appium@next
+      #     appium driver install xcuitest
+      #     appium &
+
+      - name: emulators list
+        run: |
+          ionic cap run ios --list
