@@ -7,6 +7,7 @@ const TEST_NOTE = {
 }
 
 export const NOTE_SERVICE_MOCK = {
+    testNote: JSON.parse(JSON.stringify(TEST_NOTE)),
     getNoteList: ()=>{
         return new Observable((observer) => {
             observer.next(

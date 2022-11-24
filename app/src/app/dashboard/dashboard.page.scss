@@ -32,10 +32,6 @@
   font-size: 1.2em;
 }
 
-.charts ion-card {
-  box-shadow: none;
-  border-radius: 30px;
-}
 
 ion-card{
   border-radius: 15px;
@@ -80,4 +76,30 @@ ion-icon{
 #previous-notes{
   margin-top: 3px;
   color: #969696;
+}
+
+.lastUpdateInfo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+#lastUpdateTime{
+  display: flex;
+  align-items: center;
+  color: #969696;
+  font-size: 12px;
+}
+#lastUpdateTime > ion-icon{
+  font-size: 14px;
+}
+
+.error-message{
+  color: rgb(209, 209, 209);
+  margin: 40px 0px;
+}
+
+.error-message > ion-icon {
+  font-size: 50px;
 }

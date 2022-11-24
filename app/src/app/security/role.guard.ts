@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { permissions } from './role-permissions';
-import { IonToastService } from '../services/ionToast.service';
+import { IonToastService } from '../services/ion-toast.service';
 
 @Injectable({
   providedIn: 'root'

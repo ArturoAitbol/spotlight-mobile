@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
-import { IonToastService } from 'src/app/services/ionToast.service';
+import { IonToastService } from 'src/app/services/ion-toast.service';
 import { NoteService } from 'src/app/services/note.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
 
