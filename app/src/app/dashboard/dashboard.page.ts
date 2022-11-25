@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { ReportType } from '../helpers/report-type';
 import { Note } from '../model/note.model';
-import { FakeChartImageService } from '../services/fakeChartImage.service';
-import { IonToastService } from '../services/ionToast.service';
+import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
+import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 
@@ -16,56 +17,55 @@ export class DashboardPage implements OnInit {
 
   serviceName:string;
   appName:string;
-  chartsHeader:string;
   timelapse:string;
-  date:Date;
-  firstChart:string;
-  secondChart:string;
+
+  lastUpdate:string;
+  charts:any[] = [];
   notes: Note[] = [];
+
   latestNote:Note;
   previousNotes:number;
   subaccountId:string = null;
 
-  isImageLoading:boolean = true;
+  isChartsDataLoading:boolean = true;
   isNoteDataLoading: boolean = true;
 
-  constructor(private fakeChartImageService: FakeChartImageService,
-    private noteService: NoteService,
-    private subaccountService: SubaccountService,
-    private ionToastService: IonToastService,
-    private actionSheetCtrl: ActionSheetController) {}
+  constructor(private ctaasDashboardService: CtaasDashboardService,
+              private noteService: NoteService,
+              private subaccountService: SubaccountService,
+              private ionToastService: IonToastService,
+              private actionSheetCtrl: ActionSheetController) {}
   
   ngOnInit(): void {
     this.serviceName = 'SpotLight';
     this.appName = 'Microsoft Teams';
-    this.chartsHeader = this.getChartsHeader(91,91);
-    this.getData();
+    this.timelapse = 'Last 24 Hours';
+    this.fetchData();
   }
 
-  getData(){
+  fetchData(event?:any){
     this.subaccountService.getSubAccountList().subscribe((res)=>{
       if(res.subaccounts.length>0){
         this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
-        this.getCharts();
-        this.getLatestNote();
+        this.fetchCtaasDashboard(event);
+        this.fetchNotes();
       }else{
-        this.isImageLoading=false;
+        this.isChartsDataLoading=false;
         this.isNoteDataLoading=false;
       }
     },(err)=>{
       console.error(err);
-      this.isImageLoading=false;
+      this.isChartsDataLoading=false;
       this.isNoteDataLoading=false;
     });
   }
 
   handleRefresh(event) {
-    this.getCharts(event);
-    this.getLatestNote();
-   };
+    this.fetchData(event);
+  };
 
-  getLatestNote(){
+   fetchNotes(){
     this.isNoteDataLoading = true;
     this.notes = [];
     this.latestNote = null;
@@ -106,7 +106,7 @@ export class DashboardPage implements OnInit {
     if(role === 'destructive'){
       this.noteService.deleteNote(this.latestNote.id).subscribe((res)=>{
         this.ionToastService.presentToast('Note deleted successfully!');
-        this.getLatestNote();
+        this.fetchNotes();
       },(err)=>{
         console.error(err);
         this.ionToastService.presentToast("Error deleting a note","Error");
@@ -114,55 +114,30 @@ export class DashboardPage implements OnInit {
     }
    }
 
-  getCharts(event?: any){
-    this.isImageLoading = true;
-    this.firstChart = null;
-    this.secondChart = null;
-    this.timelapse = null;
-    this.date = null;
-    forkJoin([
-      this.fakeChartImageService.getChartImage('first'),
-      this.fakeChartImageService.getChartImage('second')
-    ]).subscribe((res:any[]) =>{
-      this.firstChart = res[0].url;
-      this.secondChart = res[1].url;
-      this.timelapse = '24 Hours';
-      this.date = new Date('9/2/2022');
-      this.isImageLoading=false;
-      if(event)
-        event.target.complete();
-    },(err)=>{
-      console.error(err);
-      this.isImageLoading=false;
+   fetchCtaasDashboard(event?: any){
+    this.isChartsDataLoading = true;
+    this.charts = [];
+
+    const requests: Observable<any>[] = [];
+    for(const key in ReportType){
+      const reportType: string = ReportType[key];
+      //To-do: replace hard-coded sample subaccountId for this.subaccountId
+      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails("2c8e386b-d1bd-48b3-b73a-12bfa5d00805",reportType));
+    }
+
+    forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
+      if(res){
+        this.charts = [...res].map((e: {response:any})=> e.response ? e.response : e);
+        this.lastUpdate = this.charts[0].lastUpdatedTS ? this.charts[0].lastUpdatedTS : null;
+      }
+      if(event) event.target.complete();
+      this.isChartsDataLoading = false;
+    },(e)=>{
+      console.error('Error loading dashboard reports ', e.error);
+      this.isChartsDataLoading = false;
+      this.ionToastService.presentToast('Error loading dashboard, please connect tekVizion admin', 'Ok');
+      if(event) event.target.complete();
     })
-  }
-
-  getChartsHeader(metricA:number,metricB:number):string{
-
-    const thirdThreshold = 90;
-
-    const secondEndRange = 85;
-    const secondStartRange = 81;
-    const secondThreshold = 80;
-
-    const firstEndRange = 70;
-    const firstStartRange = 51;
-    const firstThreshold = 50;
-  
-    
-    if(metricA>thirdThreshold && metricB>thirdThreshold)
-      return 'Five-9';
-
-    if(metricA>secondThreshold && metricB>secondThreshold && 
-      ((metricA>=secondStartRange  && metricA<=secondEndRange) || (metricB>=secondStartRange  && metricB<=secondEndRange)))
-      return 'Four-9';
-
-      
-    if(metricA>firstThreshold && metricB>firstThreshold && 
-      ((metricA>=firstStartRange  && metricA<=firstEndRange) || (metricB>=firstStartRange  && metricB<=firstEndRange)))
-      return 'Three-9';
-
-    return '';
   }
 
 }
