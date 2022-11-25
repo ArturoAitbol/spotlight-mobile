@@ -121,8 +121,7 @@ export class DashboardPage implements OnInit {
     const requests: Observable<any>[] = [];
     for(const key in ReportType){
       const reportType: string = ReportType[key];
-      //To-do: replace hard-coded sample subaccountId for this.subaccountId
-      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails("2c8e386b-d1bd-48b3-b73a-12bfa5d00805",reportType));
+      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId,reportType));
     }
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
