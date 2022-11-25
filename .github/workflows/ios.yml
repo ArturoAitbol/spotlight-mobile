@@ -1,0 +1,38 @@
+name: iOS tests
+on: [push]
+jobs:
+  build_with_signing:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "This job's status is ${{ job.status }}."
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Install ionic
+        run: |
+          npm install -g @ionic/cli
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+          appium &
+      - name: emulators list
+        run: |
+          ionic cap run ios --list
+      - name: Select device
+        run: echo "DEVICE=$(ionic cap run ios --list |  grep 'iPhone 14' | grep -v 'Plus' | grep -v 'Pro'| grep -v 'Max')" >> $GITHUB_ENV
+      
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 14' | grep -v 'Plus' | grep -v 'Pro'| grep -v 'Max' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+          
+      - name: run emulator
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+      - name: check device
+        run: |
+          xcrun simctl list | grep ${{ env.DEVICE_ID }}
