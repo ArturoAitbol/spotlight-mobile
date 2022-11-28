@@ -29,13 +29,13 @@ jobs:
         run: |
           ionic cap run ios --list
       - name: Select device
-        run: echo "DEVICE=$(ionic cap run ios --list |  grep 'iPhone 14' | grep -v 'Plus' | grep -v 'Pro'| grep -v 'Max')" >> $GITHUB_ENV
+        run: echo "DEVICE=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (')" >> $GITHUB_ENV
       
       - name: Set device_id
-        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 14' | grep -v 'Plus' | grep -v 'Pro'| grep -v 'Max' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
           
       - name: run emulator
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
-      - name: check device
-        run: |
-          xcrun simctl list | grep ${{ env.DEVICE_ID }}
+
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ./tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q

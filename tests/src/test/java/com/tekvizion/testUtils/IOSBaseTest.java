@@ -38,12 +38,12 @@ public class IOSBaseTest extends AppiumUtils {
         properties.load(file);
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
-        service = startAppiumServer(ipAddress, Integer.parseInt(port));
+//        service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
         XCUITestOptions options = new XCUITestOptions();
-//        options.setDeviceName("iPhone 13 Pro");
-        options.setDeviceName(properties.getProperty("iosDeviceName"));
-//        options.setUdid("");
+//        options.setDeviceName(properties.getProperty("iosDeviceName"));
+//        options.setUdid("E7E4E226-479B-4BD3-9FC8-80EF77852758");
+        options.setUdid(System.getProperty("deviceUDID"));
         options.setPlatformVersion(properties.getProperty("iosPlatformVersion"));
         options.setWdaLaunchTimeout(Duration.ofSeconds(60));
         options.setApp(getResourcePath("test", "UIKitCatalog.app"));
