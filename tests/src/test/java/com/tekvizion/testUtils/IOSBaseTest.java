@@ -43,6 +43,7 @@ public class IOSBaseTest extends AppiumUtils {
         XCUITestOptions options = new XCUITestOptions();
 //        options.setDeviceName("iPhone 13 Pro");
         options.setDeviceName(properties.getProperty("iosDeviceName"));
+//        options.setUdid("");
         options.setPlatformVersion(properties.getProperty("iosPlatformVersion"));
         options.setWdaLaunchTimeout(Duration.ofSeconds(60));
         options.setApp(getResourcePath("test", "UIKitCatalog.app"));
