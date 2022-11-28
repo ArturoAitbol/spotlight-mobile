@@ -38,7 +38,7 @@ public class IOSBaseTest extends AppiumUtils {
         properties.load(file);
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
-//        service = startAppiumServer(ipAddress, Integer.parseInt(port));
+        service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
         XCUITestOptions options = new XCUITestOptions();
 //        options.setDeviceName(properties.getProperty("iosDeviceName"));
