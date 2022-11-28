@@ -1,4 +1,50 @@
+const TEST_ID_TOKEN_CLAIMS = {
+    idTokenClaims: {
+        'aud': '11111111-1111-1111-1111-111111111111',
+            'iss': 'https://login.microsoftonline.com/11111111-1111-1111-1111-111111111111/v2.0',
+            'iat': 1234567890,
+            'nbf': 1234567891,
+            'exp': 1234567892,
+            'name': 'Test User',
+            'nonce': '11111111-1111-1111-1111-111111111111',
+            'oid': '11111111-1111-1111-1111-111111111111',
+            'preferred_username': 'username@test.com',
+            'rh': '',
+            roles: [
+                'tekvizion.FullAdmin'
+            ],
+            'sub': 'sub',
+            'tid': '11111111-1111-1111-1111-111111111111',
+            'uti': 'uti',
+            'ver': 'ver'
+    }
+}
+
+const TEST_ID_TOKEN_CLAIMS_WITHOUT_ROLES = {
+    idTokenClaims: {
+        'aud': '11111111-1111-1111-1111-111111111111',
+            'iss': 'https://login.microsoftonline.com/11111111-1111-1111-1111-111111111111/v2.0',
+            'iat': 1234567890,
+            'nbf': 1234567891,
+            'exp': 1234567892,
+            'name': 'Test User',
+            'nonce': '11111111-1111-1111-1111-111111111111',
+            'oid': '11111111-1111-1111-1111-111111111111',
+            'preferred_username': 'preferred_username',
+            'rh': '',
+            roles: [
+            ],
+            'sub': 'sub',
+            'tid': '11111111-1111-1111-1111-111111111111',
+            'uti': 'uti',
+            'ver': 'ver'
+    }
+}
+
+
 export const MSAL_SERVICE_MOCK = {
+    mockIdTokenClaims: TEST_ID_TOKEN_CLAIMS,
+    mockIdTokenClaimsWithoutRoles: TEST_ID_TOKEN_CLAIMS_WITHOUT_ROLES,
     instance: {
         getActiveAccount: () => {
             return {

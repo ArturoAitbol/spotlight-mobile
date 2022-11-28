@@ -7,7 +7,7 @@
     <test thread-count="5" name="LoginTest">
         <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>
-            <class name="com.tekvizion.LoginTest"/>
+            <class name="com.tekvizion.androidTests.LoginTest"/>
         </classes>
     </test>
 </suite>

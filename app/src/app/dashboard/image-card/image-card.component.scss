@@ -7,6 +7,38 @@ ion-grid,ion-row{
 }
 
 ion-card{
-box-shadow: none;
 border-radius: 30px;
+}
+
+ion-card-content{
+  padding: 0px;
+}
+
+
+.error-message{
+  padding: 50px 0px;
+  color: rgb(170, 170, 170);
+}
+
+.warnign-icon{
+  font-size: 50px;
+  color: rgb(209, 209, 209);
+}
+
+.card-footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+#timelapse{
+  display: flex;
+  align-items: center;
+  color: #969696;
+  font-size: 12px;
+}
+
+#timelapse > ion-icon{
+  font-size: 14px;
 }

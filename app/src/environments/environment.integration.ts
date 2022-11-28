@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiEndpoint: 'https://tekvizion360-portal-fa.azurewebsites.net/v1.0',
+  apiEndpoint: 'https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0',
 
   // Azure Active Directory Application details
   AUTHORITY:"https://login.microsoftonline.com/e3a46007-31cb-4529-b8cc-1e59b97ebdbd",
@@ -9,7 +9,6 @@ export const environment = {
   API_SCOPE: 'tekvizion.access',
   
   // BASE URL
-  // REDIRECT_URL_AFTER_LOGIN:'http://localhost/login',
-  REDIRECT_URL_AFTER_LOGIN: window.location.origin + '/license-server/login',
+  REDIRECT_URL_AFTER_LOGIN:'http://localhost/login',
   REDIRECT_URL_APP: window.location.origin +'/msal-back-to-login',
 };

@@ -1,17 +1,22 @@
-<ion-card color="light" class="ion-margin-bottom">
-    <ion-card-header>
-      <ion-card-title [id]="titleId">{{imageTitle}}</ion-card-title>
-    </ion-card-header>
+<ion-card class="ion-margin-bottom">
     <ion-card-content>
       <ion-grid>
         <ion-row class="ion-align-items-center">
           <ion-col>
-            <img *ngIf="imageUrl else spinner;" [src]="imageUrl"/>
+            <ion-spinner *ngIf="isLoading else content" name="dots"></ion-spinner>
+            <ng-template #content>
+              <img *ngIf="imageBase64" [src]="imageBase64"/>
+              <div class="error-message" *ngIf="!imageBase64">
+                <ion-icon class="warnign-icon" name="warning-outline"></ion-icon>
+                <p>Something went wrong</p>
+                <small>Couldn't load chart</small>
+              </div>
+            </ng-template>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
+    <ion-card-content *ngIf="!isLoading && imageBase64 && lastUpdatedTime" class="card-footer">
+      <span id="timelapse"><ion-icon name="time-outline"></ion-icon>&nbsp;Last Update: {{lastUpdatedTime}}</span>
+    </ion-card-content>
 </ion-card>
-<ng-template #spinner>
-  <ion-spinner name="dots"></ion-spinner>
-</ng-template>

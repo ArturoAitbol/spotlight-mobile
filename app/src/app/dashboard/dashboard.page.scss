@@ -32,13 +32,9 @@
   font-size: 1.2em;
 }
 
-.charts ion-card {
-  box-shadow: none;
-  border-radius: 30px;
-}
 
 ion-card{
-  border-radius: 20px;
+  border-radius: 15px;
 }
 
 .charts-title div{
@@ -47,4 +43,63 @@ ion-card{
 ion-button{
   color:#203c66;
   text-transform: none;
+}
+
+#note-author{
+  font-weight: bolder;
+}
+
+ion-icon{
+  cursor: pointer;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  margin-top: -7px;
+  border-radius: 50%;
+}
+
+.card-footer{
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0px;
+}
+
+#previous-notes{
+  margin-top: 3px;
+  color: #969696;
+}
+
+.lastUpdateInfo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+#lastUpdateTime{
+  display: flex;
+  align-items: center;
+  color: #969696;
+  font-size: 12px;
+}
+#lastUpdateTime > ion-icon{
+  font-size: 14px;
+}
+
+.error-message{
+  color: rgb(209, 209, 209);
+  margin: 40px 0px;
+}
+
+.error-message > ion-icon {
+  font-size: 50px;
 }

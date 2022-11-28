@@ -1,6 +1,6 @@
-name: iOS appium tests
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: iOS tests
+on: 
+  workflow_dispatch:
 jobs:
   build_with_signing:
     runs-on: macos-latest
@@ -20,15 +20,22 @@ jobs:
       - name: Install ionic
         run: |
           npm install -g @ionic/cli
-      # - name: Install Appium
-      #   run: |
-      #     npm install -g appium@next
-      #     appium driver install xcuitest
-      #     appium &
-
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+          appium &
       - name: emulators list
         run: |
           ionic cap run ios --list
+      - name: Select device
+        run: echo "DEVICE=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (')" >> $GITHUB_ENV
       
-      - name: Setup tmate session 
-        uses: mxschmitt/action-tmate@v3
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+          
+      - name: run emulator
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ./tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q

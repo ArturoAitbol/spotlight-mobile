@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <listeners>
+        <listener class-name="com.tekvizion.testUtils.Listeners"/>
+    </listeners>
+    <test thread-count="5" name="LoginTest">
+        <parameter name="deviceUDID" value="emulator-5554"/>
+        <classes>
+            <class name="com.tekvizion.iosTests.BasicTest"/>
+        </classes>
+    </test>
+</suite>
