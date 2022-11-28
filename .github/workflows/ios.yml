@@ -24,7 +24,7 @@ jobs:
         run: |
           npm install -g appium@next
           appium driver install xcuitest
-          appium &
+
       - name: emulators list
         run: |
           ionic cap run ios --list
