@@ -2,7 +2,7 @@ name: iOS tests
 on: 
   workflow_dispatch:
 jobs:
-  build_with_signing:
+  test:
     runs-on: macos-latest
     defaults:
       run:
@@ -38,4 +38,4 @@ jobs:
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
       - name: Run functional tests
-        run: mvn test -PiosTests -f ./tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
