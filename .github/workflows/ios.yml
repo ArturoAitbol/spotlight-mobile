@@ -39,3 +39,7 @@ jobs:
 
       - name: Run functional tests
         run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
