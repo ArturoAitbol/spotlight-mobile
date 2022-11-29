@@ -14,7 +14,7 @@ public class BasicTest extends IOSBaseTest {
         AlertViews alertViews = homePage.goToAlertViews();
         alertViews.fillTextEntry("Hello");
         String actualMessage = alertViews.getConfirmMessage();
-        Assert.assertEquals(actualMessage, "A message should be a short, complete sentence");
+        Assert.assertEquals(actualMessage, "A message should be a short, complete sentence.");
         Thread.sleep(2000);
     }
 }
