@@ -43,4 +43,4 @@ jobs:
         if: success() || failure()
         with:
           name: functional-test-report
-          path: ../tests/reports
+          path: ${{ github.workspace }}/tests/reports
