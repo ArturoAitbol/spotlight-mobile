@@ -45,7 +45,10 @@ public class IOSBaseTest extends AppiumUtils {
 //        options.setUdid("E7E4E226-479B-4BD3-9FC8-80EF77852758");
         options.setUdid(System.getProperty("deviceUDID"));
         options.setPlatformVersion(properties.getProperty("iosPlatformVersion"));
-        options.setWdaLaunchTimeout(Duration.ofSeconds(60));
+        options.setWdaLaunchTimeout(Duration.ofSeconds(150));
+        options.setWdaStartupRetries(4);
+        options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
+
         options.setApp(getResourcePath("test", "UIKitCatalog.app"));
 
         this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
