@@ -14,9 +14,11 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+      
       - name: Install ionic
         run: |
           npm install -g @ionic/cli
+      
       - name: Install Appium
         run: |
           npm install -g appium@next
