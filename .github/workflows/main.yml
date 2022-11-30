@@ -1,9 +1,9 @@
 name: Spotlight Mobile CI/CD
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - ".github/**"
+  # push:
+  #   branches: [main]
+  #   paths-ignore:
+  #     - ".github/**"
 
 env:
   JAVA_VERSION: "11"
