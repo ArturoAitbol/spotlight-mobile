@@ -179,6 +179,7 @@ jobs:
           npm install -g @ionic/cli
       
       - name: emulators list
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           ionic cap run ios --list
       
