@@ -3,7 +3,7 @@ export const permissions = {
         paths: [
             'tabs',
             'dashboard',
-            'settings'
+            'notes'
         ],
         elements: ['tabBar',
                     'addNote',
@@ -13,7 +13,7 @@ export const permissions = {
         paths: [
             'tabs',
             'dashboard',
-            'settings'
+            'notes'
         ],
         elements: ['tabBar',
                     'addNote',

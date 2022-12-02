@@ -1,0 +1,53 @@
+
+<ion-content>
+    <ion-refresher slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+    <ion-spinner class="container" *ngIf="isNoteDataLoading else notesContent" name="dots"></ion-spinner>
+<ng-template #notesContent>
+   <div *ngIf="notes.length>0" class="container">
+        <ion-list lines="none">
+            <ion-list-header>
+                <ion-label>{{notes.length}} open notes</ion-label>
+            </ion-list-header>
+            <ion-item *ngFor="let note of notes" detail="false" expand="block">
+                <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card ion-activatable card-ripple'">
+                    <ion-ripple-effect *ngIf="!note.current"></ion-ripple-effect>
+                    <ion-card-header>
+                    <ion-card-subtitle>
+                        <span>{{note.openDate | date:"medium"}}</span>
+                        <span *lcAccessControl="'deleteNote'" class="ion-activatable delete-ripple circle ion-float-end">
+                            <ion-ripple-effect></ion-ripple-effect>
+                            <ion-icon (click)="deleteNote(note.id)" size="small" name="close-circle-outline"></ion-icon>
+                        </span>
+                    </ion-card-subtitle>
+                    </ion-card-header>
+                    <div (click)="seeHistoricalReports(note)">
+                        <ion-card-content>
+                            {{note.content}}
+                        </ion-card-content>
+                        <ion-card-content class="card-footer">
+                            <span id="note-author">{{note.openedBy.split("@")[0]}}</span>
+                            <small id="note-tag" [ngClass]="note.current ? 'active' : 'inactive'">
+                                {{note.current ? 'Current' : 'Outdated'}}&nbsp;<ion-icon name="speedometer"></ion-icon>
+                            </small>
+                        </ion-card-content>
+                    </div>
+                </ion-card>
+            </ion-item>
+        </ion-list>
+   </div>
+   <div *ngIf="notes.length===0" class="empty-message">
+       <div>
+            <ion-icon name="document-text-outline"></ion-icon>
+            <div class="ion-margin-top">No Notes yet.</div>
+            <ion-button class="ion-margin-top" (click)="openAddNoteModal()">Add a note</ion-button>
+       </div>
+    </div>
+   <ion-fab *lcAccessControl="'addNote'" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button *ngIf="notes.length>0" (click)="openAddNoteModal()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    </ng-template>
+</ion-content>

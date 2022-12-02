@@ -7,4 +7,6 @@ export interface Note {
     openedBy?: string;
     closeDate?: string;
     closedBy?:string;
+    reports?:any[];
+    current?:boolean;
 }

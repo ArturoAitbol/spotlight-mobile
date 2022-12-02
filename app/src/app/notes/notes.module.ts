@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { SettingsPageRoutingModule } from './settings-routing.module';
+import { NotesPageRoutingModule } from './notes-routing.module';
 
-import { SettingsPage } from './settings.page';
+import { NotesPage } from './notes.page';
 import { AddNoteComponent } from './add-note/add-note.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -16,9 +16,9 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    SettingsPageRoutingModule,
+    NotesPageRoutingModule,
     SharedModule
   ],
-  declarations: [SettingsPage,AddNoteComponent]
+  declarations: [NotesPage,AddNoteComponent]
 })
 export class SettingsPageModule {}

@@ -4,6 +4,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { ReportType } from '../helpers/report-type';
 import { Note } from '../model/note.model';
 import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
@@ -34,6 +35,7 @@ export class DashboardPage implements OnInit {
               private noteService: NoteService,
               private subaccountService: SubaccountService,
               private ionToastService: IonToastService,
+              private dashboardService: DashboardService,
               private actionSheetCtrl: ActionSheetController) {}
   
   ngOnInit(): void {
@@ -46,7 +48,8 @@ export class DashboardPage implements OnInit {
   fetchData(event?:any){
     this.subaccountService.getSubAccountList().subscribe((res)=>{
       if(res.subaccounts.length>0){
-        this.subaccountService.setSubAccount(res.subaccounts[0]);
+        // this.subaccountService.setSubAccount(res.subaccounts[0]);
+        this.subaccountService.setSubAccount({id:"2c8e386b-d1bd-48b3-b73a-12bfa5d00805",customerId:"",name:"Test",subaccountAdminEmails: []});
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
         this.fetchNotes();
@@ -126,8 +129,15 @@ export class DashboardPage implements OnInit {
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
       if(res){
-        this.charts = [...res].map((e: {response:any})=> e.response ? e.response : e);
-        this.lastUpdate = this.charts[0].lastUpdatedTS ? this.charts[0].lastUpdatedTS : null;
+        this.charts = [...res].filter((e: any) => !e.error).map((e: { response: string }) => e.response);
+        if(this.charts.length>0){
+          let reports = this.charts.map((chart:any)=>{
+            // Destructure the chart object to save only timestampId and type attributes
+            return (({ timestampId, type }) => ({ timestampId, type }))(chart);
+          });
+          this.dashboardService.setReports(reports);
+          this.lastUpdate = this.charts[0].lastUpdatedTS ? this.charts[0].lastUpdatedTS : null;
+        }
       }
       if(event) event.target.complete();
       this.isChartsDataLoading = false;
