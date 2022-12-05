@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { forkJoin, Observable } from 'rxjs';
 import { Note } from 'src/app/model/note.model';
+import { SubAccount } from 'src/app/model/subaccount.model';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
@@ -14,10 +15,10 @@ import { SubaccountService } from 'src/app/services/subaccount.service';
 export class HistoricalDashboardPage implements OnInit {
 
   note:Note;
-  lastUpdate:string;
+  reports: any[] = [];
   charts:any[] = [];
 
-  subaccountId:string = null;
+  subaccount:SubAccount = null;
 
   isChartsDataLoading:boolean = true;
 
@@ -27,7 +28,8 @@ export class HistoricalDashboardPage implements OnInit {
               private modalCtrl: ModalController) {}
   
   ngOnInit(): void {
-    if(this.note.reports!=null){
+    if(this.note?.reports!=null){
+      this.reports = this.note.reports;
       this.fetchData();
     }else{
       this.isChartsDataLoading = false;
@@ -36,8 +38,12 @@ export class HistoricalDashboardPage implements OnInit {
   }
 
   fetchData(event?:any){
-    this.subaccountId = this.subaccountService.getSubAccount().id;
-    this.fetchCtaasDashboard(event);
+    this.subaccount = this.subaccountService.getSubAccount();
+    if(this.subaccount){
+      this.fetchCtaasDashboard(event);
+    }else{
+      this.ionToastService.presentToast("No subaccount found","Error");
+    }
   }
 
   handleRefresh(event){
@@ -49,16 +55,13 @@ export class HistoricalDashboardPage implements OnInit {
     this.charts = [];
 
     const requests: Observable<any>[] = [];
-    for(const report of this.note.reports){
-      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId,report.type,report.timestampId));
+    for(const report of this.reports){
+      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id,report.type,report.timestampId));
     }
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
       if(res){
         this.charts = [...res].filter((e: any) => !e.error).map((e: { response: string }) => e.response);
-        if(this.charts.length>0){
-          this.lastUpdate = this.charts[0].lastUpdatedTS ? this.charts[0].lastUpdatedTS : null;
-        }
       }
       if(event) event.target.complete();
       this.isChartsDataLoading = false;

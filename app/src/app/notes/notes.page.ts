@@ -98,6 +98,7 @@ export class NotesPage implements OnInit {
       if(event) event.target.complete();
     },(err)=>{
       console.error(err);
+      this.ionToastService.presentToast("Error getting notes","Error");
       this.isNoteDataLoading=false;
       if(event) event.target.complete();
     });
