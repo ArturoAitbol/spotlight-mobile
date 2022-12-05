@@ -36,16 +36,16 @@ export class DashboardPage implements OnInit {
   fetchData(event?:any){
     this.subaccountService.getSubAccountList().subscribe((res)=>{
       if(res.subaccounts.length>0){
-        // this.subaccountService.setSubAccount(res.subaccounts[0]);
-        this.subaccountService.setSubAccount({id:"2c8e386b-d1bd-48b3-b73a-12bfa5d00805",customerId:"",name:"Test",subaccountAdminEmails: []});
+        this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
       }else{
         this.isChartsDataLoading=false;
       }
-    },(err)=>{
+    }, (err) => {
       console.error(err);
       this.isChartsDataLoading=false;
+      if (event) event.target.complete();
     });
   }
 
@@ -58,9 +58,9 @@ export class DashboardPage implements OnInit {
     this.charts = [];
 
     const requests: Observable<any>[] = [];
-    for(const key in ReportType){
+    for (const key in ReportType) {
       const reportType: string = ReportType[key];
-      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId,reportType));
+      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId, reportType));
     }
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
@@ -74,13 +74,13 @@ export class DashboardPage implements OnInit {
           this.dashboardService.setReports(reports);
         }
       }
-      if(event) event.target.complete();
+      if (event) event.target.complete();
       this.isChartsDataLoading = false;
-    },(e)=>{
+    }, (e) => {
       console.error('Error loading dashboard reports ', e.error);
       this.isChartsDataLoading = false;
       this.ionToastService.presentToast('Error loading dashboard, please connect tekVizion admin', 'Ok');
-      if(event) event.target.complete();
+      if (event) event.target.complete();
     })
   }
 

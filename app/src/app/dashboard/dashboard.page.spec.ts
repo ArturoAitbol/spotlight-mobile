@@ -23,12 +23,12 @@ describe('DashboardPage', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardPage,ImageCardComponent ],
-      imports: [SharedModule,IonicModule.forRoot()],
+      declarations: [DashboardPage, ImageCardComponent],
+      imports: [SharedModule, IonicModule.forRoot()],
       providers: [
         {
-          provide:MsalService,
-          useValue:MSAL_SERVICE_MOCK
+          provide: MsalService,
+          useValue: MSAL_SERVICE_MOCK
         },
         {
           provide: SubaccountService,
@@ -47,9 +47,9 @@ describe('DashboardPage', () => {
           useValue: ION_TOAST_SERVICE_MOCK
         },
         {
-        provide: CtaasDashboardService,
-        useValue:CTAAS_DASHBOARD_SERVICE_MOCK
-      }]
+          provide: CtaasDashboardService,
+          useValue: CTAAS_DASHBOARD_SERVICE_MOCK
+        }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardPage);
@@ -64,13 +64,12 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
     const serviceDescription: HTMLElement = fixture.nativeElement.querySelector('#service-description');
 
-    expect(serviceDescription.childElementCount).toBe(3);
+    expect(serviceDescription.childElementCount).toBe(1);
     expect(serviceDescription.firstChild.textContent).toBe(component.serviceName);
-    expect(serviceDescription.lastChild.textContent).toBe(component.appName);
   });
 
-  it('should show an error message instead of the charts when the data return by getCtaasDashboardDetails() have error messages',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasDashboardWithError));
+  it('should show an error message instead of the charts when the data return by getCtaasDashboardDetails() have error messages', () => {
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK, 'getCtaasDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasDashboardWithError));
     component.charts = [];
 
     fixture.detectChanges();
@@ -113,8 +112,8 @@ describe('DashboardPage', () => {
     expect(component.isChartsDataLoading).toBeFalse();
   })
 
-  it('should refresh the chart images when calling fetchCtaasDashboard()',()=>{
-    const customEvent = {target:{complete:()=>{}}};
+  it('should refresh the chart images when calling fetchCtaasDashboard()', () => {
+    const customEvent = { target: { complete: () => { } } };
     component.charts = [];
 
     component.fetchCtaasDashboard(customEvent);
@@ -122,9 +121,9 @@ describe('DashboardPage', () => {
     expect(component.charts.length).toBeGreaterThan(0);
   })
 
-  it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
-    const customEvent = {target:{complete:()=>{}}};
+  it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error', () => {
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK, 'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
+    const customEvent = { target: { complete: () => { } } };
     component.isChartsDataLoading = true;
 
     component.fetchCtaasDashboard(customEvent);

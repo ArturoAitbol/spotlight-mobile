@@ -4,18 +4,14 @@
   </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
-      
+
       <div id="service-description">
         <strong class="ion-text-center">{{serviceName}}</strong>
-        <div class="ion-text-center">for</div>
-        <strong class="ion-text-center">{{appName}}</strong>
       </div>
 
       <ion-spinner *ngIf="isChartsDataLoading else chartsContent" name="dots"></ion-spinner>
       <ng-template #chartsContent>
-        <image-card *ngFor="let chart of charts"
-        [isLoading]="isChartsDataLoading"
-        [imageBase64]="chart.imageBase64">
+        <image-card *ngFor="let chart of charts" [isLoading]="isChartsDataLoading" [imageBase64]="chart.imageBase64">
         </image-card>
         <div *ngIf="charts.length===0" class="error-message">
           <ion-icon name="warning-outline"></ion-icon>
@@ -28,7 +24,7 @@
         Request Dev Contact Me
         <ion-icon slot="end" name="information-circle-outline"></ion-icon>
       </ion-button> -->
-      
-    </div>    
+
+    </div>
   </div>
 </ion-content>

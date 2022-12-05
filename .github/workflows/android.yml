@@ -30,7 +30,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
-          script: mvn test -PRegression -f ./tests/pom.xml -q
+          script: mvn test -PandroidTests -f ./tests/pom.xml -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3

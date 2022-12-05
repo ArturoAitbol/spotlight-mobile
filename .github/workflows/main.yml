@@ -14,7 +14,6 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
-
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -23,7 +22,12 @@ jobs:
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
-        
+      
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          npm install
+
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -32,25 +36,25 @@ jobs:
           arch: x86_64
           profile: pixel_xl
           cores: 2
-          ram-size: 4096M 
+          ram-size: 5120M
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
-          script: mvn test -PRegression -f ./tests/pom.xml -q
+          script: mvn test -PandroidTests -f ./tests/pom.xml -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: functional-test-report
+          name: android-functional-test-report
           path: tests/reports
 
   android:
     needs: android-test
     name: Build and Release APK
-    runs-on: macos-latest    
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
@@ -115,14 +119,10 @@ jobs:
         working-directory: ${{ env.WORKING_DIR }}
         run: npm run build
 
-      # - name: Capacitor copy
-      #   working-directory: ${{ env.WORKING_DIR }}
-      #   run: npx cap copy && npx cap sync
-
       - name: Build Android
         working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --configuration=integration
-      
+
       # - name: Build Android Prod
       #   run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release --prod
 
@@ -139,7 +139,7 @@ jobs:
       - name: Align APK
         run: $ANDROID_HOME/build-tools/30.0.3/zipalign -f -v 4 ./app/android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/android/app/build/outputs/apk/release/app-release-aligned.apk
 
-      - name: Sign build        
+      - name: Sign build
         run: $ANDROID_HOME/build-tools/30.0.3/apksigner sign --ks-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --key-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --ks ./app/android/release.decrypted.jks --ks-key-alias release --in ./app/android/app/build/outputs/apk/release/app-release-aligned.apk --out ./app/android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK to TestApp.io
@@ -163,7 +163,45 @@ jobs:
           name: android-integration-released-version
           path: ./app/AndroidVersionCode.txt
 
+  ios-test:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+      
+      - name: Install ionic
+        run: |
+          npm install -g @ionic/cli
+      
+      - name: emulators list
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          ionic cap run ios --list
+      
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+      
+      - name: run emulator
+        working-directory: ${{ env.WORKING_DIR }}
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+      
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ./tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+      
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: ios-functional-test-report
+          path: ${{ github.workspace }}/tests/reports
+
   ios:
+    needs: ios-test
     name: Build and Release IPA
     runs-on: macos-latest
     defaults:
@@ -173,7 +211,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Download Version artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -190,7 +228,7 @@ jobs:
         uses: andstor/file-existence-action@v2
         with:
           files: "./app/iOSVersionCode.txt"
-      
+
       - name: File exists
         if: steps.check_files.outputs.files_exists == 'true'
         run: echo "ios_version_code=$(cat iOSVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
@@ -237,7 +275,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      
+
       - name: Update iOS Bundle Version
         id: updated_ios_version
         uses: actions/github-script@v6
@@ -262,12 +300,9 @@ jobs:
       - name: Build App
         run: npm run build
 
-      # - name: Capacitor copy
-      #   run: ionic capacitor copy ios && ionic capacitor update ios
-
       - name: Build iOS
         run: ionic capacitor build ios --minifycss --optimizejs --minifyjs --no-open --configuration=integration
-      
+
       # - name: Build iOS Production
       #   run: ionic capacitor build ios --minifycss --optimizejs --minifyjs --no-open --release --prod
 
@@ -291,7 +326,7 @@ jobs:
           git_release_notes: false
           include_git_commit_id: false
           notify: true
-      
+
       - name: Print deployed Release Version
         run: |
           echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt

@@ -1,0 +1,45 @@
+name: iOS tests
+on: 
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          npm install
+      
+      - name: Install ionic
+        run: |
+          npm install -g @ionic/cli
+      
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+
+      - name: emulators list
+        run: |
+          ionic cap run ios --list
+
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+          
+      - name: run emulator
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: functional-test-report
+          path: ${{ github.workspace }}/tests/reports
