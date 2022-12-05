@@ -16,8 +16,8 @@ const routes: Routes = [
         canActivate:[RoleGuard]
       },
       {
-        path: 'settings',
-        loadChildren: () => import('../settings/settings.module').then(m => m.SettingsPageModule),
+        path: 'notes',
+        loadChildren: () => import('../notes/notes.module').then(m => m.SettingsPageModule),
         canActivate:[RoleGuard]
       },
       {

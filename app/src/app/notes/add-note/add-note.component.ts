@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { DashboardService } from 'src/app/services/dashboard.service';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { NoteService } from 'src/app/services/note.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
@@ -22,6 +23,7 @@ export class AddNoteComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private noteService: NoteService,
               private subaccountService: SubaccountService,
+              private dashboardService: DashboardService,
               private modalCtrl: ModalController,
               private ionToastService: IonToastService) { }
 
@@ -34,7 +36,8 @@ export class AddNoteComponent implements OnInit {
     this.modal.canDismiss=false;
     let data = {
       subaccountId:this.subaccountService.getSubAccount().id,
-      content:this.noteForm.controls.message.value
+      content:this.noteForm.controls.message.value,
+      reports:this.dashboardService.getReports()
     }
     this.noteService.createNote(data).subscribe((res)=>{
       this.loading=false;
