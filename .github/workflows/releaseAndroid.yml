@@ -1,0 +1,139 @@
+name: Push Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release Version (use tags/vxx.xx.xx format)"
+        required: true
+        default: "latest"
+
+env:
+  JAVA_VERSION: "11"
+  WORKING_DIR: "${{ github.event.repository.name }}/app"
+  android_version_code: 1
+  latest_release: true
+  tag_version: ""
+
+jobs:
+  android:
+    name: Build and Release ABB
+    runs-on: macos-latest
+
+    steps:
+      - name: Download Version artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: pushRelease.yml
+          name: android-production-released-version
+          path: ./
+          search_artifacts: true
+          workflow_conclusion: ""
+          if_no_artifact_found: ignore
+
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "./AndroidVersionCode.txt"
+
+      - name: File exists
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
+
+      - name: Set release details
+        if: github.event.inputs.release_version != 'latest'
+        run: |
+          echo "latest_release=false" >> $GITHUB_ENV
+          echo "tag_version=${{ github.event.inputs.release_version }}" >> $GITHUB_ENV
+
+      - name: Download code release
+        uses: robinraju/release-downloader@v1.6
+        with:
+          latest: ${{ env.latest_release }}
+          tag: ${{ env.tag_version }}
+          zipBall: true
+
+      - name: Unzip Release Folder
+        run: unzip -qq ${{ github.event.repository.name }}*.zip
+
+      - name: Rename Directory
+        run: mv ${{github.repository_owner}}-${{ github.event.repository.name }}* ${{ github.event.repository.name }}
+
+      - name: Update Version Code value
+        id: updated_version
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return parseInt("${{ env.android_version_code }}") + 1
+
+      - name: Update gradle version for Android
+        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+        with:
+          build-gradle-path: "${{ env.WORKING_DIR }}/android/app/build.gradle"
+          version-code: "${{steps.updated_version.outputs.result}}"
+          version-name: "1.0.${{steps.updated_version.outputs.result}}"
+          print-file: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Setup Java SDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+
+      - name: Install app dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm install
+
+      - name: Build App
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm run build:prod
+
+      - name: Build Android
+        working-directory: ${{ env.WORKING_DIR }}
+        run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --prod
+
+      - name: Decode Keystore File
+        uses: timheuer/base64-to-file@v1
+        id: android_keystore
+        with:
+          fileName: android_keystore.keystore
+          encodedString: ${{ secrets.RELEASE_KEYSTORE }}
+
+      - name: Decode Google Play Config File
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: serviceAccount.json
+          encodedString: ${{ secrets.ANDROID_JSON_KEY_FILE }}
+
+      - name: Deploy using Fastlane
+        uses: maierj/fastlane-action@v2.3.0
+        env:
+          KEYSTORE_PATH: ${{ steps.android_keystore.outputs.filePath }}
+          ANDROID_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
+          DEVELOPER_PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          KEYSTORE_KEY_ALIAS: release
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+        with:
+          subdirectory: ${{ env.WORKING_DIR }}
+          lane: android playstore
+
+      - name: Print deployed Release Version
+        run: echo "Build-${{steps.updated_version.outputs.result}}" > ./AndroidVersionCode.txt
+
+      - name: Archive Android Code Version
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-production-released-version
+          path: ./AndroidVersionCode.txt
