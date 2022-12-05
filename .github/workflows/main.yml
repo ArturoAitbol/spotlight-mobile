@@ -14,7 +14,7 @@ env:
 
 jobs:
   android-test:
-    if: github.repository == 'octo-org/octo-repo-prod'
+  if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     steps:
       - name: checkout
@@ -175,14 +175,16 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install ionic
+        run: npm install -g @ionic/cli
+
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install xcuitest
-      
-      - name: Install ionic
-        run: |
-          npm install -g @ionic/cli
       
       - name: emulators list
         run: ionic cap run ios --list
