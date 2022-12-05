@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
 import { forkJoin, Observable } from 'rxjs';
 import { ReportType } from '../helpers/report-type';
 import { Note } from '../model/note.model';
@@ -35,8 +34,7 @@ export class DashboardPage implements OnInit {
               private noteService: NoteService,
               private subaccountService: SubaccountService,
               private ionToastService: IonToastService,
-              private dashboardService: DashboardService,
-              private actionSheetCtrl: ActionSheetController) {}
+              private dashboardService: DashboardService) {}
   
   ngOnInit(): void {
     this.serviceName = 'SpotLight';
@@ -52,7 +50,6 @@ export class DashboardPage implements OnInit {
         this.subaccountService.setSubAccount({id:"2c8e386b-d1bd-48b3-b73a-12bfa5d00805",customerId:"",name:"Test",subaccountAdminEmails: []});
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
-        this.fetchNotes();
       }else{
         this.isChartsDataLoading=false;
         this.isNoteDataLoading=false;
@@ -68,56 +65,7 @@ export class DashboardPage implements OnInit {
     this.fetchData(event);
   };
 
-   fetchNotes(){
-    this.isNoteDataLoading = true;
-    this.notes = [];
-    this.latestNote = null;
-    this.previousNotes = null;
-    this.noteService.getNoteList(this.subaccountId,'Open').subscribe((res:any)=>{
-      if(res!=null && res.notes.length>0){
-        this.notes = res.notes;
-        this.previousNotes = this.notes.length-1;
-        this.latestNote = this.notes[0];
-      }
-      this.isNoteDataLoading=false;
-    },(err)=>{
-      console.error(err);
-      this.isNoteDataLoading=false;
-    });
-  }
-
-   async deleteNote(){
-
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Are you sure you want to delete this note?',
-      buttons: [
-        {
-          text: 'Delete',
-          role: 'destructive',
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    actionSheet.present();
-
-    const { role } = await actionSheet.onWillDismiss();
-
-    if(role === 'destructive'){
-      this.noteService.deleteNote(this.latestNote.id).subscribe((res)=>{
-        this.ionToastService.presentToast('Note deleted successfully!');
-        this.fetchNotes();
-      },(err)=>{
-        console.error(err);
-        this.ionToastService.presentToast("Error deleting a note","Error");
-      })
-    }
-   }
-
-   fetchCtaasDashboard(event?: any){
+  fetchCtaasDashboard(event?: any){
     this.isChartsDataLoading = true;
     this.charts = [];
 

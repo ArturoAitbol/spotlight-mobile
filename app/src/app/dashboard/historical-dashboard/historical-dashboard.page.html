@@ -9,17 +9,11 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
+  <ion-refresher *ngIf="note.reports!==null && charts.length===0" slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
-      <div class="charts-title ion-text-center">
-        <div *ngIf="lastUpdate" class="lastUpdateInfo">
-          <span id="lastUpdateTime"><ion-icon name="time-outline"></ion-icon>&nbsp;Last Update: {{lastUpdate}}</span>
-        </div>
-      </div>
-
       <ion-spinner *ngIf="isChartsDataLoading else chartsContent" name="dots"></ion-spinner>
       <ng-template #chartsContent>
         <image-card *ngFor="let chart of charts"

@@ -28,8 +28,12 @@ export class NotesPage implements OnInit {
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
-    this.currentReport = JSON.stringify(this.dashboardService.getReports());
+    this.fetchCurrentReport();
     this.fetchNotes();
+  }
+
+  fetchCurrentReport(){
+    this.currentReport = JSON.stringify(this.dashboardService.getReports());
   }
 
   async openAddNoteModal(){
@@ -78,6 +82,7 @@ export class NotesPage implements OnInit {
   }
 
   handleRefresh(event) {
+    this.fetchCurrentReport();
     this.fetchNotes(event);
   };
 

@@ -41,7 +41,7 @@
        <div>
             <ion-icon name="document-text-outline"></ion-icon>
             <div class="ion-margin-top">No Notes yet.</div>
-            <ion-button class="ion-margin-top" (click)="openAddNoteModal()">Add a note</ion-button>
+            <ion-button *lcAccessControl="'addNote'" class="ion-margin-top" (click)="openAddNoteModal()">Add a note</ion-button>
        </div>
     </div>
    <ion-fab *lcAccessControl="'addNote'" slot="fixed" vertical="bottom" horizontal="end">

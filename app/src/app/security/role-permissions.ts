@@ -24,7 +24,7 @@ export const permissions = {
             'tabs',
             'dashboard'
         ],
-        elements: []
+        elements: ['tabBar']
     }
 };
 
