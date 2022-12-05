@@ -69,7 +69,7 @@ export class DashboardPage implements OnInit {
         if(this.charts.length>0){
           let reports = this.charts.map((chart:any)=>{
             // Destructure the chart object to save only timestampId and type attributes
-            return (({ timestampId, type }) => ({ timestampId, type }))(chart);
+            return (({ timestampId, reportType }) => ({ timestampId, reportType }))(chart);
           });
           this.dashboardService.setReports(reports);
         }

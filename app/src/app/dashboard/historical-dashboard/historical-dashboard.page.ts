@@ -56,7 +56,7 @@ export class HistoricalDashboardPage implements OnInit {
 
     const requests: Observable<any>[] = [];
     for(const report of this.reports){
-      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id,report.type,report.timestampId));
+      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id,report.reportType,report.timestampId));
     }
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
