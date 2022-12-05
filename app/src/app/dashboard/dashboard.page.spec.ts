@@ -1,15 +1,15 @@
-import { DatePipe } from '@angular/common';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { MsalService } from '@azure/msal-angular';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ACTION_SHEET_CONTROLLER_MOCK } from 'src/test/components/utils/action-sheet-controller.mock';
-import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ionToast.service.mock';
+import { CTAAS_DASHBOARD_SERVICE_MOCK } from 'src/test/services/ctaas-dashboard.service.mock';
+import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
-import { FakeChartImageService } from '../services/fakeChartImage.service';
-import { IonToastService } from '../services/ionToast.service';
+import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
+import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { SharedModule } from '../shared/shared.module';
@@ -17,22 +17,18 @@ import { SharedModule } from '../shared/shared.module';
 import { DashboardPage } from './dashboard.page';
 import { ImageCardComponent } from './image-card/image-card.component';
 
-const FAKE_CHART_IMAGE_SERVICE_MOCK = {
-  getChartImage:(parameter:any)=>{return of({url:'some url'})}
-}
-
 describe('DashboardPage', () => {
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardPage,ImageCardComponent ],
-      imports: [SharedModule,IonicModule.forRoot()],
+      declarations: [DashboardPage, ImageCardComponent],
+      imports: [SharedModule, IonicModule.forRoot()],
       providers: [
         {
-          provide:MsalService,
-          useValue:MSAL_SERVICE_MOCK
+          provide: MsalService,
+          useValue: MSAL_SERVICE_MOCK
         },
         {
           provide: SubaccountService,
@@ -51,14 +47,13 @@ describe('DashboardPage', () => {
           useValue: ION_TOAST_SERVICE_MOCK
         },
         {
-        provide: FakeChartImageService,
-        useValue:FAKE_CHART_IMAGE_SERVICE_MOCK
-      }]
+          provide: CtaasDashboardService,
+          useValue: CTAAS_DASHBOARD_SERVICE_MOCK
+        }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardPage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {
@@ -68,112 +63,105 @@ describe('DashboardPage', () => {
   it('should display essential UI and components', () => {
     fixture.detectChanges();
     const serviceDescription: HTMLElement = fixture.nativeElement.querySelector('#service-description');
-    const chartsTitle: HTMLElement = fixture.nativeElement.querySelector('.charts-title');
-    const timelapse: HTMLElement = fixture.nativeElement.querySelector('#timelapse');
-    const lastDate: HTMLElement = fixture.nativeElement.querySelector('#last-date');
 
-    expect(serviceDescription.childElementCount).toBe(3);
+    expect(serviceDescription.childElementCount).toBe(1);
     expect(serviceDescription.firstChild.textContent).toBe(component.serviceName);
-    expect(serviceDescription.lastChild.textContent).toBe(component.appName);
-
-    expect(chartsTitle.firstChild.textContent).toBe('You are a');
-    expect(chartsTitle.lastChild.textContent).toBe(component.chartsHeader);
-
-    expect(timelapse.textContent).toBe('Last '+ component.timelapse);
-
-    const datePipe = new DatePipe('en-US');
-    expect(lastDate.textContent).toBe('Since '+ datePipe.transform(component.date,'mediumDate'));
   });
 
-  it('should get the subaccount related to the user logged, the charts and the notes when calling getData()',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.callThrough();
-    spyOn(component,'getLatestNote');
-    spyOn(component,'getCharts');
+  it('should show an error message instead of the charts when the data return by getCtaasDashboardDetails() have error messages', () => {
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK, 'getCtaasDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasDashboardWithError));
+    component.charts = [];
 
-    component.getData();
-    expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
-    expect(component.getLatestNote).toHaveBeenCalled();
-    expect(component.getCharts).toHaveBeenCalled();
+    fixture.detectChanges();
+
+    expect(component.charts.length).toBeGreaterThan(0);
+    expect(component.lastUpdate).toBeNull();
+    const errorMessage: HTMLElement = fixture.nativeElement.querySelector('.error-message');
+    expect(errorMessage).not.toBeNull();
   })
 
-  it('should set the loading flags to false when calling getData() and getting no notes',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(of({subaccounts:[]}));
-    spyOn(component,'getLatestNote');
-    spyOn(component,'getCharts');
-    component.isImageLoading = true;
+  it('should get the subaccount related to the user logged, the charts and the notes when calling fetchData()', () => {
+    spyOn(SUBACCOUNT_SERVICE_MOCK, 'getSubAccountList').and.callThrough();
+    spyOn(component, 'fetchNotes');
+    spyOn(component, 'fetchCtaasDashboard');
+
+    component.fetchData();
+    expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
+    expect(component.fetchNotes).toHaveBeenCalled();
+    expect(component.fetchCtaasDashboard).toHaveBeenCalled();
+  })
+
+  it('should set the loading flags to false when calling fetchData() and getting no notes', () => {
+    spyOn(SUBACCOUNT_SERVICE_MOCK, 'getSubAccountList').and.returnValue(of({ subaccounts: [] }));
+    spyOn(component, 'fetchNotes');
+    spyOn(component, 'fetchCtaasDashboard');
+    component.isChartsDataLoading = true;
     component.isNoteDataLoading = true;
 
-    component.getData();
+    component.fetchData();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
-    expect(component.getLatestNote).not.toHaveBeenCalled();
-    expect(component.getCharts).not.toHaveBeenCalled();
-    expect(component.isImageLoading).toBeFalse();
+    expect(component.fetchNotes).not.toHaveBeenCalled();
+    expect(component.fetchCtaasDashboard).not.toHaveBeenCalled();
+    expect(component.isChartsDataLoading).toBeFalse();
     expect(component.isNoteDataLoading).toBeFalse();
   })
 
-  it('should set the loading flags to false when the call to< getData() throws an error',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(throwError("Some error"));
-    spyOn(component,'getLatestNote');
-    spyOn(component,'getCharts');
-    component.isImageLoading = true;
+  it('should set the loading flags to false when the call to fetchData() throws an error', () => {
+    spyOn(SUBACCOUNT_SERVICE_MOCK, 'getSubAccountList').and.returnValue(throwError("Some error"));
+    spyOn(component, 'fetchNotes');
+    spyOn(component, 'fetchCtaasDashboard');
+    component.isChartsDataLoading = true;
     component.isNoteDataLoading = true;
 
-    component.getData();
+    component.fetchData();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
-    expect(component.getLatestNote).not.toHaveBeenCalled();
-    expect(component.getCharts).not.toHaveBeenCalled();
-    expect(component.isImageLoading).toBeFalse();
+    expect(component.fetchNotes).not.toHaveBeenCalled();
+    expect(component.fetchCtaasDashboard).not.toHaveBeenCalled();
+    expect(component.isChartsDataLoading).toBeFalse();
     expect(component.isNoteDataLoading).toBeFalse();
   })
 
-  it('should refresh the chart images when calling getCharts()',()=>{
-    const customEvent = {target:{complete:()=>{}}};
-    component.firstChart = null;
-    component.secondChart = null;
-    component.timelapse = null;
-    component.date = null;
+  it('should refresh the chart images when calling fetchCtaasDashboard()', () => {
+    const customEvent = { target: { complete: () => { } } };
+    component.charts = [];
+    component.lastUpdate = null;
 
-    component.handleRefresh(customEvent);
+    component.fetchCtaasDashboard(customEvent);
 
-    expect(component.firstChart).not.toBeNull();
-    expect(component.secondChart).not.toBeNull();
-    expect(component.timelapse).not.toBeNull();
-    expect(component.date).not.toBeNull();
+    expect(component.charts.length).toBeGreaterThan(0);
   })
 
-  it('should set the image-loading flag to false when the call to getCharts() throws an error',()=>{
-    spyOn(FAKE_CHART_IMAGE_SERVICE_MOCK,'getChartImage').and.returnValue(throwError("Some error"));
-    const customEvent = {target:{complete:()=>{}}};
-    component.isImageLoading = true;
+  it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error', () => {
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK, 'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
+    const customEvent = { target: { complete: () => { } } };
+    component.isChartsDataLoading = true;
 
-    component.handleRefresh(customEvent);
+    component.fetchCtaasDashboard(customEvent);
 
-    expect(component.isImageLoading).toBeFalse();
-    expect(component.firstChart).toBeNull();
-    expect(component.secondChart).toBeNull();
-    expect(component.timelapse).toBeNull();
-    expect(component.date).toBeNull();
+    expect(component.isChartsDataLoading).toBeFalse();
+    expect(component.charts.length).toBe(0);
+    expect(component.lastUpdate).toBeUndefined();
   })
 
-  it('should refresh the notes data when calling getLatestNote()',()=>{
+  it('should refresh the notes data when calling fetchNotes()', () => {
     component.notes = [];
     component.latestNote = undefined;
     component.previousNotes = undefined;
 
-    component.getLatestNote();
+    component.fetchNotes();
 
     expect(component.notes.length).toBeGreaterThan(0);
     expect(component.latestNote).not.toBeUndefined();
     expect(component.previousNotes).not.toBeUndefined();
   })
 
-  it('should set the note-loading flag to false when the call to getLatestNote() throws an error',()=>{
-    spyOn(NOTE_SERVICE_MOCK,'getNoteList').and.returnValue(throwError("Some error"));
+  it('should set the note-loading flag to false when the call to fetchNotes() throws an error', () => {
+    spyOn(NOTE_SERVICE_MOCK, 'getNoteList').and.returnValue(throwError("Some error"));
     component.isNoteDataLoading = true;
 
-    component.getLatestNote();
+    component.fetchNotes();
 
     expect(component.isNoteDataLoading).toBeFalse();
     expect(component.notes.length).toBe(0);
@@ -181,64 +169,38 @@ describe('DashboardPage', () => {
     expect(component.previousNotes).toBeNull();
   })
 
-  it('should refresh the chart images and the notes data when calling handleRefresh()',()=>{
-    spyOn(component,'getLatestNote');
-    spyOn(component,'getCharts');
+  it('should refresh the chart images and the notes data when calling handleRefresh()', () => {
+    spyOn(component, 'fetchNotes');
+    spyOn(component, 'fetchCtaasDashboard');
+
     component.handleRefresh({});
 
-    expect(component.getLatestNote).toHaveBeenCalled();
-    expect(component.getCharts).toHaveBeenCalled();
+    expect(component.fetchNotes).toHaveBeenCalled();
+    expect(component.fetchCtaasDashboard).toHaveBeenCalled();
   })
 
-  it('should delete the note that is being shown when deleteNote() is called and the user confirm the action',fakeAsync(()=>{
-    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
-    spyOn(component,'getLatestNote');
-    fixture.detectChanges();
+  it('should delete the note that is being shown when deleteNote() is called and the user confirm the action', fakeAsync(() => {
+    spyOn(ION_TOAST_SERVICE_MOCK, 'presentToast').and.callThrough();
+    spyOn(component, 'fetchNotes');
+
+    component.latestNote = NOTE_SERVICE_MOCK.testNote;
     component.deleteNote();
     flush();
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note deleted successfully!');
-    expect(component.getLatestNote).toHaveBeenCalled();
+    expect(component.fetchNotes).toHaveBeenCalled();
   }))
 
-  it('should show an error when deleteNote() is called and the user does not confirm the action',fakeAsync(()=>{
-    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
-    spyOn(NOTE_SERVICE_MOCK,'deleteNote').and.returnValue(throwError("some error"));
-    spyOn(component,'getLatestNote');
-    fixture.detectChanges();
+  it('should show an error when deleteNote() is called and the user does not confirm the action', fakeAsync(() => {
+    spyOn(ION_TOAST_SERVICE_MOCK, 'presentToast').and.callThrough();
+    spyOn(NOTE_SERVICE_MOCK, 'deleteNote').and.returnValue(throwError("some error"));
+    spyOn(component, 'fetchNotes');
+
+    component.latestNote = NOTE_SERVICE_MOCK.testNote;
     component.deleteNote();
     flush();
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error deleting a note','Error');
-    expect(component.getLatestNote).not.toHaveBeenCalled();
+
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error deleting a note', 'Error');
+    expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
-
-
-  it('should return "Five-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
-    //current condition: both metrics beyond 90
-    const chartsHeader = component.getChartsHeader(91,91);
-    expect(chartsHeader).toBe('Five-9');
-  });
-
-  it('should return "Four-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
-    //current condition: both metrics above 80 and at least one of them between 81 and 85
-    let chartsHeader = component.getChartsHeader(82,86);
-    expect(chartsHeader).toBe('Four-9');
-
-    chartsHeader = component.getChartsHeader(86,82);
-    expect(chartsHeader).toBe('Four-9');
-  });
-
-  it('should return "Three-9" as charts header if metrics match the corresponding conditions when calling getChartsHeader()', () => {
-    //current condition: both metrics above 50 and at least one of them between 51 and 70
-    let chartsHeader = component.getChartsHeader(51,72);
-    expect(chartsHeader).toBe('Three-9');
-
-    chartsHeader = component.getChartsHeader(72,51);
-    expect(chartsHeader).toBe('Three-9');
-  });
-
-  it('should return an empty string as charts header if metrics does not match any condition  when calling getChartsHeader()', () => {
-    const chartsHeader = component.getChartsHeader(0,0);
-    expect(chartsHeader).toBe('');
-  });
 
 });

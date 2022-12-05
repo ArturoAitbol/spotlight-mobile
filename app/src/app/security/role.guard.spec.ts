@@ -2,8 +2,8 @@ import { TestBed } from "@angular/core/testing";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { MsalService } from "@azure/msal-angular";
 import { MSAL_SERVICE_MOCK } from "src/test/services/msal.service.mock";
-import { ION_TOAST_SERVICE_MOCK } from "src/test/services/ionToast.service.mock";
-import { IonToastService } from "../services/ionToast.service";
+import { ION_TOAST_SERVICE_MOCK } from "src/test/services/ion-toast.service.mock";
+import { IonToastService } from "../services/ion-toast.service";
 import { RoleGuard } from "./role.guard";
 
 const mockRouter = {
@@ -54,6 +54,12 @@ describe('When roles are loaded for username@test.com the role', () => {
         protectedRoutes.forEach(route => {
             expect(guard.canActivate({url: [{path: route, parameters: {}}]} as ActivatedRouteSnapshot)).toBeTrue();
         });
+    });
+
+    it('should grant access when at least one of the user roles has permission', () => {
+        msalServiceMock.getActiveAccount.and.returnValue({ idTokenClaims: {roles: ['tekvizion.ConfigTester','customer.SubaccountAdmin']}})
+        const protectedRoute = 'settings';
+        expect(guard.canActivate({url: [{path: protectedRoute, parameters: {}}]} as ActivatedRouteSnapshot)).toBeTrue();
     });
 
     it('should not grant access to nonexistent routes', () => {

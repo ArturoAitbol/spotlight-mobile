@@ -4,34 +4,37 @@
   </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
+
       <div id="service-description">
         <strong class="ion-text-center">{{serviceName}}</strong>
-        <div class="ion-text-center">for</div>
-        <strong class="ion-text-center">{{appName}}</strong>
       </div>
-      <div *ngIf="chartsHeader" class="charts-title ion-text-center">
-        <p>You are a</p>
-        <div>{{chartsHeader}}</div>
-      </div>
-      <div class="charts">
-        <image-card [isLoading]="isImageLoading" [titleId]="'timelapse'" [imageTitle]="timelapse && 'Last '+ timelapse" [imageUrl]="firstChart"></image-card>
-        <image-card [isLoading]="isImageLoading" [titleId]="'last-date'" [imageTitle]="date && 'Since ' + (date | date:'mediumDate')" [imageUrl]="secondChart"></image-card>
-      </div>
-      <ion-card *ngIf="isNoteDataLoading else content">
+
+      <ion-spinner *ngIf="isChartsDataLoading else chartsContent" name="dots"></ion-spinner>
+      <ng-template #chartsContent>
+        <image-card *ngFor="let chart of charts" [isLoading]="isChartsDataLoading" [imageBase64]="chart.imageBase64">
+        </image-card>
+        <div *ngIf="charts.length===0" class="error-message">
+          <ion-icon name="warning-outline"></ion-icon>
+          <p>Something went wrong</p>
+          <small>Couldn't load charts</small>
+        </div>
+      </ng-template>
+
+
+      <ion-card *ngIf="isNoteDataLoading else notesContent">
         <ion-card-content class="ion-text-center">
-          <ion-spinner name="dots"></ion-spinner>     
+          <ion-spinner name="dots"></ion-spinner>
         </ion-card-content>
       </ion-card>
-      <ng-template #content>
+      <ng-template #notesContent>
         <ion-card *ngIf="latestNote" class="ion-text-left">
           <ion-card-header>
             <ion-card-subtitle>
-              <span>{{latestNote.openDate | date:"medium"}}</span>
+              <span>{{latestNote?.openDate | date: 'medium'}}</span>
               <span *lcAccessControl="'deleteNote'" class="ion-activatable ripple-parent circle ion-float-end">
                 <ion-ripple-effect></ion-ripple-effect>
                 <ion-icon (click)="deleteNote()" size="small" name="close-circle-outline"></ion-icon>
               </span>
-              
             </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
@@ -39,20 +42,23 @@
           </ion-card-content>
           <ion-card-content class="card-footer">
             <span id="note-author">{{latestNote.openedBy}}</span>
-            <small id="previous-notes" *ngIf="previousNotes>0">{{previousNotes}} more <ion-icon name="documents-outline"></ion-icon></small>
+            <small id="previous-notes" *ngIf="previousNotes>0">{{previousNotes}} more <ion-icon
+                name="documents-outline"></ion-icon></small>
           </ion-card-content>
         </ion-card>
         <ion-card *ngIf="!latestNote">
           <ion-card-content>
-              <ion-icon size="large" name="document-text-outline"></ion-icon>
-              <div>No Notes yet.</div>
+            <ion-icon size="large" name="document-text-outline"></ion-icon>
+            <div>No Notes yet.</div>
           </ion-card-content>
         </ion-card>
       </ng-template>
+
       <!-- <ion-button fill="clear">
         Request Dev Contact Me
         <ion-icon slot="end" name="information-circle-outline"></ion-icon>
       </ion-button> -->
-    </div>    
+
+    </div>
   </div>
 </ion-content>

@@ -41,13 +41,15 @@ public class IOSBaseTest extends AppiumUtils {
         service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
         XCUITestOptions options = new XCUITestOptions();
-//        options.setDeviceName("iPhone 13 Pro");
-        options.setDeviceName(properties.getProperty("iosDeviceName"));
+        options.setUdid(System.getProperty("deviceUDID"));
         options.setPlatformVersion(properties.getProperty("iosPlatformVersion"));
-        options.setWdaLaunchTimeout(Duration.ofSeconds(60));
-        options.setApp(getResourcePath("test", "UIKitCatalog.app"));
+        options.setWdaLaunchTimeout(Duration.ofSeconds(180));
+        options.setWdaStartupRetries(4);
+        options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
 
-        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
+        options.setApp(getResourcePath("test", "UIKitCatalog.app"));
+        this.driver = new IOSDriver(service.getUrl(), options);
+//        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 

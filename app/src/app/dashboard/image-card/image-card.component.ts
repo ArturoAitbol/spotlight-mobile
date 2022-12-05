@@ -8,9 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ImageCardComponent implements OnInit {
 
   @Input() isLoading: boolean;
-  @Input() imageUrl;
-  @Input() imageTitle;
-  @Input() titleId = 'title';
+  @Input() imageBase64;
+  @Input() lastUpdatedTime;
 
   constructor() { }
 
