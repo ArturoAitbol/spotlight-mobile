@@ -42,3 +42,9 @@ ion-toast.custom-toast::part(button) {
   color: #f33f7c;
   font-size: 12px;
 }
+
+ion-button{
+  --background:#203c66;
+  --border-radius: 12px;
+  --color: white;
+}
