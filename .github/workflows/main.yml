@@ -14,7 +14,7 @@ env:
 
 jobs:
   android-test:
-  if: github.repository == 'octo-org/octo-repo-prod'
+    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     steps:
       - name: checkout
