@@ -1,10 +1,9 @@
 name: Spotlight Mobile CI/CD
 on:
-  workflow_dispatch:
-  # push:
-  #   branches: [main]
-  #   paths-ignore:
-  #     - ".github/**"
+  push:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
 
 env:
   JAVA_VERSION: "11"
@@ -14,7 +13,6 @@ env:
 
 jobs:
   android-test:
-    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     steps:
       - name: checkout
@@ -54,7 +52,6 @@ jobs:
           path: tests/reports
 
   android:
-    if: github.repository == 'octo-org/octo-repo-prod'
     needs: android-test
     name: Build and Release APK
     runs-on: macos-latest
@@ -207,7 +204,6 @@ jobs:
           path: ${{ github.workspace }}/tests/reports
 
   ios:
-    if: github.repository == 'octo-org/octo-repo-prod'
     needs: ios-test
     name: Build and Release IPA
     runs-on: macos-latest
