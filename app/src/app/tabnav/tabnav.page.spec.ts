@@ -39,9 +39,9 @@ describe('TabnavPage', () => {
   it('should display essential UI and components',()=>{
     fixture.detectChanges();
     const dashboardTab: HTMLElement = fixture.nativeElement.querySelector('[tab="dashboard"]');
-    const settingsTab: HTMLElement = fixture.nativeElement.querySelector('[tab="settings"]');
+    const notesTab: HTMLElement = fixture.nativeElement.querySelector('[tab="notes"]');
     expect(dashboardTab.lastChild.textContent).toBe('Dashboard');
-    expect(settingsTab.lastChild.textContent).toBe('Settings');
+    expect(notesTab.lastChild.textContent).toBe('Notes');
 
   });
 
