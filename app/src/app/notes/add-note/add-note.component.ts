@@ -34,23 +34,29 @@ export class AddNoteComponent implements OnInit {
     this.loading=true;
     this.modal = await this.modalCtrl.getTop();
     this.modal.canDismiss=false;
-    let data = {
-      subaccountId:this.subaccountService.getSubAccount().id,
-      content:this.noteForm.controls.message.value,
-      reports:this.dashboardService.getReports()
-    }
-    this.noteService.createNote(data).subscribe((res)=>{
+    const currentReports = this.dashboardService.getReports();
+    if(currentReports!==null){
+      let data = {
+        subaccountId:this.subaccountService.getSubAccount().id,
+        content:this.noteForm.controls.message.value,
+        reports:currentReports
+      }
+      this.noteService.createNote(data).subscribe((res)=>{
+        this.loading=false;
+        this.modal.canDismiss = true;
+        this.modalCtrl.dismiss(res, 'confirm');
+        this.ionToastService.presentToast("Note created successfully!");
+      },(err)=>{
+        console.error(err);
+        this.loading=false;
+        this.modal.canDismiss = true;
+        this.ionToastService.presentToast("Error creating a note",'Error');
+      })
+    }else{
       this.loading=false;
       this.modal.canDismiss = true;
-      this.modalCtrl.dismiss(res, 'confirm');
-      this.ionToastService.presentToast("Note created successfully!");
-    },(err)=>{
-      console.error(err);
-      this.loading=false;
-      this.modal.canDismiss = true;
-      this.ionToastService.presentToast("Error creating a note",'Error');
-    })
-    
+      this.ionToastService.presentToast("Couldn't create note: charts are missing","Error");
+    } 
   }
 
   cancel() {

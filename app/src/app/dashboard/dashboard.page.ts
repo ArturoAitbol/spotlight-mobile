@@ -14,7 +14,6 @@ import { SubaccountService } from '../services/subaccount.service';
 export class DashboardPage implements OnInit {
 
   serviceName:string;
-  appName:string;
 
   charts:any[] = [];
   
@@ -28,8 +27,7 @@ export class DashboardPage implements OnInit {
               private dashboardService: DashboardService) {}
   
   ngOnInit(): void {
-    this.serviceName = 'SpotLight';
-    this.appName = 'Microsoft Teams';
+    this.serviceName = 'Spotlight';
     this.fetchData();
   }
 
@@ -72,12 +70,16 @@ export class DashboardPage implements OnInit {
             return (({ timestampId, reportType }) => ({ timestampId, reportType }))(chart);
           });
           this.dashboardService.setReports(reports);
-        }
-      }
+          this.dashboardService.announceDashboardRefresh();
+        }else
+          this.dashboardService.setReports(null);
+      }else
+        this.dashboardService.setReports(null);
       if (event) event.target.complete();
       this.isChartsDataLoading = false;
     }, (e) => {
       console.error('Error loading dashboard reports ', e.error);
+      this.dashboardService.setReports(null);
       this.isChartsDataLoading = false;
       this.ionToastService.presentToast('Error loading dashboard, please connect tekVizion admin', 'Ok');
       if (event) event.target.complete();
