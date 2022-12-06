@@ -15,16 +15,16 @@ import { AddNoteComponent } from './add-note/add-note.component';
 export class NotesPage implements OnInit {
 
   notes: Note[] = [];
-  subaccountId:string = null;
+  subaccountId: string = null;
   isNoteDataLoading: boolean = true;
-  currentReport:string;
+  currentReport: string;
 
   constructor(private modalCtrl: ModalController,
-              private actionSheetCtrl: ActionSheetController,
-              private ionToastService: IonToastService,
-              private subaccountService: SubaccountService,
-              private dashboardService: DashboardService,
-              private noteService: NoteService) { }
+    private actionSheetCtrl: ActionSheetController,
+    private ionToastService: IonToastService,
+    private subaccountService: SubaccountService,
+    private dashboardService: DashboardService,
+    private noteService: NoteService) { }
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
@@ -32,16 +32,16 @@ export class NotesPage implements OnInit {
     this.fetchNotes();
   }
 
-  fetchCurrentReport(){
+  fetchCurrentReport() {
     this.currentReport = JSON.stringify(this.dashboardService.getReports());
   }
 
-  async openAddNoteModal(){
+  async openAddNoteModal() {
     const modal = await this.modalCtrl.create({
       component: AddNoteComponent,
-      initialBreakpoint:0.25,
-      breakpoints:[0, 0.25, 0.5, 0.75],
-      handleBehavior:"cycle"
+      initialBreakpoint: 0.25,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      handleBehavior: "cycle"
     });
 
     modal.present();
@@ -51,7 +51,7 @@ export class NotesPage implements OnInit {
       this.fetchNotes();
   }
 
-  async deleteNote(id:string){
+  async deleteNote(id: string) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Are you sure you want to delete this note?',
       buttons: [
@@ -70,13 +70,13 @@ export class NotesPage implements OnInit {
 
     const { role } = await actionSheet.onWillDismiss();
 
-    if(role === 'destructive'){
-      this.noteService.deleteNote(id).subscribe((res)=>{
+    if (role === 'destructive') {
+      this.noteService.deleteNote(id).subscribe((res) => {
         this.ionToastService.presentToast('Note deleted successfully!');
         this.fetchNotes();
-      },(err)=>{
+      }, (err) => {
         console.error(err);
-        this.ionToastService.presentToast("Error deleting a note","Error");
+        this.ionToastService.presentToast("Error deleting a note", "Error");
       })
     }
   }
@@ -86,42 +86,44 @@ export class NotesPage implements OnInit {
     this.fetchNotes(event);
   };
 
-  fetchNotes(event?:any){
+  fetchNotes(event?: any) {
     this.isNoteDataLoading = true;
     this.notes = [];
-    this.noteService.getNoteList(this.subaccountId,'Open').subscribe((res:any)=>{
-      if(res!=null && res.notes.length>0){
+    this.noteService.getNoteList(this.subaccountId, 'Open').subscribe((res: any) => {
+      if (res != null && res.notes.length > 0) {
         this.notes = res.notes;
         this.tagNotes(this.notes);
       }
-      this.isNoteDataLoading=false;
-      if(event) event.target.complete();
-    },(err)=>{
+      this.isNoteDataLoading = false;
+      if (event)
+        event.target.complete();
+    }, (err) => {
       console.error(err);
-      this.ionToastService.presentToast("Error getting notes","Error");
-      this.isNoteDataLoading=false;
-      if(event) event.target.complete();
+      this.ionToastService.presentToast("Error getting notes", "Error");
+      this.isNoteDataLoading = false;
+      if (event)
+        event.target.complete();
     });
   }
 
-  tagNotes(notes){
+  tagNotes(notes) {
     notes.forEach(note => {
-      note.current = JSON.stringify(note.reports)===this.currentReport;
+      note.current = JSON.stringify(note.reports) === this.currentReport;
     });
   }
 
-  async seeHistoricalReports(note){
-    if(!note.current){
+  async seeHistoricalReports(note) {
+    if (!note.current) {
       const modal = await this.modalCtrl.create({
         component: HistoricalDashboardPage,
-        componentProps:{note:note},
-        initialBreakpoint:1,
-        breakpoints:[0,1],
-        handleBehavior:"cycle"
+        componentProps: { note: note },
+        initialBreakpoint: 1,
+        breakpoints: [0, 1],
+        handleBehavior: "cycle"
       });
       modal.present();
-  
-      const {data,role} = await modal.onWillDismiss();
+
+      const { data, role } = await modal.onWillDismiss();
     }
   }
 
