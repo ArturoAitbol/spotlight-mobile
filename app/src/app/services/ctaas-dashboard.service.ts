@@ -11,7 +11,7 @@ export class CtaasDashboardService {
   private readonly FETCH_DASHBOARD_URL: string = this.API_URL + '/{subaccountId}/{reportType}';
   constructor(private httpClient: HttpClient) { }
   /**
-   * fetch SpotLight Power BI reports
+   * fetch Spotlight Power BI reports
    * @param subaccountId: string 
    * @param reportType: string 
    * @param timestamp: string

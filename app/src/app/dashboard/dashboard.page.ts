@@ -28,7 +28,7 @@ export class DashboardPage implements OnInit {
               private dashboardService: DashboardService) {}
   
   ngOnInit(): void {
-    this.serviceName = 'SpotLight';
+    this.serviceName = 'Spotlight';
     this.appName = 'Microsoft Teams';
     this.fetchData();
   }
