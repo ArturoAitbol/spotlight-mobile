@@ -121,7 +121,18 @@ describe('DashboardPage', () => {
     expect(component.charts.length).toBeGreaterThan(0);
   })
 
-  it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error', () => {
+  it('should set the loading flag to false when the call to getSubAccountList() throws an error', () => {
+    spyOn(SUBACCOUNT_SERVICE_MOCK, 'getSubAccountList').and.returnValue(throwError("Some error"));
+    const customEvent = { target: { complete: () => { } } };
+    component.isChartsDataLoading = true;
+
+    component.fetchData(customEvent);
+
+    expect(component.isChartsDataLoading).toBeFalse();
+    expect(component.charts.length).toBe(0);
+  })
+
+  it('should set the loading flag to false when the call to fetchCtaasDashboard() throws an error', () => {
     spyOn(CTAAS_DASHBOARD_SERVICE_MOCK, 'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
     const customEvent = { target: { complete: () => { } } };
     component.isChartsDataLoading = true;

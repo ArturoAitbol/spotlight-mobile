@@ -3,9 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { IonicModule } from '@ionic/angular';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
+import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
+import { Constants } from '../helpers/constants';
+import { DashboardService } from '../services/dashboard.service';
 import { SharedModule } from '../shared/shared.module';
 
 import { TabnavPage } from './tabnav.page';
+
+const dashboardService = new DashboardService();
 
 describe('TabnavPage', () => {
   let component: TabnavPage;
@@ -23,16 +28,20 @@ describe('TabnavPage', () => {
         {
           provide:MsalService,
           useValue:MSAL_SERVICE_MOCK
+        },
+        {
+          provide:DashboardService,
+          useValue:dashboardService
         }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TabnavPage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
@@ -43,6 +52,25 @@ describe('TabnavPage', () => {
     expect(dashboardTab.lastChild.textContent).toBe('Dashboard');
     expect(notesTab.lastChild.textContent).toBe('Notes');
 
+  });
+
+  it('should keep the notes tab as disabled if selected subaccount is not defined',()=>{
+    localStorage.clear();
+    fixture.detectChanges();
+    expect(component.disableNotes).toBeTrue();
+  });
+
+  it('should enable the notes tab if selected subaccount is defined',()=>{
+    localStorage.setItem(Constants.SELECTED_SUBACCOUNT,SUBACCOUNT_SERVICE_MOCK.getSubAccount());
+    fixture.detectChanges();
+    expect(component.disableNotes).toBeFalse();
+  });
+
+  it('should enable the notes tab when dashboard loads completely',()=>{
+    localStorage.clear();
+    dashboardService.announceDashboardRefresh();
+    fixture.detectChanges();
+    expect(component.disableNotes).toBeFalse();
   });
 
 });

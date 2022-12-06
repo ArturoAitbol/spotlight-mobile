@@ -54,6 +54,7 @@ export class DashboardPage implements OnInit {
   fetchCtaasDashboard(event?: any) {
     this.isChartsDataLoading = true;
     this.charts = [];
+    this.dashboardService.setReports(null);
 
     const requests: Observable<any>[] = [];
     for (const key in ReportType) {
@@ -71,17 +72,13 @@ export class DashboardPage implements OnInit {
           });
           this.dashboardService.setReports(reports);
           this.dashboardService.announceDashboardRefresh();
-        }else
-          this.dashboardService.setReports(null);
-      }else{
-        this.dashboardService.setReports(null);
+        }
       }
       if (event) 
         event.target.complete();
       this.isChartsDataLoading = false;
     }, (e) => {
       console.error('Error loading dashboard reports ', e.error);
-      this.dashboardService.setReports(null);
       this.isChartsDataLoading = false;
       this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
       if (event)

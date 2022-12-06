@@ -13,6 +13,7 @@ import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
 
 import { AddNoteComponent } from './add-note.component';
+import { Constants } from 'src/app/helpers/constants';
 
 describe('AddNoteComponent', () => {
   let component: AddNoteComponent;
@@ -69,6 +70,8 @@ describe('AddNoteComponent', () => {
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.callThrough();
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(MODAL_CONTROLLER_MOCK,'dismiss').and.callThrough();
+    const currentReports = '[{"timestampId":"1","reportType":"a-type"},{"timestampId":"2","reportType":"b-type"}]';
+    localStorage.setItem(Constants.CURRENT_REPORTS,currentReports);
     fixture.detectChanges();
 
     await component.addNote();
@@ -82,11 +85,25 @@ describe('AddNoteComponent', () => {
   it('should show a message if an error occurred when calling addNote()',async()=>{
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError({error: "some error"}));
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
+    const currentReports = '[{"timestampId":"1","reportType":"a-type"},{"timestampId":"2","reportType":"b-type"}]';
+    localStorage.setItem(Constants.CURRENT_REPORTS,currentReports);
     fixture.detectChanges();
 
     await component.addNote();
 
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error creating a note","Error");
+    expect(component.loading).toBeFalse();
+  })
+
+  it('should show a message when calling addNote() if there is not chart reports',async()=>{
+    spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError({error: "some error"}));
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
+    localStorage.removeItem(Constants.CURRENT_REPORTS);
+    fixture.detectChanges();
+
+    await component.addNote();
+
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Couldn't create note: charts are missing","Error");
     expect(component.loading).toBeFalse();
   })
 
