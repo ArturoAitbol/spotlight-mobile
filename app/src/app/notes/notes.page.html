@@ -15,9 +15,9 @@
                     <ion-card-header>
                     <ion-card-subtitle>
                         <span>{{note.openDate | date:"medium"}}</span>
-                        <span *lcAccessControl="'deleteNote'" class="ion-activatable delete-ripple circle ion-float-end">
+                        <span *lcAccessControl="'closeNote'" class="ion-activatable delete-ripple circle ion-float-end">
                             <ion-ripple-effect></ion-ripple-effect>
-                            <ion-icon (click)="deleteNote(note.id)" size="small" name="close-circle-outline"></ion-icon>
+                            <ion-icon (click)="closeNote(note.id)" size="small" name="close-circle-outline"></ion-icon>
                         </span>
                     </ion-card-subtitle>
                     </ion-card-header>
@@ -27,8 +27,8 @@
                         </ion-card-content>
                         <ion-card-content class="card-footer">
                             <span id="note-author">{{note.openedBy.split("@")[0]}}</span>
-                            <small id="note-tag" [ngClass]="note.current ? 'active' : 'inactive'">
-                                {{note.current ? '' : 'Outdated'}}&nbsp;<ion-icon (click)="seeHistoricalReports(note)" name="bar-chart-outline"></ion-icon>
+                            <small id="note-tag">
+                                <ion-icon (click)="seeHistoricalReports(note)" name="bar-chart-outline"></ion-icon>
                             </small>
                         </ion-card-content>
                     </div>

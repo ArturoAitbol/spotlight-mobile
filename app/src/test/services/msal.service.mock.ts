@@ -11,7 +11,7 @@ const TEST_ID_TOKEN_CLAIMS = {
             'preferred_username': 'username@test.com',
             'rh': '',
             roles: [
-                'tekvizion.FullAdmin'
+                'customer.SubaccountAdmin'
             ],
             'sub': 'sub',
             'tid': '11111111-1111-1111-1111-111111111111',
@@ -32,8 +32,7 @@ const TEST_ID_TOKEN_CLAIMS_WITHOUT_ROLES = {
             'oid': '11111111-1111-1111-1111-111111111111',
             'preferred_username': 'preferred_username',
             'rh': '',
-            roles: [
-            ],
+            roles: [],
             'sub': 'sub',
             'tid': '11111111-1111-1111-1111-111111111111',
             'uti': 'uti',

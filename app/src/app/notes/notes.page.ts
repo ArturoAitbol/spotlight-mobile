@@ -55,12 +55,12 @@ export class NotesPage implements OnInit {
       this.fetchNotes();
   }
 
-  async deleteNote(id: string) {
+  async closeNote(id: string) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Are you sure you want to delete this note?',
+      header: 'Are you sure you want to close this note?',
       buttons: [
         {
-          text: 'Delete',
+          text: 'Close',
           role: 'destructive',
         },
         {
@@ -76,11 +76,11 @@ export class NotesPage implements OnInit {
 
     if (role === 'destructive') {
       this.noteService.deleteNote(id).subscribe((res) => {
-        this.ionToastService.presentToast('Note deleted successfully!');
+        this.ionToastService.presentToast('Note closed successfully!');
         this.fetchNotes();
       }, (err) => {
         console.error(err);
-        this.ionToastService.presentToast("Error deleting a note", "Error");
+        this.ionToastService.presentToast("Error closing a note", "Error");
       })
     }
   }
@@ -111,9 +111,11 @@ export class NotesPage implements OnInit {
 
   tagNotes(notes){
     this.currentReport = this.dashboardService.getReports();
-    notes.forEach(note => {
-      note.current = isEqual(note.reports,this.currentReport);
-    });
+    if(this.currentReport!==null){
+      notes.forEach(note => {
+        note.current = isEqual(note.reports,this.currentReport);
+      });
+    }   
   }
 
   async seeHistoricalReports(note) {
