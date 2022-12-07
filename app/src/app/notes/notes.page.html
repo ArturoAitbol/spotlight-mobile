@@ -14,7 +14,7 @@
                 <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card'">
                     <ion-card-header>
                     <ion-card-subtitle>
-                        <span>{{note.openDate | date:"medium"}}</span>
+                        <span>{{note.openDate.replace(" ", "T") | date:"medium"}}</span>
                         <span *lcAccessControl="'closeNote'" class="ion-activatable delete-ripple circle ion-float-end">
                             <ion-ripple-effect></ion-ripple-effect>
                             <ion-icon (click)="closeNote(note.id)" size="small" name="close-circle-outline"></ion-icon>
