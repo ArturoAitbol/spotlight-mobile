@@ -13,8 +13,7 @@ import { SubaccountService } from '../services/subaccount.service';
 })
 export class DashboardPage implements OnInit {
 
-  serviceName: string;
-  appName: string;
+  serviceName:string;
 
   charts: any[] = [];
 
@@ -29,7 +28,6 @@ export class DashboardPage implements OnInit {
 
   ngOnInit(): void {
     this.serviceName = 'Spotlight';
-    this.appName = 'Microsoft Teams';
     this.fetchData();
   }
 
@@ -56,6 +54,7 @@ export class DashboardPage implements OnInit {
   fetchCtaasDashboard(event?: any) {
     this.isChartsDataLoading = true;
     this.charts = [];
+    this.dashboardService.setReports(null);
 
     const requests: Observable<any>[] = [];
     for (const key in ReportType) {
@@ -72,9 +71,10 @@ export class DashboardPage implements OnInit {
             return (({ timestampId, reportType }) => ({ timestampId, reportType }))(chart);
           });
           this.dashboardService.setReports(reports);
+          this.dashboardService.announceDashboardRefresh();
         }
       }
-      if (event)
+      if (event) 
         event.target.complete();
       this.isChartsDataLoading = false;
     }, (e) => {

@@ -95,6 +95,7 @@ export class AppComponent implements OnInit,OnDestroy {
     if (this.msalService.instance.getActiveAccount() != null) {
       try {
         this.msalService.logoutRedirect();
+        localStorage.clear();
       } catch (error) {
           console.error('error while logout: ', error);
       }

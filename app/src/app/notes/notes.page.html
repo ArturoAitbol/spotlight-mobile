@@ -11,8 +11,7 @@
                 <ion-label>{{notes.length}} open notes</ion-label>
             </ion-list-header>
             <ion-item *ngFor="let note of notes" detail="false" expand="block">
-                <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card ion-activatable card-ripple'">
-                    <ion-ripple-effect *ngIf="!note.current"></ion-ripple-effect>
+                <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card'">
                     <ion-card-header>
                     <ion-card-subtitle>
                         <span>{{note.openDate | date:"medium"}}</span>
@@ -22,14 +21,14 @@
                         </span>
                     </ion-card-subtitle>
                     </ion-card-header>
-                    <div (click)="seeHistoricalReports(note)">
+                    <div>
                         <ion-card-content>
                             {{note.content}}
                         </ion-card-content>
                         <ion-card-content class="card-footer">
                             <span id="note-author">{{note.openedBy.split("@")[0]}}</span>
                             <small id="note-tag" [ngClass]="note.current ? 'active' : 'inactive'">
-                                {{note.current ? 'Current' : 'Outdated'}}&nbsp;<ion-icon name="speedometer"></ion-icon>
+                                {{note.current ? '' : 'Outdated'}}&nbsp;<ion-icon (click)="seeHistoricalReports(note)" name="bar-chart-outline"></ion-icon>
                             </small>
                         </ion-card-content>
                     </div>

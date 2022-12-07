@@ -7,6 +7,9 @@ import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { AddNoteComponent } from './add-note/add-note.component';
+import { isEqual } from "lodash";
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-notes',
   templateUrl: './notes.page.html',
@@ -20,23 +23,24 @@ export class NotesPage implements OnInit {
   currentReport: string;
 
   constructor(private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController,
-    private ionToastService: IonToastService,
-    private subaccountService: SubaccountService,
-    private dashboardService: DashboardService,
-    private noteService: NoteService) { }
+              private actionSheetCtrl: ActionSheetController,
+              private ionToastService: IonToastService,
+              private subaccountService: SubaccountService,
+              private dashboardService: DashboardService,
+              private noteService: NoteService,
+              private router: Router) {
+                dashboardService.dashboardRefreshed$.subscribe(()=>{
+                  if(this.notes.length>0)
+                    this.tagNotes(this.notes);
+                })
+               }
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
-    this.fetchCurrentReport();
     this.fetchNotes();
   }
 
-  fetchCurrentReport() {
-    this.currentReport = JSON.stringify(this.dashboardService.getReports());
-  }
-
-  async openAddNoteModal() {
+  async openAddNoteModal(){
     const modal = await this.modalCtrl.create({
       component: AddNoteComponent,
       initialBreakpoint: 0.25,
@@ -82,7 +86,6 @@ export class NotesPage implements OnInit {
   }
 
   handleRefresh(event) {
-    this.fetchCurrentReport();
     this.fetchNotes(event);
   };
 
@@ -106,9 +109,10 @@ export class NotesPage implements OnInit {
     });
   }
 
-  tagNotes(notes) {
+  tagNotes(notes){
+    this.currentReport = this.dashboardService.getReports();
     notes.forEach(note => {
-      note.current = JSON.stringify(note.reports) === this.currentReport;
+      note.current = isEqual(note.reports,this.currentReport);
     });
   }
 
@@ -122,8 +126,10 @@ export class NotesPage implements OnInit {
         handleBehavior: "cycle"
       });
       modal.present();
-
-      const { data, role } = await modal.onWillDismiss();
+  
+      const {data,role} = await modal.onWillDismiss();
+    }else{
+      this.router.navigate(['/tabs/dashboard']);
     }
   }
 

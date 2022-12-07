@@ -1,16 +1,24 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
 import { ActionSheetController, IonicModule, ModalController } from '@ionic/angular';
 import { throwError } from 'rxjs';
 import { ACTION_SHEET_CONTROLLER_MOCK } from 'src/test/components/utils/action-sheet-controller.mock';
 import { MODAL_CONTROLLER_MOCK } from 'src/test/components/utils/modal-controller.mock';
+import { ROUTER_MOCK } from 'src/test/components/utils/router.mock';
 import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
+import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
+import { DashboardService } from '../services/dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
+import { SharedModule } from '../shared/shared.module';
 
 import { NotesPage } from './notes.page';
+
+const dashboardService = new DashboardService();
 
 describe('NotesPage', () => {
   let component: NotesPage;
@@ -19,8 +27,12 @@ describe('NotesPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NotesPage ],
-      imports: [IonicModule.forRoot()],
+      imports: [SharedModule,IonicModule.forRoot()],
       providers:[
+        {
+          provide:MsalService,
+          useValue:MSAL_SERVICE_MOCK
+        },
         {
           provide:NoteService,
           useValue:NOTE_SERVICE_MOCK
@@ -40,6 +52,14 @@ describe('NotesPage', () => {
         {
           provide:ActionSheetController,
           useValue:ACTION_SHEET_CONTROLLER_MOCK
+        },
+        {
+          provide: Router,
+          useValue: ROUTER_MOCK
+        },
+        {
+          provide: DashboardService,
+          useValue: dashboardService
         }
       ]
     }).compileComponents();
@@ -56,13 +76,22 @@ describe('NotesPage', () => {
   it('should get the notes and current reports when initializing',()=>{
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
     spyOn(component,'fetchNotes');
-    spyOn(component,'fetchCurrentReport').and.callThrough();
 
     fixture.detectChanges();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
-    expect(component.fetchCurrentReport).toHaveBeenCalled();
+  })
+
+  it('should tag the notes if dashboard was refreshed when initializing',()=>{
+    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
+    spyOn(component,'fetchNotes').and.callThrough();;
+    spyOn(component,'tagNotes');
+    fixture.detectChanges();
+
+    dashboardService.announceDashboardRefresh();
+
+    expect(component.tagNotes).toHaveBeenCalled();
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{
@@ -90,11 +119,9 @@ describe('NotesPage', () => {
 
   it('should refresh the current reports and notes when calling handleRefresh()',()=>{
     spyOn(component,'fetchNotes').and.callThrough();
-    spyOn(component, 'fetchCurrentReport').and.callThrough();
 
     component.handleRefresh({ target: {complete:()=>{} } });
 
-    expect(component.fetchCurrentReport).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
   })
 
@@ -131,7 +158,19 @@ describe('NotesPage', () => {
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
 
-  it('should open a modal with the HistoricalDashboard page when calling seeHistoricalReports() and the selected note is not referring to the current dashboard',fakeAsync(()=>{
+  it('should navigate to dashboard page if the selected note is referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
+    spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
+    spyOn(ROUTER_MOCK,'navigate').and.callThrough();
+    const note = {current:true};
+
+    component.seeHistoricalReports(note);
+    flush();
+
+    expect(ROUTER_MOCK.navigate).toHaveBeenCalled();
+    expect(MODAL_CONTROLLER_MOCK.create).not.toHaveBeenCalled();
+  }))
+
+  it('should open a modal with the HistoricalDashboard page if the selected note is NOT referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
     spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
     const note = {current:false};
 

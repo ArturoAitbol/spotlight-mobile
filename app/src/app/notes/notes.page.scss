@@ -44,16 +44,21 @@ ion-fab-button{
 
 #note-tag{
   margin-top: 3px;
-  color: #3969b3; 
-  text-align: right;
   font-size: 12px;
   width: 60%;
+  display: flex;
+  align-items: flex-center;
+  justify-content: flex-end;
 }
 #note-tag.active {
     color: #3969b3; 
 }
 #note-tag.inactive{
   color: #969696;
+}
+#note-tag ion-icon{
+  font-size: 18px;
+  color: #3969b3; 
 }
 
 #note-author{
@@ -65,9 +70,6 @@ ion-list-header{
   font-size: 18px;
 }
 
-.card-ripple {
-  position: relative;
-}
   
 .delete-ripple {
   position: relative;
