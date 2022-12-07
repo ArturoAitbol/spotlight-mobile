@@ -37,8 +37,11 @@ export class DashboardPage implements OnInit {
         this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
-      } else
+      } else{
         this.isChartsDataLoading = false;
+        if (event)
+        event.target.complete();
+      }
     }, (err) => {
       // console.error(err);
       this.isChartsDataLoading = false;

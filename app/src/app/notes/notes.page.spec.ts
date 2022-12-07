@@ -136,25 +136,25 @@ describe('NotesPage', () => {
     expect(component.fetchNotes).toHaveBeenCalled();
   }))
 
-  it('should delete the note that is being shown when deleteNote() is called and the user confirm the action',fakeAsync(()=>{
+  it('should close a note when calling closeNote() if the user confirm the action',fakeAsync(()=>{
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'fetchNotes');
     
-    component.deleteNote("000-000");
+    component.closeNote("000-000");
     flush();
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note deleted successfully!');
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note closed successfully!');
     expect(component.fetchNotes).toHaveBeenCalled();
   }))
 
-  it('should show an error when deleteNote() is called and the user does NOT confirm the action',fakeAsync(()=>{
+  it('should show an error when calling closeNote() if the user does NOT confirm the action',fakeAsync(()=>{
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(NOTE_SERVICE_MOCK,'deleteNote').and.returnValue(throwError("some error"));
     spyOn(component,'fetchNotes');
 
-    component.deleteNote("000-000");
+    component.closeNote("000-000");
     flush();
     
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error deleting a note','Error');
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error closing a note','Error');
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
 
