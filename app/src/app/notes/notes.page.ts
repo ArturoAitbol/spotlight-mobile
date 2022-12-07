@@ -7,7 +7,7 @@ import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { AddNoteComponent } from './add-note/add-note.component';
-import { isEqual } from "lodash";
+import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
 
 @Component({
