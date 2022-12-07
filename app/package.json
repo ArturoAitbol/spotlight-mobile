@@ -35,6 +35,7 @@
     "cordova-plugin-inappbrowser": "^5.0.0",
     "ionicons": "^6.0.3",
     "jquery": "^3.6.1",
+    "lodash-es": "^4.17.21",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
