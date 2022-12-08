@@ -155,7 +155,7 @@ jobs:
       - name: Upload release
         uses: actions/upload-artifact@v2
         with:
-          name: ios-release
+          name: ios-release-Build-${{steps.updated_version.outputs.result}}
           path: ${{ env.WORKING_DIR }}/ios/App/App.xcarchive/Products/Applications/App.ipa
           retention-days: 60
 
