@@ -90,7 +90,7 @@ describe('LoginPage', () => {
     const disclaimer: HTMLElement = fixture.nativeElement.querySelector('.disclaimer');
     const copyright: HTMLElement = fixture.nativeElement.querySelector('#copyright');
 
-    expect(signInTitle.textContent).toBe('tekVizion 360 Portal');
+    expect(signInTitle.textContent).toBe('Spotlight');
     expect(loginButton.textContent).toContain('Login');
     expect(disclaimer.textContent).toContain('By clicking Login, I agree to the');
     expect(copyright.textContent).toContain('2022 tekVizion PVS inc. All Rights Reserved');
