@@ -205,7 +205,7 @@ jobs:
   #         path: ${{ github.workspace }}/tests/reports
 
   ios:
-    needs: ios-test
+    # needs: ios-test
     name: Build and Release IPA
     runs-on: macos-latest
     defaults:
