@@ -12,7 +12,7 @@ env:
   WORKING_DIR: "${{ github.event.repository.name }}/app"
   ios_version_code: 1
   latest_release: true
-  tag_version: ""
+  tag_version: "latest"
 
 jobs:
   ios:
