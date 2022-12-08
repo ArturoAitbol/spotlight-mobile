@@ -166,7 +166,6 @@ jobs:
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }} #Get From AppConnect
           PROVISIONING_PROFILE_SPECIFIER: match AppStore ${{ secrets.DEVELOPER_APP_IDENTIFIER }} #App Bundle ID
           TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }} #Anything
-          # TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }} #Anything
           TEMP_KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }} #Anything
           APPLE_ISSUER_ID: ${{ secrets.AUTH_KEY_ISSUER_ID }} #API Key Issuer ID
           APPLE_KEY_ID: ${{ secrets.KEY_ID }} #API Key ID

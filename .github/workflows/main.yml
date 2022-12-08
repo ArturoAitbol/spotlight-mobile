@@ -1,5 +1,6 @@
 name: Spotlight Mobile CI/CD
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths-ignore:
@@ -12,196 +13,196 @@ env:
   ios_version_code: 0
 
 jobs:
-  android-test:
-    runs-on: macos-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
+  # android-test:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v3
 
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install uiautomator2
+  #     - name: Install Appium
+  #       run: |
+  #         npm install -g appium@next
+  #         appium driver install uiautomator2
       
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          npm install
+  #     - name: Install dependencies
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: |
+  #         npm install
 
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 26
-          target: google_apis
-          arch: x86_64
-          profile: pixel_xl
-          cores: 2
-          ram-size: 5120M
-          sdcard-path-or-size: 2000M
-          avd-name: Pixel
-          force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
-          disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -q
+  #     - name: Run tests
+  #       uses: reactivecircus/android-emulator-runner@v2
+  #       with:
+  #         api-level: 26
+  #         target: google_apis
+  #         arch: x86_64
+  #         profile: pixel_xl
+  #         cores: 2
+  #         ram-size: 5120M
+  #         sdcard-path-or-size: 2000M
+  #         avd-name: Pixel
+  #         force-avd-creation: false
+  #         emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+  #         disable-animations: true
+  #         script: mvn test -PandroidTests -f ./tests/pom.xml -q
 
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        if: success() || failure()
-        with:
-          name: android-functional-test-report
-          path: tests/reports
+  #     - name: Archive test results
+  #       uses: actions/upload-artifact@v3
+  #       if: success() || failure()
+  #       with:
+  #         name: android-functional-test-report
+  #         path: tests/reports
 
-  android:
-    needs: android-test
-    name: Build and Release APK
-    runs-on: macos-latest
+  # android:
+  #   needs: android-test
+  #   name: Build and Release APK
+  #   runs-on: macos-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: Download Version artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: main.yml
-          name: android-integration-released-version
-          path: ./app/
-          search_artifacts: true
-          workflow_conclusion: ""
-          if_no_artifact_found: ignore
+  #     - name: Download Version artifact
+  #       uses: dawidd6/action-download-artifact@v2
+  #       with:
+  #         github_token: ${{secrets.GITHUB_TOKEN}}
+  #         workflow: main.yml
+  #         name: android-integration-released-version
+  #         path: ./app/
+  #         search_artifacts: true
+  #         workflow_conclusion: ""
+  #         if_no_artifact_found: ignore
 
-      - name: Check file existence
-        id: check_files
-        uses: andstor/file-existence-action@v2
-        with:
-          files: "./app/AndroidVersionCode.txt"
+  #     - name: Check file existence
+  #       id: check_files
+  #       uses: andstor/file-existence-action@v2
+  #       with:
+  #         files: "./app/AndroidVersionCode.txt"
 
-      - name: File exists
-        working-directory: ${{ env.WORKING_DIR }}
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
+  #     - name: File exists
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       if: steps.check_files.outputs.files_exists == 'true'
+  #       run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16.x
 
-      - name: Setup Java SDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: "zulu"
-          java-version: ${{ env.JAVA_VERSION }}
+  #     - name: Setup Java SDK ${{ env.JAVA_VERSION }}
+  #       uses: actions/setup-java@v3
+  #       with:
+  #         distribution: "zulu"
+  #         java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Update Version Code value
-        id: updated_version
-        uses: actions/github-script@v6
-        with:
-          script: |
-            return parseInt("${{ env.android_version_code }}") + 1
+  #     - name: Update Version Code value
+  #       id: updated_version
+  #       uses: actions/github-script@v6
+  #       with:
+  #         script: |
+  #           return parseInt("${{ env.android_version_code }}") + 1
 
-      - name: Update gradle version for Android
-        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
-        with:
-          build-gradle-path: "./app/android/app/build.gradle"
-          version-code: "${{steps.updated_version.outputs.result}}"
-          version-name: "1.0.${{steps.updated_version.outputs.result}}"
-          print-file: true
+  #     - name: Update gradle version for Android
+  #       uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+  #       with:
+  #         build-gradle-path: "./app/android/app/build.gradle"
+  #         version-code: "${{steps.updated_version.outputs.result}}"
+  #         version-name: "1.0.${{steps.updated_version.outputs.result}}"
+  #         print-file: true
 
-      - name: Install Ionic
-        run: npm install -g @ionic/cli
+  #     - name: Install Ionic
+  #       run: npm install -g @ionic/cli
 
-      - name: Install app dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: npm install
+  #     - name: Install app dependencies
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: npm install
 
-      - name: Build App
-        working-directory: ${{ env.WORKING_DIR }}
-        run: npm run build
+  #     - name: Build App
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: npm run build
 
-      - name: Build Android
-        working-directory: ${{ env.WORKING_DIR }}
-        run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --configuration=integration
+  #     - name: Build Android
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --configuration=integration
 
-      # - name: Build Android Prod
-      #   run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release --prod
+  #     # - name: Build Android Prod
+  #     #   run: ionic capacitor build android --minifycss --optimizejs --minifyjs --no-open --release --prod
 
-      - name: Build app APK
-        working-directory: ${{ env.WORKING_DIR }}/android
-        run: gradle assemble
+  #     - name: Build app APK
+  #       working-directory: ${{ env.WORKING_DIR }}/android
+  #       run: gradle assemble
 
-      - name: Extract Android signing key from env
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" > ./android/release.jks.base64
-          base64 -d ./android/release.jks.base64 > ./android/release.decrypted.jks
+  #     - name: Extract Android signing key from env
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: |
+  #         echo "${{ secrets.RELEASE_KEYSTORE }}" > ./android/release.jks.base64
+  #         base64 -d ./android/release.jks.base64 > ./android/release.decrypted.jks
 
-      - name: Align APK
-        run: $ANDROID_HOME/build-tools/30.0.3/zipalign -f -v 4 ./app/android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/android/app/build/outputs/apk/release/app-release-aligned.apk
+  #     - name: Align APK
+  #       run: $ANDROID_HOME/build-tools/30.0.3/zipalign -f -v 4 ./app/android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/android/app/build/outputs/apk/release/app-release-aligned.apk
 
-      - name: Sign build
-        run: $ANDROID_HOME/build-tools/30.0.3/apksigner sign --ks-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --key-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --ks ./app/android/release.decrypted.jks --ks-key-alias release --in ./app/android/app/build/outputs/apk/release/app-release-aligned.apk --out ./app/android/app/build/outputs/apk/release/app-release.apk
+  #     - name: Sign build
+  #       run: $ANDROID_HOME/build-tools/30.0.3/apksigner sign --ks-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --key-pass pass:${{secrets.RELEASE_KEYSTORE_PASSWORD}} --ks ./app/android/release.decrypted.jks --ks-key-alias release --in ./app/android/app/build/outputs/apk/release/app-release-aligned.apk --out ./app/android/app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload APK to TestApp.io
-        uses: testappio/github-action@v5
-        with:
-          api_token: ${{secrets.TESTAPPIO_API_TOKEN}}
-          app_id: ${{secrets.TESTAPPIO_APP_ID}}
-          file: ./app/android/app/build/outputs/apk/release/app-release.apk
-          release_notes: "Testing manual release notes..."
-          git_release_notes: false
-          include_git_commit_id: false
-          notify: true
+  #     - name: Upload APK to TestApp.io
+  #       uses: testappio/github-action@v5
+  #       with:
+  #         api_token: ${{secrets.TESTAPPIO_API_TOKEN}}
+  #         app_id: ${{secrets.TESTAPPIO_APP_ID}}
+  #         file: ./app/android/app/build/outputs/apk/release/app-release.apk
+  #         release_notes: "Testing manual release notes..."
+  #         git_release_notes: false
+  #         include_git_commit_id: false
+  #         notify: true
 
-      - name: Print deployed Release Version
-        run: |
-          echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
+  #     - name: Print deployed Release Version
+  #       run: |
+  #         echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
 
-      - name: Archive Android Code Version
-        uses: actions/upload-artifact@v3
-        with:
-          name: android-integration-released-version
-          path: ./app/AndroidVersionCode.txt
+  #     - name: Archive Android Code Version
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: android-integration-released-version
+  #         path: ./app/AndroidVersionCode.txt
 
-  ios-test:
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./app
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
+  # ios-test:
+  #   runs-on: macos-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./app
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+  #     - name: Install dependencies
+  #       run: npm install
 
-      - name: Install ionic
-        run: npm install -g @ionic/cli
+  #     - name: Install ionic
+  #       run: npm install -g @ionic/cli
 
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install xcuitest
+  #     - name: Install Appium
+  #       run: |
+  #         npm install -g appium@next
+  #         appium driver install xcuitest
       
-      - name: emulators list
-        run: ionic cap run ios --list
+  #     - name: emulators list
+  #       run: ionic cap run ios --list
       
-      - name: Set device_id
-        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+  #     - name: Set device_id
+  #       run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
       
-      - name: run emulator
-        working-directory: ${{ env.WORKING_DIR }}
-        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+  #     - name: run emulator
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
       
-      - name: Run functional tests
-        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+  #     - name: Run functional tests
+  #       run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
       
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        if: success() || failure()
-        with:
-          name: ios-functional-test-report
-          path: ${{ github.workspace }}/tests/reports
+  #     - name: Archive test results
+  #       uses: actions/upload-artifact@v3
+  #       if: success() || failure()
+  #       with:
+  #         name: ios-functional-test-report
+  #         path: ${{ github.workspace }}/tests/reports
 
   ios:
     needs: ios-test
