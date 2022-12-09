@@ -180,7 +180,7 @@ jobs:
           DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }} #team ID
         with:
           subdirectory: ${{ env.WORKING_DIR }}
-          lane: release_appstore
+          lane: ios release_appstore
 
       - name: Print deployed Release Version
         run: echo "Build-${{steps.updated_version.outputs.result}}" > ./iOSVersionCode.txt
