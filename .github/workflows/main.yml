@@ -166,6 +166,14 @@ jobs:
           path: ./app/AndroidVersionCode.txt
       
       #####################
+
+      - name: Archive Full Build
+        uses: vimtor/action-zip@v1
+        with:
+          files: './app/AndroidVersionCode.txt'
+          recursive: true        
+          dest: 'Spotlight-release-${{github.run_number}}-${{steps.date.outputs.date}}-${{steps.hash.outputs.hash}}.zip'
+
       - name: Get latest release details
         id: release_details
         uses: cardinalby/git-get-release-action@v1
