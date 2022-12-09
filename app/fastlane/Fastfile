@@ -86,19 +86,6 @@ platform :ios do
       api_key: api_key
     )
 
-    # gym(
-    #   configuration: "Release",
-    #   workspace: "./ios/App/App.xcworkspace",
-    #   scheme: "App",
-    #   xcargs: "-allowProvisioningUpdates",
-    #   export_method: "app-store",
-    #   export_options: {
-    #     provisioningProfiles: { 
-    #         DEVELOPER_APP_ID => "#{PROVISIONING_PROFILE_SPECIFIER}"
-    #     }
-    #   }
-    # )
-
     pilot(
       apple_id: "#{DEVELOPER_APP_ID}",
       app_identifier: "#{DEVELOPER_APP_IDENTIFIER}",

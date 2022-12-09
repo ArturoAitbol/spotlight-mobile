@@ -115,13 +115,6 @@ jobs:
         with:
           fileName: serviceAccount.json
           encodedString: ${{ secrets.ANDROID_JSON_KEY_FILE }}
-      
-      - name: Upload release bundle
-        uses: actions/upload-artifact@v2
-        with:
-          name: android-release-Build-${{steps.updated_version.outputs.result}}
-          path: ${{ env.WORKING_DIR }}/android/app/build/outputs/bundle/release/app-release.aab
-          retention-days: 60
 
       - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v2.3.0
@@ -135,6 +128,13 @@ jobs:
         with:
           subdirectory: ${{ env.WORKING_DIR }}
           lane: android playstore
+
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-release-Build-${{steps.updated_version.outputs.result}}
+          path: ${{ env.WORKING_DIR }}/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 60
 
       - name: Print deployed Release Version
         run: echo "Build-${{steps.updated_version.outputs.result}}" > ./AndroidVersionCode.txt
