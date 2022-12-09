@@ -1,5 +1,5 @@
-default_platform(:android)
-default_platform(:ios)
+# default_platform(:android)
+# default_platform(:ios)
 
 KEYSTORE_PATH = ENV["KEYSTORE_PATH"]
 KEYSTORE_KEY_ALIAS = ENV["KEYSTORE_KEY_ALIAS"]
