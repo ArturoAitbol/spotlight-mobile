@@ -92,7 +92,7 @@ jobs:
           path: ${{ github.workspace }}/tests/reports
   generate-release:
     name: Generate release with code
-    needs: [job1, job2]
+    needs: [android-test, ios-test]
     runs-on: ubuntu-latest
 
     steps:
