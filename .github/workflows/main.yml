@@ -52,38 +52,108 @@ jobs:
   #         name: android-functional-test-report
   #         path: tests/reports
 
-  android:
-    # needs: android-test
-    name: Build and Release APK
+  generate-release:
+    name: Generate release with code
     runs-on: macos-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Download Version artifact
-        uses: dawidd6/action-download-artifact@v2
         with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: main.yml
-          name: android-integration-released-version
-          path: ./app/
-          search_artifacts: true
-          workflow_conclusion: ""
-          if_no_artifact_found: ignore
+          fetch-depth: 0
 
-      - name: Check file existence
-        id: check_files
-        uses: andstor/file-existence-action@v2
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Get Commit Short Hash
+        id: hash
+        run: echo "hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_OUTPUT
+
+      - name: Get Latest tag
+        id: current_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Get next minor version
+        id: next_tag
+        uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
-          files: "./app/AndroidVersionCode.txt"
+          version: ${{ steps.current_tag.outputs.tag }}
 
-      - name: File exists
-        working-directory: ${{ env.WORKING_DIR }}
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
+      - name: Add Release version file
+        run: echo "Released ${{ steps.next_tag.outputs.patch }} Build" > ./ReleaseVersion.txt
 
-      # - name: Setup Node
+      - name: Archive Full Build
+        uses: vimtor/action-zip@v1
+        with:
+          files: "./ReleaseVersion.txt"
+          recursive: true
+          dest: "Spotlight-release-${{github.run_number}}-${{steps.date.outputs.date}}-${{steps.hash.outputs.hash}}.zip"
+
+      - name: Get latest release details
+        id: release_details
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+
+      - name: Get Latest Release commit hash
+        id: get_commit
+        uses: actions/github-script@0.9.0
+        with:
+          script: |
+            const commit = "${{fromJSON(steps.release_details.outputs.assets)[0].name}}".split('-').pop().split('.').shift();
+            core.setOutput('commit', commit);
+
+      - name: Create Release Notes from commit history
+        id: list_messages
+        run: git log --pretty=format:%s --ancestry-path ${{steps.get_commit.outputs.commit}}^..${{steps.hash.outputs.hash}} > ReleaseNotes.txt
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          bodyFile: "./ReleaseNotes.txt"
+          artifacts: "Spotlight-release-${{github.run_number}}-${{steps.date.outputs.date}}-${{steps.hash.outputs.hash}}.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Release Version
+        run: echo 'Released 1.0.${{steps.updated_version.outputs.result}} Build'
+
+      # android:
+      #   needs: android-test
+      #   name: Build and Release APK
+      #   runs-on: macos-latest
+
+      #   steps:
+      #     - name: Checkout repository
+      #       uses: actions/checkout@v3
+
+      #     - name: Download Version artifact
+      #       uses: dawidd6/action-download-artifact@v2
+      #       with:
+      #         github_token: ${{secrets.GITHUB_TOKEN}}
+      #         workflow: main.yml
+      #         name: android-integration-released-version
+      #         path: ./app/
+      #         search_artifacts: true
+      #         workflow_conclusion: ""
+      #         if_no_artifact_found: ignore
+
+      #     - name: Check file existence
+      #       id: check_files
+      #       uses: andstor/file-existence-action@v2
+      #       with:
+      #         files: "./app/AndroidVersionCode.txt"
+
+      #     - name: File exists
+      #       working-directory: ${{ env.WORKING_DIR }}
+      #       if: steps.check_files.outputs.files_exists == 'true'
+      #       run: echo "android_version_code=$(cat AndroidVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
+
+      #     - name: Setup Node
       #   uses: actions/setup-node@v3
       #   with:
       #     node-version: 16.x
@@ -93,25 +163,21 @@ jobs:
       #   with:
       #     distribution: "zulu"
       #     java-version: ${{ env.JAVA_VERSION }}
-      
-      - name: Get Commit Short Hash
-        id: hash
-        run: echo "hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_OUTPUT
 
-      - name: Update Version Code value
-        id: updated_version
-        uses: actions/github-script@v6
-        with:
-          script: |
-            return parseInt("${{ env.android_version_code }}") + 1
+      # - name: Update Version Code value
+      #   id: updated_version
+      #   uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       return parseInt("${{ env.android_version_code }}") + 1
 
-      - name: Update gradle version for Android
-        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
-        with:
-          build-gradle-path: "./app/android/app/build.gradle"
-          version-code: "${{steps.updated_version.outputs.result}}"
-          version-name: "1.0.${{steps.updated_version.outputs.result}}"
-          print-file: true
+      # - name: Update gradle version for Android
+      #   uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+      #   with:
+      #     build-gradle-path: "./app/android/app/build.gradle"
+      #     version-code: "${{steps.updated_version.outputs.result}}"
+      #     version-name: "1.0.${{steps.updated_version.outputs.result}}"
+      #     print-file: true
 
       # - name: Install Ionic
       #   run: npm install -g @ionic/cli
@@ -155,55 +221,15 @@ jobs:
       #     include_git_commit_id: false
       #     notify: true
 
-      - name: Print deployed Release Version
-        run: |
-          echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
+      # - name: Print deployed Release Version
+      #   run: |
+      #     echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
 
-      - name: Archive Android Code Version
-        uses: actions/upload-artifact@v3
-        with:
-          name: android-integration-released-version
-          path: ./app/AndroidVersionCode.txt
-      
-      #####################
-
-      - name: Archive Full Build
-        uses: vimtor/action-zip@v1
-        with:
-          files: './app/AndroidVersionCode.txt'
-          recursive: true        
-          dest: 'Spotlight-release-${{github.run_number}}-${{steps.date.outputs.date}}-${{steps.hash.outputs.hash}}.zip'
-
-      - name: Get latest release details
-        id: release_details
-        uses: cardinalby/git-get-release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          latest: true
-    
-      - name: Get Latest Release commit hash
-        id: get_commit
-        uses: actions/github-script@0.9.0
-        with:
-          script: |
-            const commit = "${{fromJSON(steps.release_details.outputs.assets)[0].name}}".split('-').pop().split('.').shift();
-            core.setOutput('commit', commit);
-      
-      - name: Create Release Notes from commit history
-        id: list_messages
-        run: git log --pretty=format:%s --ancestry-path ${{steps.get_commit.outputs.commit}}^..${{steps.hash.outputs.hash}} > ReleaseNotes.txt
-
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: 1.0.${{steps.updated_version.outputs.result}}
-          name: Release 1.0.${{steps.updated_version.outputs.result}}
-          bodyFile: "./ReleaseNotes.txt" 
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Print Release Version
-        run: echo 'Released 1.0.${{steps.updated_version.outputs.result}} Build'
+      # - name: Archive Android Code Version
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: android-integration-released-version
+      #     path: ./app/AndroidVersionCode.txt
 
   # ios-test:
   #   runs-on: macos-latest
