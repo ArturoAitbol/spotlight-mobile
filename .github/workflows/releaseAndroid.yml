@@ -13,7 +13,7 @@ env:
   WORKING_DIR: "${{ github.event.repository.name }}/app"
   android_version_code: 1
   latest_release: true
-  tag_version: "latest"
+  tag_version: ""
 
 jobs:
   android:
