@@ -54,7 +54,7 @@ jobs:
 
   generate-release:
     name: Generate release with code
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
