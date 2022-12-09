@@ -21,6 +21,25 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Setup Java SDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+
       - name: Download Version artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -75,20 +94,6 @@ jobs:
           version-code: "${{steps.updated_version.outputs.result}}"
           version-name: "1.0.${{steps.updated_version.outputs.result}}"
           print-file: true
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Setup Java SDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: "zulu"
-          java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Install Ionic
-        run: npm install -g @ionic/cli
 
       - name: Install app dependencies
         working-directory: ${{ env.WORKING_DIR }}
