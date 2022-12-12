@@ -28,13 +28,13 @@ describe('CtaasDashboardService', () => {
     });
     expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{params:undefined});
 
-    const timestamp = '20211001000100';
-    ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType,timestamp).subscribe({
+    const timestampId = '20211001000100';
+    ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType,timestampId).subscribe({
       next: () => { done(); },
       error: done.fail
   });
   
-  let params = new HttpParams().append('timestamp', timestamp);
+  let params = new HttpParams().append('timestampId', timestampId);
   expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{ params: params });
   });
 
