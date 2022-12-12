@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -44,13 +45,7 @@ public class AppiumUtils {
         return data;
     }
 
-    public AppiumDriverLocalService startAppiumServer(String ipAddress, int port){
-        /*Properties properties = new Properties();
-        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
-        properties.load(file);
-        String ipAddress = properties.getProperty("ipAddress");
-        String port = properties.getProperty("port");*/
-
+    public AppiumDriverLocalService startAppiumServer(String ipAddress, int port) throws IOException {
         AppiumDriverLocalService service = null;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac")){
