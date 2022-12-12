@@ -309,12 +309,6 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'true'
         run: echo "ios_version_code=$(cat iOSVersionCode.txt | cut -d "-" -f2-)" >> $GITHUB_ENV
       
-      - name: Print Secrets
-        run: |
-          echo ${{secrets.APPLE_DEV_TEAM}} | sed 's/./& /g'
-          echo ${{ secrets.P12_PASSWORD }} | sed 's/./& /g'
-          echo ${{ secrets.BUILD_CERTIFICATE_BASE64 }} | sed 's/./& /g'
-
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
