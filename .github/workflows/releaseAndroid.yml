@@ -132,7 +132,7 @@ jobs:
           KEYSTORE_STORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         with:
           subdirectory: ${{ env.WORKING_DIR }}
-          lane: ios release_playstore
+          lane: android release_playstore
 
       - name: Upload release bundle
         uses: actions/upload-artifact@v2
