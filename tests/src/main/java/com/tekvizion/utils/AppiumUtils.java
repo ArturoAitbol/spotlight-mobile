@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,6 +22,7 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class AppiumUtils {
 
@@ -43,6 +45,12 @@ public class AppiumUtils {
     }
 
     public AppiumDriverLocalService startAppiumServer(String ipAddress, int port){
+        /*Properties properties = new Properties();
+        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
+        properties.load(file);
+        String ipAddress = properties.getProperty("ipAddress");
+        String port = properties.getProperty("port");*/
+
         AppiumDriverLocalService service = null;
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac")){

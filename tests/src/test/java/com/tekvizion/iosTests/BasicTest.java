@@ -10,11 +10,11 @@ public class BasicTest extends IOSBaseTest {
     HomePage homePage;
     @Test
     public void fillTextEntryTest() throws InterruptedException {
-        homePage = new HomePage(driver);
+        /*homePage = new HomePage(driver);
         AlertViews alertViews = homePage.goToAlertViews();
         alertViews.fillTextEntry("Hello");
         String actualMessage = alertViews.getConfirmMessage();
-        Assert.assertEquals(actualMessage, "A message should be a short, complete sentence.");
+        Assert.assertEquals(actualMessage, "A message should be a short, complete sentence.");*/
         Thread.sleep(2000);
     }
 }
