@@ -14,7 +14,7 @@ export class CtaasDashboardService {
    * fetch Spotlight Power BI reports
    * @param subaccountId: string 
    * @param reportType: string 
-   * @param timestamp: string
+   * @param timestampId: string
    * @returns: Observable<any> 
    */
   public getCtaasDashboardDetails(subaccountId: string, reportType: string,timestampId?: string): Observable<any> {
