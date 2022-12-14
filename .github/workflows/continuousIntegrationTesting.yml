@@ -9,6 +9,7 @@ env:
 
 jobs:
   android-test:
+    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     steps:
       - name: checkout
@@ -47,6 +48,7 @@ jobs:
           name: android-functional-test-report
           path: tests/reports
   ios-test:
+    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     defaults:
       run:
