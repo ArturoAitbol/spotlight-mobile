@@ -10,6 +10,7 @@ import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
+import { ReportType } from '../helpers/report-type';
 import { DashboardService } from '../services/dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
@@ -74,24 +75,28 @@ describe('NotesPage', () => {
   });
 
   it('should get the notes and current reports when initializing',()=>{
+    dashboardService.setReports([{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+                                {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY}]);
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes');
+    spyOn(component,'fetchNotes').and.callThrough();
+    spyOn(component,'tagNotes').and.callThrough();
 
     fixture.detectChanges();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
+    expect(component.tagNotes).toHaveBeenCalled();
   })
 
-  it('should tag the notes if dashboard was refreshed when initializing',()=>{
+  it('should tag the notes if dashboard was refreshed',()=>{
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes').and.callThrough();;
+    spyOn(component,'fetchNotes').and.callThrough();
     spyOn(component,'tagNotes');
     fixture.detectChanges();
 
     dashboardService.announceDashboardRefresh();
 
-    expect(component.tagNotes).toHaveBeenCalled();
+    expect(component.tagNotes).toHaveBeenCalledTimes(2);
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{

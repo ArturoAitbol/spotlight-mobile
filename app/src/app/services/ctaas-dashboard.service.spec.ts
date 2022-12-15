@@ -21,7 +21,7 @@ describe('CtaasDashboardService', () => {
     httpClientSpy.get.and.returnValue(NOTE_SERVICE_MOCK.getNoteList());
 
     const subaccountId = '00000-0000-000'
-    const reportType = ReportType.DailyCallingReliability;
+    const reportType = ReportType.DAILY_CALLING_RELIABILITY;
     ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType).subscribe({
         next: () => { done(); },
         error: done.fail

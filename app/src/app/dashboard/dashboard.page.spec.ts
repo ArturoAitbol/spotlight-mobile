@@ -64,7 +64,7 @@ describe('DashboardPage', () => {
     fixture.detectChanges();
     const serviceDescription: HTMLElement = fixture.nativeElement.querySelector('#service-description');
 
-    expect(serviceDescription.childElementCount).toBe(1);
+    expect(serviceDescription.childElementCount).toBe(2);
     expect(serviceDescription.firstChild.textContent).toBe(component.serviceName);
   });
 
@@ -149,6 +149,25 @@ describe('DashboardPage', () => {
     component.handleRefresh({ target: {complete:()=>{} } });
 
     expect(component.fetchCtaasDashboard).toHaveBeenCalled();
+  })
+
+  it('should set the loading flags to false if no subaccounts are found when calling handleRefresh()',()=>{
+    spyOn(component,'fetchCtaasDashboard');
+    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(of({subaccounts:[]}));
+
+    component.handleRefresh({ target: {complete:()=>{} } });
+
+    expect(component.isChartsDataLoading).toBeFalse();
+  })
+
+
+  
+  it('should change the charts list when calling onClickToggleButton()',()=>{
+    component.reports = {daily:[1,2],weekly:[3,4]}
+
+    component.onClickToggleButton("weekly");
+
+    expect(component.charts).toBe(component.reports.weekly);
   })
 
 });
