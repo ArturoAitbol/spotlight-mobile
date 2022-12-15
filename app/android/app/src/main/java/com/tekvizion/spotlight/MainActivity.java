@@ -1,4 +1,4 @@
-package com.tekvizion.spotlight;
+package com.tekvizion.aitbol.spotlight;
 
 import com.getcapacitor.BridgeActivity;
 

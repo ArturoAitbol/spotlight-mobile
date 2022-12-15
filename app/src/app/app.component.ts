@@ -6,8 +6,10 @@ import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
-import { StatusBar } from '@capacitor/status-bar';
+import { StatusBar, StatusBarInfo } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
+import { PushNotificationsService } from './services/push-notifications.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -26,10 +28,18 @@ export class AppComponent implements OnInit,OnDestroy {
   constructor(private router: Router,
               private msalService: MsalService,
               private iab: InAppBrowser,
-              private msalBroadcastService: MsalBroadcastService) {
+              private msalBroadcastService: MsalBroadcastService,
+              private platform: Platform,
+              private pushNotificationService: PushNotificationsService) {
     this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
+    this.initializeApp();
   }
 
+  initializeApp(){
+    this.platform.ready().then(()=>{
+      this.pushNotificationService.initPush();
+    });
+  }
   ngOnInit(): void {
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
@@ -46,6 +56,7 @@ export class AppComponent implements OnInit,OnDestroy {
           }
       });
     }
+
     this.msalBroadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
       takeUntil(this._destroying$))
