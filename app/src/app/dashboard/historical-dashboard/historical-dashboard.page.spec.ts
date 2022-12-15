@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
+import { ReportType } from 'src/app/helpers/report-type';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
@@ -41,6 +42,7 @@ describe('HistoricalDashboardComponent', () => {
 
     fixture = TestBed.createComponent(HistoricalDashboardPage);
     component = fixture.componentInstance;
+    component.note = { subaccountId:"11", content:"content", openDate:"2022-01-01 12:00:00", openedBy: "user@example.com", reports: [{timestampId:'00',reportType:'daily'},{timestampId:'01',reportType:'weekly'}] };
   }));
 
   it('should create', () => {
@@ -50,7 +52,6 @@ describe('HistoricalDashboardComponent', () => {
 
   it('should call fetchData when initializing',()=>{
     spyOn(component,'fetchData');
-    component.note = { subaccountId:"11", content:"content", reports: [{timestampId:"00"},{timestampId:"01"}] };
     component.charts = [];
 
     fixture.detectChanges();
@@ -93,7 +94,11 @@ describe('HistoricalDashboardComponent', () => {
   it('should refresh the chart images when calling fetchCtaasDashboard()',()=>{
     const customEvent = {target:{complete:()=>{}}};
     component.charts = [];
-    component.reports = [{timestampId:"00"},{timestampId:"01"}]
+    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'02',reportType:ReportType.DAILY_PESQ},
+                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}]
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -105,7 +110,11 @@ describe('HistoricalDashboardComponent', () => {
   it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error',()=>{
     spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
     const customEvent = {target:{complete:()=>{}}};
-    component.reports = [{timestampId:"00"},{timestampId:"01"}]
+    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'02',reportType:ReportType.DAILY_PESQ},
+                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}]
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -117,7 +126,11 @@ describe('HistoricalDashboardComponent', () => {
 
   it('should refresh the chart images when calling handleRefresh()',()=>{
     spyOn(component,'fetchCtaasDashboard').and.callThrough();
-    component.reports = [{timestampId:"00"},{timestampId:"01"}]
+    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'02',reportType:ReportType.DAILY_PESQ},
+                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+                        {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}]
     component.isChartsDataLoading = true;
 
     component.handleRefresh({target:{complete:()=>{}}});
@@ -133,5 +146,14 @@ describe('HistoricalDashboardComponent', () => {
 
     expect(MODAL_CONTROLLER_MOCK.dismiss).toHaveBeenCalledWith(null,'cancel');
   })
+
+  it('should change the charts list when calling onClickToggleButton()',()=>{
+    component.reports = {daily:[1,2],weekly:[3,4]}
+
+    component.onClickToggleButton("weekly");
+
+    expect(component.charts).toBe(component.reports.weekly);
+  })
+
 
 });

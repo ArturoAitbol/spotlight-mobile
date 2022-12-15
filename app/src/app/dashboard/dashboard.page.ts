@@ -16,10 +16,16 @@ export class DashboardPage implements OnInit {
   serviceName:string;
 
   charts: any[] = [];
+  reports: any = {};
 
   subaccountId: string = null;
 
   isChartsDataLoading: boolean = true;
+  hasDashboardDetails: boolean = false;
+
+  readonly DAILY: string = 'daily';
+  readonly WEEKLY: string = 'weekly';
+  selectedPeriod: string = this.DAILY;
 
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
@@ -56,7 +62,10 @@ export class DashboardPage implements OnInit {
 
   fetchCtaasDashboard(event?: any) {
     this.isChartsDataLoading = true;
+    this.hasDashboardDetails = false;
     this.charts = [];
+    this.reports[this.DAILY] = [];
+    this.reports[this.WEEKLY] = [];
     this.dashboardService.setReports(null);
 
     const requests: Observable<any>[] = [];
@@ -67,13 +76,20 @@ export class DashboardPage implements OnInit {
 
     forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
       if (res) {
-        this.charts = [...res].filter((e: any) => !e.error).map((e: { response: string }) => e.response);
-        if (this.charts.length > 0) {
-          let reports = this.charts.map((chart: any) => {
-            // Destructure the chart object to save only timestampId and type attributes
-            return (({ timestampId, reportType }) => ({ timestampId, reportType }))(chart);
+        const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
+        if (result.length > 0) {
+          this.hasDashboardDetails = true;
+          const reportsIdentifiers: any[] = []; 
+          result.forEach((e) => {
+              let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
+              reportsIdentifiers.push(reportIdentifier);
+              if (e.reportType.toLowerCase().includes(this.DAILY))
+                this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+              else if (e.reportType.toLowerCase().includes(this.WEEKLY))
+                this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
           });
-          this.dashboardService.setReports(reports);
+          this.charts = this.reports[this.DAILY];
+          this.dashboardService.setReports(reportsIdentifiers);
           this.dashboardService.announceDashboardRefresh();
         }
       }
@@ -87,6 +103,32 @@ export class DashboardPage implements OnInit {
       if (event)
         event.target.complete();
     })
+  }
+
+  /**
+  * on click toggle button
+  */
+  onClickToggleButton(selectedPeriod: string){
+    this.selectedPeriod = selectedPeriod;
+    this.charts = this.reports[selectedPeriod];
+  }
+
+    /**
+   * get report name by report type
+   * @param reportType: string 
+   * @returns: string 
+   */
+     getReportNameByType(reportType: string): string {
+      switch (reportType) {
+          case ReportType.DAILY_FEATURE_FUNCTIONALITY:
+          case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
+            return 'Feature Functionality';
+          case ReportType.DAILY_CALLING_RELIABILITY:
+            return 'Calling Reliability';
+          case ReportType.DAILY_PESQ:
+          case ReportType.WEEKLY_PESQ:
+            return 'PESQ';
+      }
   }
 
 }
