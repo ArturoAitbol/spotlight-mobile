@@ -8,6 +8,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
 import { StatusBar } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
+import { Platform } from '@ionic/angular';
+import { ForegroundService } from './services/foreground.service';
 
 @Component({
   selector: 'app-root',
@@ -26,8 +28,15 @@ export class AppComponent implements OnInit,OnDestroy {
   constructor(private router: Router,
               private msalService: MsalService,
               private iab: InAppBrowser,
-              private msalBroadcastService: MsalBroadcastService) {
+              private msalBroadcastService: MsalBroadcastService,
+              private foregroundService: ForegroundService,
+              private platform: Platform) {
     this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
+    this.platform.ready().then(() => {
+      this.platform.resume.subscribe((e) => {
+        this.foregroundService.announceBackFromBackground();
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -55,12 +64,12 @@ export class AppComponent implements OnInit,OnDestroy {
         this.msalService.instance.setActiveAccount(account);
         if (this.isLoggedIn())
           this.router.navigate(['/']);
-      })
+      });
 
-      timer(0, 1000).subscribe(()=>{
-        this.dateTime = new Date();
-        this.salutation = this.getSalutation();
-      })
+    timer(0, 1000).subscribe(()=>{
+      this.dateTime = new Date();
+      this.salutation = this.getSalutation();
+    });
   }
 
   async setStatusBarColor(color:string) {
