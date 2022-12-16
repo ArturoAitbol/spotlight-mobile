@@ -3,7 +3,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ReportType } from '../helpers/report-type';
 import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
 import { DashboardService } from '../services/dashboard.service';
-import { ForegroundService } from '../services/foreground.service';
+import { DataRefresherService } from '../services/data-refresher.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { SubaccountService } from '../services/subaccount.service';
 
@@ -33,9 +33,9 @@ export class DashboardPage implements OnInit, OnDestroy {
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,
-    private foregroundService: ForegroundService,
+    private foregroundService: DataRefresherService,
     private dashboardService: DashboardService) {
-      this.foregroundSubscription = this.foregroundService.backFromBackground$.subscribe(()=>{
+      this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
         this.fetchData();
       });
   }

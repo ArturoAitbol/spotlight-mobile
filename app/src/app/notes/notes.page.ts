@@ -9,7 +9,7 @@ import { SubaccountService } from '../services/subaccount.service';
 import { AddNoteComponent } from './add-note/add-note.component';
 import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
-import { ForegroundService } from '../services/foreground.service';
+import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,10 +31,10 @@ export class NotesPage implements OnInit, OnDestroy {
               private ionToastService: IonToastService,
               private subaccountService: SubaccountService,
               private dashboardService: DashboardService,
-              private foregroundService: ForegroundService,
+              private foregroundService: DataRefresherService,
               private noteService: NoteService,
               private router: Router) {
-                this.foregroundSubscription = this.foregroundService.backFromBackground$.subscribe(()=>{
+                this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
                   this.fetchNotes();
                 });
                 this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
@@ -117,7 +117,6 @@ export class NotesPage implements OnInit, OnDestroy {
         event.target.complete();
     }, (err) => {
       console.error(err);
-      // this.ionToastService.presentToast("Error getting notes", "Error");
       this.isNoteDataLoading = false;
       if (event)
         event.target.complete();
