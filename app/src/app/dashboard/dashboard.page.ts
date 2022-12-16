@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ReportType } from '../helpers/report-type';
 import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
 import { DashboardService } from '../services/dashboard.service';
+import { DataRefresherService } from '../services/data-refresher.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { SubaccountService } from '../services/subaccount.service';
 
@@ -11,7 +12,7 @@ import { SubaccountService } from '../services/subaccount.service';
   templateUrl: 'dashboard.page.html',
   styleUrls: ['dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, OnDestroy {
 
   serviceName:string;
 
@@ -26,15 +27,27 @@ export class DashboardPage implements OnInit {
   readonly DAILY: string = 'daily';
   readonly WEEKLY: string = 'weekly';
   selectedPeriod: string = this.DAILY;
+  
+  foregroundSubscription: Subscription;
 
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,
-    private dashboardService: DashboardService) { }
+    private foregroundService: DataRefresherService,
+    private dashboardService: DashboardService) {
+      this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+        this.fetchData();
+      });
+  }
 
   ngOnInit(): void {
     this.serviceName = 'Spotlight';
     this.fetchData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.foregroundSubscription)
+      this.foregroundSubscription.unsubscribe();
   }
 
   fetchData(event?: any) {

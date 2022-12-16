@@ -15,11 +15,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError(err => {
                 const error = err.error || err.statusText;
-                if (!window.navigator.onLine) {
-                    this.ionToastService.presentToast('No Internet Connection', 'Error', 'bottom', 3000);
-                    return;
-                }
-                // this.ionToastService.presentToast(error.error || error, 'Error');
+                if (!err.status)
+                    this.ionToastService.presentToast('No internet connection', 'Error');
+                else 
+                    this.ionToastService.presentToast(error, 'Error');
                 return throwError(error);
             })
         );

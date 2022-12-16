@@ -110,7 +110,6 @@ describe('NotesPage', () => {
 
   it('should set the loading flags to false when the call to fetchNotes() throws an error',()=>{
     spyOn(NOTE_SERVICE_MOCK,'getNoteList').and.returnValue(throwError("Some error"));
-    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'fetchNotes').and.callThrough();
     component.isNoteDataLoading = true;
 
@@ -119,7 +118,6 @@ describe('NotesPage', () => {
     expect(NOTE_SERVICE_MOCK.getNoteList).toHaveBeenCalled();
     expect(component.isNoteDataLoading).toBeFalse();
     expect(component.notes.length).toBe(0);
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error getting notes","Error");
   })
 
   it('should refresh the current reports and notes when calling handleRefresh()',()=>{

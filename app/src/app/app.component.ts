@@ -7,7 +7,11 @@ import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
 import { StatusBar } from '@capacitor/status-bar';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, PluginListenerHandle } from '@capacitor/core';
+import { Network } from '@capacitor/network';
+import { Platform } from '@ionic/angular';
+import { DataRefresherService } from './services/data-refresher.service';
+import { IonToastService } from './services/ion-toast.service';
 
 @Component({
   selector: 'app-root',
@@ -22,15 +26,33 @@ export class AppComponent implements OnInit,OnDestroy {
   salutation: string;
   userInfo: any;
   private readonly _destroying$ = new Subject<void>();
+  networkStatus: any;
+  networkListener: PluginListenerHandle;
 
   constructor(private router: Router,
               private msalService: MsalService,
               private iab: InAppBrowser,
-              private msalBroadcastService: MsalBroadcastService) {
+              private msalBroadcastService: MsalBroadcastService,
+              private ionToastService: IonToastService,
+              private foregroundService: DataRefresherService,
+              private platform: Platform) {
     this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
+    this.platform.ready().then(() => {
+      this.platform.resume.subscribe((e) => {
+        this.foregroundService.announceBackFromBackground();
+      });
+    });
   }
 
   ngOnInit(): void {
+    this.networkListener = Network.addListener('networkStatusChange', (status) => {
+      this.networkStatus = status;
+      if (status.connected) {
+        this.ionToastService.presentToast('Internet connection restored', 'Connected');
+        this.foregroundService.announceBackFromBackground();
+      } else
+        this.ionToastService.presentToast('No internet connection', 'Error');
+    });
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
@@ -55,12 +77,12 @@ export class AppComponent implements OnInit,OnDestroy {
         this.msalService.instance.setActiveAccount(account);
         if (this.isLoggedIn())
           this.router.navigate(['/']);
-      })
+      });
 
-      timer(0, 1000).subscribe(()=>{
-        this.dateTime = new Date();
-        this.salutation = this.getSalutation();
-      })
+    timer(0, 1000).subscribe(()=>{
+      this.dateTime = new Date();
+      this.salutation = this.getSalutation();
+    });
   }
 
   async setStatusBarColor(color:string) {
@@ -105,5 +127,8 @@ export class AppComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+    if (this.networkListener) {
+      this.networkListener.remove;
+    }
   }
 }
