@@ -73,7 +73,7 @@ jobs:
         run: mv ${{github.repository_owner}}-${{ github.event.repository.name }}* ${{ github.event.repository.name }}
 
       - name: Update Version Code value
-        id: updated_version
+        id: updated_ios_version
         uses: actions/github-script@v6
         with:
           script: |
@@ -153,7 +153,7 @@ jobs:
       - name: Upload release
         uses: actions/upload-artifact@v2
         with:
-          name: ios-release-Build-${{steps.updated_version.outputs.result}}
+          name: ios-release-Build-${{steps.updated_ios_version.outputs.result}}
           path: ${{ env.WORKING_DIR }}/ios/App/App.xcarchive/Products/Applications/App.ipa
           retention-days: 60
 
@@ -182,7 +182,7 @@ jobs:
           lane: ios release_appstore
 
       - name: Print deployed Release Version
-        run: echo "Build-${{steps.updated_version.outputs.result}}" > ./iOSVersionCode.txt
+        run: echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
 
       - name: Archive iOS Code Version
         uses: actions/upload-artifact@v3
