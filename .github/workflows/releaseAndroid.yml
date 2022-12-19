@@ -33,7 +33,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Grand execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ${{ env.WORKING_DIR }}/android/gradlew
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
