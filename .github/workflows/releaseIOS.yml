@@ -64,7 +64,6 @@ jobs:
         uses: robinraju/release-downloader@v1.6
         with:
           latest: ${{ env.latest_release }}
-          tag: ${{ env.tag_version }}
           zipBall: true
 
       - name: Unzip Release Folder
