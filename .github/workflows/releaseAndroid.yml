@@ -32,9 +32,6 @@ jobs:
           distribution: "zulu"
           java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Grand execute permission for gradlew
-        run: chmod +x ${{ env.WORKING_DIR }}/android/gradlew
-
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -123,6 +120,9 @@ jobs:
         with:
           fileName: serviceAccount.json
           encodedString: ${{ secrets.ANDROID_JSON_KEY_FILE }}
+
+      - name: Grand execute permission for gradlew
+        run: chmod +x ${{ env.WORKING_DIR }}/android/gradlew
 
       - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v2.3.0
