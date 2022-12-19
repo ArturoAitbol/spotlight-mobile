@@ -46,12 +46,14 @@ export class AppComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
-      this.networkStatus = status;
       if (status.connected) {
-        this.ionToastService.presentToast('Internet connection restored', 'Connected');
-        this.foregroundService.announceBackFromBackground();
+        if (this.networkStatus && !this.networkStatus.connected) {
+          this.ionToastService.presentToast('Internet connection restored', 'Connected');
+          this.foregroundService.announceBackFromBackground();
+        }
       } else
         this.ionToastService.presentToast('No internet connection', 'Error');
+      this.networkStatus = status;
     });
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
