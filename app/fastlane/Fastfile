@@ -57,6 +57,7 @@ end
 
 
 def ensure_temp_keychain(name, password)
+  system("echo "+ name)
   delete_temp_keychain(name)
   create_temp_keychain(name, password)
 end
