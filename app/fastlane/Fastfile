@@ -48,7 +48,7 @@ end
 
 ################ iOS ################
 def delete_temp_keychain(name)
-  delete_keychain(name: name) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+  delete_keychain(name: name) if File.exist? File.expand_path("~/Library/Keychains/#{name}")
 end
 
 def create_temp_keychain(name, password)
