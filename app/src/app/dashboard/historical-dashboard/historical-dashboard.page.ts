@@ -117,10 +117,11 @@ export class HistoricalDashboardPage implements OnInit {
     getReportNameByType(reportType: string): string {
       switch (reportType) {
         case ReportType.DAILY_FEATURE_FUNCTIONALITY:
-        case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
-          return 'Feature Functionality';
-        case ReportType.DAILY_CALLING_RELIABILITY:
-          return 'Calling Reliability';
+            return 'Feature Functionality';
+          case ReportType.DAILY_CALLING_RELIABILITY:
+            return 'Calling Reliability';
+          case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
+            return 'Feature Functionality & Calling Reliability';
         case ReportType.DAILY_PESQ:
         case ReportType.WEEKLY_PESQ:
           return 'PESQ';
