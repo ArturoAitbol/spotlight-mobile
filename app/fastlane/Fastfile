@@ -87,6 +87,18 @@ platform :ios do
       verbose: true
     )
 
+    gym(
+      configuration: "Release",
+      workspace: "./ios/App/App.xcworkspace",
+      scheme: "App",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: { 
+            DEVELOPER_APP_ID => "#{PROVISIONING_PROFILE_SPECIFIER}"
+        }
+      }
+    )
+
     pilot(
       apple_id: "#{DEVELOPER_APP_ID}",
       app_identifier: "#{DEVELOPER_APP_IDENTIFIER}",
@@ -94,7 +106,7 @@ platform :ios do
       skip_submission: true,
       distribute_external: false,
       notify_external_testers: false,
-      ipa: "./ios/App/App.xcarchive/Products/Applications/App.ipa"
+      ipa: "./App.ipa"
     )
 
     delete_temp_keychain(keychain_name)
