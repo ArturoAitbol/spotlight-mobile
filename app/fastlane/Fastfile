@@ -67,7 +67,7 @@ platform :ios do
 
     keychain_name = TEMP_KEYCHAIN_USER
     keychain_password = TEMP_KEYCHAIN_PASSWORD
-    ensure_temp_keychain(keychain_name, keychain_password)
+    ensure_temp_keychain("fastlane_temp_keychain", "keychain_password")
   
     api_key = app_store_connect_api_key(
       key_id: APPLE_KEY_ID,
@@ -81,8 +81,8 @@ platform :ios do
       type: 'appstore',
       git_basic_authorization: "#{GIT_CREDENTIALS}",
       readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
+      keychain_name: "fastlane_temp_keychain",
+      keychain_password: "keychain_password",
       api_key: api_key,
       verbose: true
     )
