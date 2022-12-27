@@ -81,9 +81,10 @@ platform :ios do
       type: 'appstore',
       git_basic_authorization: "#{GIT_CREDENTIALS}",
       readonly: true,
-      keychain_name: keychain_name+"-db",
+      keychain_name: keychain_name,
       keychain_password: keychain_password,
-      api_key: api_key
+      api_key: api_key,
+      verbose: true
     )
 
     pilot(
