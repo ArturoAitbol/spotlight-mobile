@@ -52,7 +52,7 @@ def delete_temp_keychain(name)
 end
 
 def create_temp_keychain(name, password)
-  create_keychain(name: name, password: password, unlock: false, timeout: 0,default_keychain:true)
+  create_keychain(name: name, password: password, unlock: true, timeout: 0,default_keychain:true)
 end
 
 
