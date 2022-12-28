@@ -10,7 +10,7 @@ ANDROID_JSON_KEY_FILE = ENV['ANDROID_JSON_KEY_FILE']
 ################ iOS ################
 DEVELOPER_APP_IDENTIFIER = ENV["DEVELOPER_APP_IDENTIFIER"]
 DEVELOPER_APP_ID = ENV["DEVELOPER_APP_ID"]
-PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+# PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
 TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
 APPLE_ISSUER_ID = ENV["APPLE_ISSUER_ID"]
@@ -91,7 +91,12 @@ platform :ios do
       configuration: "Release",
       workspace: "./ios/App/App.xcworkspace",
       scheme: "App",
-      export_method: "app-store"
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: { 
+          DEVELOPER_APP_IDENTIFIER => "NewAppProvisioning"
+        }
+      }
     )
 
     pilot(
