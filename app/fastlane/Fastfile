@@ -52,7 +52,7 @@ def delete_temp_keychain(name)
 end
 
 def create_temp_keychain(name, password)
-  create_keychain(name: name, password: password, unlock: true, timeout: 0,default_keychain:true)
+  create_keychain(name: name, password: password, unlock: true, timeout: 0,default_keychain:true,add_to_search_list: true)
 end
 
 
@@ -81,7 +81,7 @@ platform :ios do
       type: 'appstore',
       git_basic_authorization: "#{GIT_CREDENTIALS}",
       readonly: true,
-      keychain_name: "fastlane_temp_keychain-db",
+      keychain_name: "fastlane_temp_keychain",
       keychain_password: "keychain_password",
       api_key: api_key,
       verbose: true
