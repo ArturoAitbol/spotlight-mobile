@@ -81,7 +81,7 @@ platform :ios do
       type: 'appstore',
       git_basic_authorization: "#{GIT_CREDENTIALS}",
       readonly: true,
-      keychain_name: "fastlane_temp_keychain",
+      keychain_name: "fastlane_temp_keychain-db",
       keychain_password: "keychain_password",
       api_key: api_key,
       verbose: true
