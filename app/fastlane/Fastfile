@@ -10,7 +10,7 @@ ANDROID_JSON_KEY_FILE = ENV['ANDROID_JSON_KEY_FILE']
 ################ iOS ################
 DEVELOPER_APP_IDENTIFIER = ENV["DEVELOPER_APP_IDENTIFIER"]
 DEVELOPER_APP_ID = ENV["DEVELOPER_APP_ID"]
-# PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
 TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
 APPLE_ISSUER_ID = ENV["APPLE_ISSUER_ID"]
@@ -52,7 +52,7 @@ def delete_temp_keychain(name)
 end
 
 def create_temp_keychain(name, password)
-  create_keychain(name: name, password: password, unlock: true, timeout: 0,default_keychain:true,add_to_search_list: true)
+  create_keychain(name: name, password: password, unlock: false, timeout: 0)
 end
 
 
@@ -94,7 +94,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: { 
-          DEVELOPER_APP_IDENTIFIER => "NewAppProvisioning"
+            DEVELOPER_APP_ID => "#{PROVISIONING_PROFILE_SPECIFIER}"
         }
       }
     )
@@ -106,7 +106,7 @@ platform :ios do
       skip_submission: true,
       distribute_external: false,
       notify_external_testers: false,
-      ipa: "./App.ipa"
+      ipa: "./ios/App/App.xcarchive/Products/Applications/App.ipa"
     )
 
     delete_temp_keychain(keychain_name)
