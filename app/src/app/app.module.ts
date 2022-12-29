@@ -41,7 +41,8 @@ import { SharedModule } from './shared/shared.module';
     
   ],
   providers: [
-    MsalGuard,InAppBrowser,File,
+    InAppBrowser,
+    File,
     { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

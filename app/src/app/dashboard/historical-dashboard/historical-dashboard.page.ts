@@ -66,7 +66,8 @@ export class HistoricalDashboardPage implements OnInit {
 
     const requests: Observable<any>[] = [];
     for(const report of this.reports){
-      requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id,report.reportType,report.timestampId));
+      if (Object.values(ReportType).includes(report.reportType))
+        requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id, report.reportType, report.timestampId));
     }
 
     forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
@@ -109,23 +110,22 @@ export class HistoricalDashboardPage implements OnInit {
     this.charts = this.reports[selectedPeriod];
   }
 
-      /**
+  /**
    * get report name by report type
    * @param reportType: string 
    * @returns: string 
    */
-    getReportNameByType(reportType: string): string {
-      switch (reportType) {
-        case ReportType.DAILY_FEATURE_FUNCTIONALITY:
-            return 'Feature Functionality';
-          case ReportType.DAILY_CALLING_RELIABILITY:
-            return 'Calling Reliability';
-          case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
-            return 'Feature Functionality & Calling Reliability';
-        case ReportType.DAILY_PESQ:
-        case ReportType.WEEKLY_PESQ:
-          return 'PESQ';
-      }
+  getReportNameByType(reportType: string): string {
+    switch (reportType) {
+      case ReportType.DAILY_FEATURE_FUNCTIONALITY:
+        return 'Feature Functionality';
+      case ReportType.DAILY_CALLING_RELIABILITY:
+        return 'Calling Reliability';
+      case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
+        return 'Feature Functionality & Calling Reliability';
+      // case ReportType.DAILY_PESQ:
+      // case ReportType.WEEKLY_PESQ:
+      //   return 'PESQ'; disabling for now until mediastats are ready
     }
-
+  }
 }
