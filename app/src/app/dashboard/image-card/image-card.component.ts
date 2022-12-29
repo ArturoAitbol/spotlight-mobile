@@ -9,6 +9,7 @@ export class ImageCardComponent implements OnInit {
 
   @Input() isLoading: boolean;
   @Input() imageBase64;
+  @Input() reportName;
   @Input() lastUpdatedTime;
 
   constructor() { }

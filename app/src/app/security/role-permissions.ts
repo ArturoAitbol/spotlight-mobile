@@ -1,28 +1,18 @@
 export const permissions = {
-    'tekvizion.FullAdmin': {
-        paths: [
-            'tabs',
-            'dashboard',
-            'settings'
-        ],
-        elements: ['tabBar',
-                    'addNote',
-                    'deleteNote']
-    },
     'customer.SubaccountAdmin': {
         paths: [
             'tabs',
             'dashboard',
-            'settings'
+            'notes'
         ],
-        elements: ['tabBar',
-                    'addNote',
-                    'deleteNote']
+        elements: [ 'addNote',
+                    'closeNote']
     },
     'customer.SubaccountStakeholder': {
         paths: [
             'tabs',
-            'dashboard'
+            'dashboard',
+            'notes'
         ],
         elements: []
     }

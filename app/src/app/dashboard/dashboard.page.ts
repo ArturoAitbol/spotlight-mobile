@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-import { forkJoin, Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { ReportType } from '../helpers/report-type';
-import { Note } from '../model/note.model';
 import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
+import { DataRefresherService } from '../services/data-refresher.service';
 import { IonToastService } from '../services/ion-toast.service';
-import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 
 @Component({
@@ -13,34 +12,42 @@ import { SubaccountService } from '../services/subaccount.service';
   templateUrl: 'dashboard.page.html',
   styleUrls: ['dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, OnDestroy {
 
-  serviceName: string;
-  appName: string;
-  timelapse: string;
+  serviceName:string;
 
-  lastUpdate: string;
   charts: any[] = [];
-  notes: Note[] = [];
+  reports: any = {};
 
-  latestNote: Note;
-  previousNotes: number;
   subaccountId: string = null;
 
   isChartsDataLoading: boolean = true;
-  isNoteDataLoading: boolean = true;
+  hasDashboardDetails: boolean = false;
+
+  readonly DAILY: string = 'daily';
+  readonly WEEKLY: string = 'weekly';
+  selectedPeriod: string = this.DAILY;
+  
+  foregroundSubscription: Subscription;
 
   constructor(private ctaasDashboardService: CtaasDashboardService,
-    private noteService: NoteService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,
-    private actionSheetCtrl: ActionSheetController) { }
+    private foregroundService: DataRefresherService,
+    private dashboardService: DashboardService) {
+      this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+        this.fetchData();
+      });
+  }
 
   ngOnInit(): void {
-    this.serviceName = 'SpotLight';
-    this.appName = 'Microsoft Teams';
-    this.timelapse = 'Last 24 Hours';
+    this.serviceName = 'Spotlight';
     this.fetchData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.foregroundSubscription)
+      this.foregroundSubscription.unsubscribe();
   }
 
   fetchData(event?: any) {
@@ -49,15 +56,16 @@ export class DashboardPage implements OnInit {
         this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
-        this.fetchNotes();
-      } else {
+      } else{
         this.isChartsDataLoading = false;
-        this.isNoteDataLoading = false;
+        if (event)
+        event.target.complete();
       }
     }, (err) => {
-      console.error(err);
+      // console.error(err);
       this.isChartsDataLoading = false;
-      this.isNoteDataLoading = false;
+      if (event)
+        event.target.complete();
     });
   }
 
@@ -65,58 +73,13 @@ export class DashboardPage implements OnInit {
     this.fetchData(event);
   };
 
-  fetchNotes() {
-    this.isNoteDataLoading = true;
-    this.notes = [];
-    this.latestNote = null;
-    this.previousNotes = null;
-    this.noteService.getNoteList(this.subaccountId, 'Open').subscribe((res: any) => {
-      if (res != null && res.notes.length > 0) {
-        this.notes = res.notes;
-        this.previousNotes = this.notes.length - 1;
-        this.latestNote = this.notes[0];
-      }
-      this.isNoteDataLoading = false;
-    }, (err) => {
-      console.error(err);
-      this.isNoteDataLoading = false;
-    });
-  }
-
-  async deleteNote() {
-
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Are you sure you want to delete this note?',
-      buttons: [
-        {
-          text: 'Delete',
-          role: 'destructive',
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    actionSheet.present();
-
-    const { role } = await actionSheet.onWillDismiss();
-
-    if (role === 'destructive') {
-      this.noteService.deleteNote(this.latestNote.id).subscribe((res) => {
-        this.ionToastService.presentToast('Note deleted successfully!');
-        this.fetchNotes();
-      }, (err) => {
-        console.error(err);
-        this.ionToastService.presentToast("Error deleting a note", "Error");
-      })
-    }
-  }
-
   fetchCtaasDashboard(event?: any) {
     this.isChartsDataLoading = true;
+    this.hasDashboardDetails = false;
     this.charts = [];
+    this.reports[this.DAILY] = [];
+    this.reports[this.WEEKLY] = [];
+    this.dashboardService.setReports(null);
 
     const requests: Observable<any>[] = [];
     for (const key in ReportType) {
@@ -126,17 +89,60 @@ export class DashboardPage implements OnInit {
 
     forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
       if (res) {
-        this.charts = [...res].map((e: { response: any }) => e.response ? e.response : e);
-        this.lastUpdate = this.charts[0].lastUpdatedTS ? this.charts[0].lastUpdatedTS : null;
+        const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
+        if (result.length > 0) {
+          this.hasDashboardDetails = true;
+          const reportsIdentifiers: any[] = []; 
+          result.forEach((e) => {
+              let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
+              reportsIdentifiers.push(reportIdentifier);
+              if (e.reportType.toLowerCase().includes(this.DAILY))
+                this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+              else if (e.reportType.toLowerCase().includes(this.WEEKLY))
+                this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+          });
+          this.charts = this.reports[this.DAILY];
+          this.dashboardService.setReports(reportsIdentifiers);
+          this.dashboardService.announceDashboardRefresh();
+        }
       }
-      if (event) event.target.complete();
+      if (event) 
+        event.target.complete();
       this.isChartsDataLoading = false;
     }, (e) => {
       console.error('Error loading dashboard reports ', e.error);
       this.isChartsDataLoading = false;
-      this.ionToastService.presentToast('Error loading dashboard, please connect tekVizion admin', 'Ok');
-      if (event) event.target.complete();
+      this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
+      if (event)
+        event.target.complete();
     })
+  }
+
+  /**
+  * on click toggle button
+  */
+  onClickToggleButton(selectedPeriod: string){
+    this.selectedPeriod = selectedPeriod;
+    this.charts = this.reports[selectedPeriod];
+  }
+
+    /**
+   * get report name by report type
+   * @param reportType: string 
+   * @returns: string 
+   */
+     getReportNameByType(reportType: string): string {
+      switch (reportType) {
+          case ReportType.DAILY_FEATURE_FUNCTIONALITY:
+            return 'Feature Functionality';
+          case ReportType.DAILY_CALLING_RELIABILITY:
+            return 'Calling Reliability';
+          case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
+            return 'Feature Functionality & Calling Reliability';
+          case ReportType.DAILY_PESQ:
+          case ReportType.WEEKLY_PESQ:
+            return 'PESQ';
+      }
   }
 
 }

@@ -4,14 +4,15 @@ import com.tekvizion.utils.IOSActions;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import lombok.extern.java.Log;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public class HomePage extends IOSActions {
     IOSDriver driver;
 
-    @iOSXCUITFindBy(accessibility = "Alert Views")
-    WebElement alertViesButton;
+    @iOSXCUITFindBy(accessibility = "Login")
+    WebElement loginButton;
 
     public HomePage(IOSDriver driver){
         super(driver);
@@ -19,8 +20,8 @@ public class HomePage extends IOSActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public AlertViews goToAlertViews(){
-        alertViesButton.click();
-        return new AlertViews(driver);
+    public Login goToLoginForm(){
+        loginButton.click();
+        return new Login(driver);
     }
 }

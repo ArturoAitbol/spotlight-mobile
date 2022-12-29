@@ -47,7 +47,6 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
 
-        options.setApp(getResourcePath("test", "UIKitCatalog.app"));
         this.driver = new IOSDriver(service.getUrl(), options);
 //        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));

@@ -354,7 +354,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 97C4K3R6W5;
+				DEVELOPMENT_TEAM = "6W94SHSZB6";
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = App;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -364,9 +364,12 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "-7C4K3R6W5.io.ionic.starter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -378,7 +381,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 97C4K3R6W5;
+				DEVELOPMENT_TEAM = "6W94SHSZB6";
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = App;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -387,9 +390,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "-7C4K3R6W5.io.ionic.starter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

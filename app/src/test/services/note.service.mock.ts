@@ -3,7 +3,9 @@ import { Observable } from "rxjs";
 const TEST_NOTE = {
     id:'00000-0000-000',
     subaccountId:'000-aaaa-bbbb-cccc',
-    content:'test contet'
+    content:'test contet',
+    openedBy:'user@example.com',
+    openDate:"2022-12-07 11:09:55.795127"
 }
 
 export const NOTE_SERVICE_MOCK = {

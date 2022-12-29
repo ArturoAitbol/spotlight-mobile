@@ -8,15 +8,17 @@ import { IonToastService } from "../services/ion-toast.service";
 export class ErrorInterceptor implements HttpInterceptor {
 
 
-    constructor(private ionToastService:IonToastService){
+    constructor(private ionToastService: IonToastService) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
-            catchError( err => {
-                console.error(err);
-                const error = err.error.error? err.error : err.statusText;
-                this.ionToastService.presentToast(error.error || error,'Error');
+            catchError(err => {
+                const error = err.error || err.statusText;
+                if (!err.status)
+                    this.ionToastService.presentToast('No internet connection', 'Error');
+                else 
+                    this.ionToastService.presentToast(error, 'Error');
                 return throwError(error);
             })
         );

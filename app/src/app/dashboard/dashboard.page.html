@@ -1,64 +1,34 @@
 <ion-content>
-  <ion-refresher slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
-
-      <div id="service-description">
+      <div id="service-description" [ngClass]="{'title': !isChartsDataLoading && hasDashboardDetails}">
         <strong class="ion-text-center">{{serviceName}}</strong>
+        <div *ngIf="!isChartsDataLoading && hasDashboardDetails">
+          <ion-button class="left" (click)="onClickToggleButton(DAILY)" [ngClass]="{'active':selectedPeriod===DAILY}">{{DAILY | titlecase}}</ion-button>
+          <ion-button class="right" (click)="onClickToggleButton(WEEKLY)" [ngClass]="{'active':selectedPeriod===WEEKLY}">{{WEEKLY | titlecase}}</ion-button>
+        </div>
       </div>
-
       <ion-spinner *ngIf="isChartsDataLoading else chartsContent" name="dots"></ion-spinner>
       <ng-template #chartsContent>
-        <image-card *ngFor="let chart of charts" [isLoading]="isChartsDataLoading" [imageBase64]="chart.imageBase64">
-        </image-card>
-        <div *ngIf="charts.length===0" class="error-message">
-          <ion-icon name="warning-outline"></ion-icon>
-          <p>Something went wrong</p>
-          <small>Couldn't load charts</small>
+        <image-card *ngFor="let chart of charts" [isLoading]="isChartsDataLoading" [imageBase64]="chart.imageBase64" [reportName]="chart.reportName"></image-card>
+        <div *ngIf="!hasDashboardDetails else noReports" class="error-message">
+            <ion-icon name="warning-outline"></ion-icon>
+            <p>Failed to load the dashboard</p>
+            <small>Please reach out to tekVizion support.</small>
         </div>
+        <ng-template #noReports>
+          <div *ngIf="charts.length===0" class="error-message">
+              <p>No Reports available</p>
+          </div>
+        </ng-template>
       </ng-template>
-
-
-      <ion-card *ngIf="isNoteDataLoading else notesContent">
-        <ion-card-content class="ion-text-center">
-          <ion-spinner name="dots"></ion-spinner>
-        </ion-card-content>
-      </ion-card>
-      <ng-template #notesContent>
-        <ion-card *ngIf="latestNote" class="ion-text-left">
-          <ion-card-header>
-            <ion-card-subtitle>
-              <span>{{latestNote?.openDate | date: 'medium'}}</span>
-              <span *lcAccessControl="'deleteNote'" class="ion-activatable ripple-parent circle ion-float-end">
-                <ion-ripple-effect></ion-ripple-effect>
-                <ion-icon (click)="deleteNote()" size="small" name="close-circle-outline"></ion-icon>
-              </span>
-            </ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content>
-            {{latestNote.content}}
-          </ion-card-content>
-          <ion-card-content class="card-footer">
-            <span id="note-author">{{latestNote.openedBy}}</span>
-            <small id="previous-notes" *ngIf="previousNotes>0">{{previousNotes}} more <ion-icon
-                name="documents-outline"></ion-icon></small>
-          </ion-card-content>
-        </ion-card>
-        <ion-card *ngIf="!latestNote">
-          <ion-card-content>
-            <ion-icon size="large" name="document-text-outline"></ion-icon>
-            <div>No Notes yet.</div>
-          </ion-card-content>
-        </ion-card>
-      </ng-template>
-
       <!-- <ion-button fill="clear">
         Request Dev Contact Me
         <ion-icon slot="end" name="information-circle-outline"></ion-icon>
       </ion-button> -->
-
     </div>
   </div>
 </ion-content>

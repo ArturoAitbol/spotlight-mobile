@@ -7,6 +7,7 @@ import { DashboardPage } from './dashboard.page';
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { ImageCardComponent } from './image-card/image-card.component';
 import { SharedModule } from '../shared/shared.module';
+import { HistoricalDashboardPage } from './historical-dashboard/historical-dashboard.page';
 
 
 @NgModule({
@@ -17,6 +18,6 @@ import { SharedModule } from '../shared/shared.module';
     DashboardPageRoutingModule,
     SharedModule
   ],
-  declarations: [DashboardPage,ImageCardComponent]
+  declarations: [DashboardPage,ImageCardComponent,HistoricalDashboardPage]
 })
 export class DashboardPageModule {}

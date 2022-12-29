@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { ReportType } from '../helpers/report-type';
@@ -21,12 +21,21 @@ describe('CtaasDashboardService', () => {
     httpClientSpy.get.and.returnValue(NOTE_SERVICE_MOCK.getNoteList());
 
     const subaccountId = '00000-0000-000'
-    const reportType = ReportType.DailyCallingReliability;
+    const reportType = ReportType.DAILY_CALLING_RELIABILITY;
     ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType).subscribe({
         next: () => { done(); },
         error: done.fail
     });
-    expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`);
+    expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{params:undefined});
+
+    const timestampId = '20211001000100';
+    ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType,timestampId).subscribe({
+      next: () => { done(); },
+      error: done.fail
+  });
+  
+  let params = new HttpParams().append('timestampId', timestampId);
+  expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{ params: params });
   });
 
 });
