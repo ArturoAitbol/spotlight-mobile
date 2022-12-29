@@ -45,6 +45,9 @@ export class AppComponent implements OnInit,OnDestroy {
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
     }
+    // else{
+    //     this.pushNotificationService.initPush();
+    // }
 
     if(Capacitor.isNativePlatform()){
       this.router.events.subscribe((event: RouterEvent) => {

@@ -10,17 +10,15 @@ export class PushNotificationsService {
 
   constructor(private router: Router) { }
 
-  initPush() {
+  public initPush() {
     if (Capacitor.platform !== 'web') {
       this.registerPush();
     }
   }
 
   private registerPush() {
-     // This should go after login, now is only for testings
      PushNotifications.requestPermissions().then((permission) => {
       if (permission.receive) {
-        // Register with Apple / Google to receive push via APNS/FCM
         PushNotifications.addListener(
           'registration',
           (token: PushNotificationToken) => {
