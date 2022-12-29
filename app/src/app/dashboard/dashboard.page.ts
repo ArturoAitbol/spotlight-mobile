@@ -138,9 +138,9 @@ export class DashboardPage implements OnInit, OnDestroy {
             return 'Feature Functionality';
           case ReportType.DAILY_CALLING_RELIABILITY:
             return 'Calling Reliability';
-          case ReportType.DAILY_PESQ:
-          case ReportType.WEEKLY_PESQ:
-            return 'PESQ';
+          // case ReportType.DAILY_PESQ:
+          // case ReportType.WEEKLY_PESQ:
+          //   return 'PESQ'; disabling for now until mediastats are ready
       }
   }
 
