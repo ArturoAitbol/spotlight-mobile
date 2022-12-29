@@ -50,9 +50,9 @@ export class AppComponent implements OnInit,OnDestroy {
   
 
   initializeApp(){
-    this.platform.ready().then(()=>{
-      this.pushNotificationService.initPush();
-    });
+    // this.platform.ready().then(()=>{
+    //   this.pushNotificationService.initPush();
+    // });
   }
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
@@ -69,9 +69,9 @@ export class AppComponent implements OnInit,OnDestroy {
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
     }
-    // else{
-    //     this.pushNotificationService.initPush();
-    // }
+    else{
+        this.pushNotificationService.initPush();
+    }
 
     if(Capacitor.isNativePlatform()){
       this.router.events.subscribe((event: RouterEvent) => {
