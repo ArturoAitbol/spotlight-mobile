@@ -36,11 +36,7 @@
       </div>
       <ion-spinner *ngIf="isChartsDataLoading else chartsContent" name="dots"></ion-spinner>
       <ng-template #chartsContent>
-        <image-card *ngFor="let chart of charts"
-        [isLoading]="isChartsDataLoading"
-        [imageBase64]="chart.imageBase64"
-        [reportName]="chart.reportName">
-        </image-card>
+        <image-card *ngFor="let chart of charts" [isLoading]="isChartsDataLoading" [imageBase64]="chart.imageBase64" [reportName]="chart.reportName"></image-card>
         <div *ngIf="!hasDashboardDetails else noReports" class="error-message">
           <ion-icon name="warning-outline"></ion-icon>
           <p>Failed to load the dashboard</p>
