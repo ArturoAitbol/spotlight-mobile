@@ -38,22 +38,14 @@ export class AppComponent implements OnInit,OnDestroy {
     private foregroundService: DataRefresherService,
     private platform: Platform,
     private pushNotificationService: PushNotificationsService) {
-    this.initializeApp();
-    this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
-    this.platform.ready().then(() => {
-      this.platform.resume.subscribe((e) => {
-        this.foregroundService.announceBackFromBackground();
-      });
+      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.pushNotificationService));
+      this.platform.ready().then(() => {
+        this.platform.resume.subscribe((e) => {
+          this.foregroundService.announceBackFromBackground();
+        });
     });
   }
-
   
-
-  initializeApp(){
-    // this.platform.ready().then(()=>{
-    //   this.pushNotificationService.initPush();
-    // });
-  }
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
       if (status.connected) {
@@ -68,9 +60,6 @@ export class AppComponent implements OnInit,OnDestroy {
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
-    }
-    else{
-        this.pushNotificationService.initPush();
     }
 
     if(Capacitor.isNativePlatform()){
@@ -88,6 +77,8 @@ export class AppComponent implements OnInit,OnDestroy {
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
       takeUntil(this._destroying$))
       .subscribe((result: EventMessage)=>{
+        if (Capacitor.isNativePlatform())
+          this.pushNotificationService.initPush();
         const account = result.payload as AccountInfo;
         console.debug('login res: ',account);
         this.msalService.instance.setActiveAccount(account);

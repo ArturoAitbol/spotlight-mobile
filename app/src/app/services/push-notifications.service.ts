@@ -2,33 +2,38 @@ import { Injectable } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
 import { PushNotifications, PushNotificationToken, PushNotificationActionPerformed, PushNotification } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
+import { AdminDeviceService } from './admin-device.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PushNotificationsService {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private adminDeviceService: AdminDeviceService) { }
 
   public initPush() {
-    if (Capacitor.platform !== 'web') {
+    if (Capacitor.isNativePlatform()) {
       this.registerPush();
     }
   }
 
   private registerPush() {
-     PushNotifications.requestPermissions().then((permission) => {
+    PushNotifications.requestPermissions().then((permission) => {
       if (permission.receive) {
-        PushNotifications.addListener(
-          'registration',
-          (token: PushNotificationToken) => {
-            console.log("REGISTER PUSH");
-            console.log('My token: ' + JSON.stringify(token));
-          }
-        );
+        PushNotifications.addListener('registration', (token: PushNotificationToken) => {
+          let tokenString = JSON.stringify(token);
+          console.log("REGISTER PUSH");
+          console.log('My token: ' + tokenString);
+          localStorage.setItem("deviceToken", tokenString);
+          let deviceToken = {
+            deviceToken: tokenString
+          };
+          this.adminDeviceService.createAdminDevice(deviceToken);
+        });
         PushNotifications.register();
       } else {
         // No permission for push granted
+        console.log("ERROR REGISTERING PUSH NOTIFICAITONS");
       }
     });
 
@@ -55,5 +60,11 @@ export class PushNotificationsService {
         }
       }
     );
+  }
+
+  public unregisterDevice() {
+    let deviceToken = localStorage.getItem("deviceToken");
+    if (deviceToken)
+      this.adminDeviceService.deleteAdminDevice(deviceToken);
   }
 }
