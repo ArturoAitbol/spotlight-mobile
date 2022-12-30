@@ -63,8 +63,10 @@ export class PushNotificationsService {
   }
 
   public unregisterDevice() {
-    let deviceToken = localStorage.getItem("deviceToken");
-    if (deviceToken)
-      this.adminDeviceService.deleteAdminDevice(deviceToken);
+    if (Capacitor.isNativePlatform()) {
+      let deviceToken = localStorage.getItem("deviceToken");
+      if (deviceToken)
+        this.adminDeviceService.deleteAdminDevice(deviceToken);
+    }
   }
 }
