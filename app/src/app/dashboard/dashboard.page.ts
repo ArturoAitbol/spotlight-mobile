@@ -51,17 +51,19 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   fetchData(event?: any) {
-    this.subaccountService.getSubAccountList().subscribe((res) => {
+    this.subaccountService.getSubAccountList().subscribe((res) => { 
       if (res.subaccounts.length > 0) {
         this.subaccountService.setSubAccount(res.subaccounts[0]);
         this.subaccountId = this.subaccountService.getSubAccount().id;
         this.fetchCtaasDashboard(event);
       } else{
+      this.dashboardService.setReports(null);
         this.isChartsDataLoading = false;
         if (event)
         event.target.complete();
       }
     }, (err) => {
+      this.dashboardService.setReports(null);
       // console.error(err);
       this.isChartsDataLoading = false;
       if (event)
@@ -103,8 +105,8 @@ export class DashboardPage implements OnInit, OnDestroy {
           });
           this.charts = this.reports[this.DAILY];
           this.dashboardService.setReports(reportsIdentifiers);
-          this.dashboardService.announceDashboardRefresh();
         }
+        this.dashboardService.announceDashboardRefresh();
       }
       if (event) 
         event.target.complete();
@@ -113,6 +115,7 @@ export class DashboardPage implements OnInit, OnDestroy {
       console.error('Error loading dashboard reports ', e.error);
       this.isChartsDataLoading = false;
       this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
+      this.dashboardService.announceDashboardRefresh();
       if (event)
         event.target.complete();
     })
