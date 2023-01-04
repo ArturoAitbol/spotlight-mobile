@@ -34,6 +34,7 @@ export class CustomNavigationClient extends NavigationClient {
           this.pushNotificationService.unregisterDevice();
           browser.close();
           window.location.href = environment.REDIRECT_URL_APP;
+          localStorage.clear();
         }
       });
     } else {

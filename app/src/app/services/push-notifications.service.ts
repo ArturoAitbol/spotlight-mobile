@@ -9,7 +9,7 @@ import { AdminDeviceService } from './admin-device.service';
 })
 export class PushNotificationsService {
 
-  constructor(private router: Router, private adminDeviceService: AdminDeviceService) { }
+  constructor(private router: Router, public adminDeviceService: AdminDeviceService) { }
 
   public initPush() {
     if (Capacitor.isNativePlatform()) {
@@ -18,17 +18,21 @@ export class PushNotificationsService {
   }
 
   private registerPush() {
+    let adminDeviceService = this.adminDeviceService;
     PushNotifications.requestPermissions().then((permission) => {
       if (permission.receive) {
         PushNotifications.addListener('registration', (token: PushNotificationToken) => {
-          let tokenString = JSON.stringify(token);
           console.log("REGISTER PUSH");
-          console.log('My token: ' + tokenString);
-          localStorage.setItem("deviceToken", tokenString);
+          console.log('My token: ', token);
+          localStorage.setItem("deviceToken", token.value);
           let deviceToken = {
-            deviceToken: tokenString
+            deviceToken: token.value
           };
-          this.adminDeviceService.createAdminDevice(deviceToken);
+          adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
+            console.log(res);
+          },(err)=>{
+            console.error(err);
+          });
         });
         PushNotifications.register();
       } else {
@@ -65,8 +69,13 @@ export class PushNotificationsService {
   public unregisterDevice() {
     if (Capacitor.isNativePlatform()) {
       let deviceToken = localStorage.getItem("deviceToken");
-      if (deviceToken)
-        this.adminDeviceService.deleteAdminDevice(deviceToken);
+      if (deviceToken) {
+        this.adminDeviceService.deleteAdminDevice(deviceToken).subscribe((res)=>{
+          console.log(res);
+        },(err)=>{
+          console.error(err);
+        });
+      }
     }
   }
 }

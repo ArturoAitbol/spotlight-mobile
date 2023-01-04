@@ -50,7 +50,6 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   login() {
-    sessionStorage.clear();
     this.waitingForMsAuth = true;
     if (this.msalGuardConfig.authRequest) {
       this.msalService.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
