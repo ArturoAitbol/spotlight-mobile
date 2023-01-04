@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.tekvizion.aitbol.spotlight',
+  appId: 'com.tekvizion.spotlight',
   appName: 'spotlight-mobile',
   webDir: 'www',
   bundledWebRuntime: false,

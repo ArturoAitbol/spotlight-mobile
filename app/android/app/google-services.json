@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:874560354778:android:c38be7f9b9eae6f2abe8e3",
         "android_client_info": {
-          "package_name": "com.tekvizion.aitbol.spotlight"
+          "package_name": "com.tekvizion.spotlight"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tekvizion.aitbol.spotlight"
+                "bundle_id": "com.tekvizion.spotlight"
               }
             }
           ]
@@ -70,7 +70,7 @@
               "client_id": "874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tekvizion.aitbol.spotlight"
+                "bundle_id": "com.tekvizion.spotlight"
               }
             }
           ]
