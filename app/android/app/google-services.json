@@ -1,77 +1,34 @@
 {
   "project_info": {
-    "project_number": "874560354778",
-    "project_id": "notifications-test-805a4",
-    "storage_bucket": "notifications-test-805a4.appspot.com"
+    "project_number": "433974285608",
+    "project_id": "spotlight-integration",
+    "storage_bucket": "spotlight-integration.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874560354778:android:c38be7f9b9eae6f2abe8e3",
+        "mobilesdk_app_id": "1:433974285608:android:f9c158262dafb13c28ac1d",
         "android_client_info": {
           "package_name": "com.tekvizion.spotlight"
         }
       },
       "oauth_client": [
         {
-          "client_id": "874560354778-pbr0gs6682d7o5dl1iqiduuq1f3t5ra1.apps.googleusercontent.com",
+          "client_id": "433974285608-gf2ru789mq2b1othbhl39jfuvlota55k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCfUJt64APSKdxXD1Bv6KKLXnXDHt6zjs8"
+          "current_key": "AIzaSyBSD8Et-Xljvd5yzuA1DvbnhMGtaWrK3_U"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "874560354778-pbr0gs6682d7o5dl1iqiduuq1f3t5ra1.apps.googleusercontent.com",
+              "client_id": "433974285608-gf2ru789mq2b1othbhl39jfuvlota55k.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.tekvizion.spotlight"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:874560354778:android:cbaec8ae799d37c3abe8e3",
-        "android_client_info": {
-          "package_name": "io.ionic.starter"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "874560354778-pbr0gs6682d7o5dl1iqiduuq1f3t5ra1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCfUJt64APSKdxXD1Bv6KKLXnXDHt6zjs8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "874560354778-pbr0gs6682d7o5dl1iqiduuq1f3t5ra1.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.tekvizion.spotlight"
-              }
             }
           ]
         }
