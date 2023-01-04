@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AdminDeviceService {
 
-  private readonly API_URL: string = environment.apiEndpoint + '/subaccount_admin_device'; 
+  private readonly API_URL: string = environment.apiEndpoint + '/subaccountAdminDevices'; 
 
   constructor(private httpClient: HttpClient) { }
 
