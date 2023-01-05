@@ -374,6 +374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "6W94SHSZB6";
+				PROVISIONING_PROFILE_SPECIFIER = "NewAppProvisioning";
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = spotlight;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";

@@ -8,8 +8,6 @@ KEYSTORE_STORE_PASSWORD = ENV["KEYSTORE_STORE_PASSWORD"]
 ANDROID_JSON_KEY_FILE = ENV['ANDROID_JSON_KEY_FILE']
 
 ################ iOS ################
-xcode_select("/Applications/Xcode.app")
-
 DEVELOPER_APP_IDENTIFIER = ENV["DEVELOPER_APP_IDENTIFIER"]
 DEVELOPER_APP_ID = ENV["DEVELOPER_APP_ID"]
 PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
@@ -85,20 +83,19 @@ platform :ios do
       readonly: true,
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      api_key: api_key,
-      verbose: true
+      api_key: api_key
     )
 
     gym(
       configuration: "Release",
       workspace: "./ios/App/App.xcworkspace",
       scheme: "App",
-      export_method: "app-store",
-      export_options: {
-        provisioningProfiles: { 
-          DEVELOPER_APP_IDENTIFIER => "#{PROVISIONING_PROFILE_SPECIFIER}"
-        }
-      }
+      export_method: "app-store"
+      # export_options: {
+      #   provisioningProfiles: { 
+      #     DEVELOPER_APP_IDENTIFIER => "#{PROVISIONING_PROFILE_SPECIFIER}"
+      #   }
+      # }
     )
 
     # pilot(
