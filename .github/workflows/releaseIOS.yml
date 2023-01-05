@@ -160,7 +160,7 @@ jobs:
       - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v2.3.0
         env:
-          DEVELOPER_APP_IDENTIFIER: ${{ secrets.DEVELOPER_APP_IDENTIFIER }} #App bundle ID
+          DEVELOPER_APP_IDENTIFIER: com.tekvizion.spotlight #App bundle ID
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }} #Get From AppConnect
           PROVISIONING_PROFILE_SPECIFIER: NewAppProvisioning #App Bundle ID
           TEMP_KEYCHAIN_USER: login.keychain #Anything
