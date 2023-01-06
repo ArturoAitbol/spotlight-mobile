@@ -14,6 +14,8 @@ import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { AppComponent } from './app.component';
 import { IonToastService } from './services/ion-toast.service';
 import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
+import { PushNotificationsService } from './services/push-notifications.service';
+import { PUSH_NOTIFICATIONS_SERVICE_MOCK } from 'src/test/services/push-notifications.service.mock';
 
 const MSAL_BROADCAST_SERVICE_MOCK = new MsalBroadcastServiceMock(EventType.LOGIN_SUCCESS);
 
@@ -44,6 +46,10 @@ const defaultTestBedConfig = {
     {
       provide: Router,
       useValue: ROUTER_MOCK
+    },
+    {
+      provide: PushNotificationsService,
+      useValue: PUSH_NOTIFICATIONS_SERVICE_MOCK
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

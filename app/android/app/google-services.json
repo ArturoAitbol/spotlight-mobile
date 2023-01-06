@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "433974285608",
+    "project_id": "spotlight-integration",
+    "storage_bucket": "spotlight-integration.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433974285608:android:f9c158262dafb13c28ac1d",
+        "android_client_info": {
+          "package_name": "com.tekvizion.spotlight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "433974285608-gf2ru789mq2b1othbhl39jfuvlota55k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSD8Et-Xljvd5yzuA1DvbnhMGtaWrK3_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "433974285608-gf2ru789mq2b1othbhl39jfuvlota55k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

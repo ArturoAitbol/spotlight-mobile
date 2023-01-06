@@ -6,10 +6,11 @@ import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
-import { StatusBar } from '@capacitor/status-bar';
+import { StatusBar, StatusBarInfo } from '@capacitor/status-bar';
+import { PushNotificationsService } from './services/push-notifications.service';
+import { Platform } from '@ionic/angular';
 import { Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { Network } from '@capacitor/network';
-import { Platform } from '@ionic/angular';
 import { DataRefresherService } from './services/data-refresher.service';
 import { IonToastService } from './services/ion-toast.service';
 
@@ -30,20 +31,21 @@ export class AppComponent implements OnInit,OnDestroy {
   networkListener: PluginListenerHandle;
 
   constructor(private router: Router,
-              private msalService: MsalService,
-              private iab: InAppBrowser,
-              private msalBroadcastService: MsalBroadcastService,
-              private ionToastService: IonToastService,
-              private foregroundService: DataRefresherService,
-              private platform: Platform) {
-    this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
-    this.platform.ready().then(() => {
-      this.platform.resume.subscribe((e) => {
-        this.foregroundService.announceBackFromBackground();
-      });
+    private msalService: MsalService,
+    private iab: InAppBrowser,
+    private msalBroadcastService: MsalBroadcastService,
+    private ionToastService: IonToastService,
+    private foregroundService: DataRefresherService,
+    private platform: Platform,
+    private pushNotificationService: PushNotificationsService) {
+      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.pushNotificationService));
+      this.platform.ready().then(() => {
+        this.platform.resume.subscribe((e) => {
+          this.foregroundService.announceBackFromBackground();
+        });
     });
   }
-
+  
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
       if (status.connected) {
@@ -70,10 +72,13 @@ export class AppComponent implements OnInit,OnDestroy {
           }
       });
     }
+
     this.msalBroadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
       takeUntil(this._destroying$))
       .subscribe((result: EventMessage)=>{
+        if (Capacitor.isNativePlatform())
+          this.pushNotificationService.initPush();
         const account = result.payload as AccountInfo;
         console.debug('login res: ',account);
         this.msalService.instance.setActiveAccount(account);
@@ -119,7 +124,6 @@ export class AppComponent implements OnInit,OnDestroy {
     if (this.msalService.instance.getActiveAccount() != null) {
       try {
         this.msalService.logoutRedirect();
-        localStorage.clear();
       } catch (error) {
           console.error('error while logout: ', error);
       }
