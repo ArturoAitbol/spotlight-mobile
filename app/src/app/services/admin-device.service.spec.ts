@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ADMIN_DEVICE_SERVICE_MOCK } from 'src/test/services/admin-device.service.mock';
 
@@ -19,7 +19,7 @@ describe('AdminDeviceService', () => {
 
   
   it('should make the proper http calls on createAdminDevice()', (done: DoneFn) => {
-    httpClientSpy.post.and.returnValue(ADMIN_DEVICE_SERVICE_MOCK.createDevice());
+    httpClientSpy.post.and.returnValue(ADMIN_DEVICE_SERVICE_MOCK.createAdminDevice());
 
     const deviceToCreate: any = {
       token:'000-aaaa-bbbb-cccc',
@@ -29,18 +29,18 @@ describe('AdminDeviceService', () => {
         next: () => { done(); },
         error: done.fail
     });
-    expect(httpClientSpy.post).toHaveBeenCalledWith(environment.apiEndpoint + '/subaccount_admin_device',deviceToCreate);
+    expect(httpClientSpy.post).toHaveBeenCalledWith(environment.apiEndpoint + '/subaccountAdminDevices',deviceToCreate);
   });
 
   it('should make the proper http calls on deleteAdminDevice()', (done: DoneFn) => {
     let deviceId = '00000-0000-000'
-    httpClientSpy.delete.and.returnValue(ADMIN_DEVICE_SERVICE_MOCK.deleteDevice(deviceId));
+    httpClientSpy.delete.and.returnValue(ADMIN_DEVICE_SERVICE_MOCK.deleteAdminDevice(deviceId));
    
     deviceService.deleteAdminDevice(deviceId).subscribe({
         next: () => { done(); },
         error: done.fail
     });
-    expect(httpClientSpy.delete).toHaveBeenCalledWith(environment.apiEndpoint + '/subaccount_admin_device/'+ deviceId);
+    expect(httpClientSpy.delete).toHaveBeenCalledWith(environment.apiEndpoint + '/subaccountAdminDevices/'+ deviceId);
   });
 
 });

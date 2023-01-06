@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 
 export const ADMIN_DEVICE_SERVICE_MOCK = {
-    createDevice: ()=>{
+    createAdminDevice: ()=>{
         return new Observable((observer) => {
             observer.next(
                 JSON.parse(JSON.stringify({id:'00000-0000-000'}))
@@ -12,7 +12,7 @@ export const ADMIN_DEVICE_SERVICE_MOCK = {
             };
         });
     },
-    deleteDevice: (noteId:string)=>{
+    deleteAdminDevice: (token:string)=>{
         return new Observable((observer) => {
             observer.next();
             observer.complete();
