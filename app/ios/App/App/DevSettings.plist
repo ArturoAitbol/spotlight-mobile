@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>HUB_NAME</key>
+	<string>notificationTests</string>
+	<key>CONNECTION_STRING</key>
+	<string>Endpoint=sb://newTests.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=Y14GXRsZ+lGmvSSY9a3EW6zptXSsd4Jv41lCv6Ry4JQ=</string>
+</dict>	
+</plist>

@@ -83,7 +83,8 @@ describe('AddNoteComponent', () => {
   })
 
   it('should show a message if an error occurred when calling addNote()',async()=>{
-    spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError({error: "some error"}));
+    const err = {error: "some error"};
+    spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError(err));
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     const currentReports = '[{"timestampId":"1","reportType":"a-type"},{"timestampId":"2","reportType":"b-type"}]';
     localStorage.setItem(Constants.CURRENT_REPORTS,currentReports);
@@ -91,19 +92,20 @@ describe('AddNoteComponent', () => {
 
     await component.addNote();
 
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error creating a note","Error");
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error creating a note. " + err.error,"Error");
     expect(component.loading).toBeFalse();
   })
 
   it('should show a message when calling addNote() if there is not chart reports',async()=>{
-    spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError({error: "some error"}));
+    const err = {error: "some error"};
+    spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError(err));
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     localStorage.removeItem(Constants.CURRENT_REPORTS);
     fixture.detectChanges();
 
     await component.addNote();
 
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Couldn't create note: charts are missing","Error");
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error creating a note. " + err.error,"Error");
     expect(component.loading).toBeFalse();
   })
 

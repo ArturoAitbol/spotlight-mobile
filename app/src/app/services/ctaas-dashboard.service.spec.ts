@@ -21,20 +21,20 @@ describe('CtaasDashboardService', () => {
     httpClientSpy.get.and.returnValue(NOTE_SERVICE_MOCK.getNoteList());
 
     const subaccountId = '00000-0000-000'
-    const reportType = ReportType.DailyCallingReliability;
+    const reportType = ReportType.DAILY_CALLING_RELIABILITY;
     ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType).subscribe({
         next: () => { done(); },
         error: done.fail
     });
     expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{params:undefined});
 
-    const timestamp = '20211001000100';
-    ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType,timestamp).subscribe({
+    const timestampId = '20211001000100';
+    ctaasDashboardService.getCtaasDashboardDetails(subaccountId,reportType,timestampId).subscribe({
       next: () => { done(); },
       error: done.fail
   });
   
-  let params = new HttpParams().append('timestamp', timestamp);
+  let params = new HttpParams().append('timestampId', timestampId);
   expect(httpClientSpy.get).toHaveBeenCalledWith(environment.apiEndpoint + `/ctaasDashboard/${subaccountId}/${reportType}`,{ params: params });
   });
 

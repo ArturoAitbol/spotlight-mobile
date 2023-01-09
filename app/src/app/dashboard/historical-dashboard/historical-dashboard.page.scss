@@ -12,4 +12,38 @@
   font-size: 50px;
 }
 
+#toggle-buttons{
+  margin-top: 20px;
+}
+
+#toggle-buttons ion-button{
+  --background: #f8f8f8;
+  --color: rgb(0, 0, 0);
+  --box-shadow: none;
+  --border-color: #e0e0e0;
+  --border-style: solid;
+  --border-width: 1px;
+  text-transform: none;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+ion-button.left{
+  --border-radius: 3px 0px 0px 3px;
+}
+ion-button.right{
+  --border-radius: 0px 3px 3px 0px;
+}
+
+
+.active{
+  --background: #e0e0e0 !important;
+}
   
+ion-card{
+  border-radius: 15px;
+}
+
+#note-author{
+  font-weight: bolder;
+}

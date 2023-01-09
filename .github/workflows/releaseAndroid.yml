@@ -121,6 +121,9 @@ jobs:
           fileName: serviceAccount.json
           encodedString: ${{ secrets.ANDROID_JSON_KEY_FILE }}
 
+      - name: Grand execute permission for gradlew
+        run: chmod +x ${{ env.WORKING_DIR }}/android/gradlew
+
       - name: Deploy using Fastlane
         uses: maierj/fastlane-action@v2.3.0
         env:

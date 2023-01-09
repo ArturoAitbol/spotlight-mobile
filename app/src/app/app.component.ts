@@ -6,8 +6,13 @@ import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
-import { StatusBar } from '@capacitor/status-bar';
-import { Capacitor } from '@capacitor/core';
+import { StatusBar, StatusBarInfo } from '@capacitor/status-bar';
+import { PushNotificationsService } from './services/push-notifications.service';
+import { Platform } from '@ionic/angular';
+import { Capacitor, PluginListenerHandle } from '@capacitor/core';
+import { Network } from '@capacitor/network';
+import { DataRefresherService } from './services/data-refresher.service';
+import { IonToastService } from './services/ion-toast.service';
 
 @Component({
   selector: 'app-root',
@@ -22,15 +27,36 @@ export class AppComponent implements OnInit,OnDestroy {
   salutation: string;
   userInfo: any;
   private readonly _destroying$ = new Subject<void>();
+  networkStatus: any;
+  networkListener: PluginListenerHandle;
 
   constructor(private router: Router,
-              private msalService: MsalService,
-              private iab: InAppBrowser,
-              private msalBroadcastService: MsalBroadcastService) {
-    this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab));
+    private msalService: MsalService,
+    private iab: InAppBrowser,
+    private msalBroadcastService: MsalBroadcastService,
+    private ionToastService: IonToastService,
+    private foregroundService: DataRefresherService,
+    private platform: Platform,
+    private pushNotificationService: PushNotificationsService) {
+      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.pushNotificationService));
+      this.platform.ready().then(() => {
+        this.platform.resume.subscribe((e) => {
+          this.foregroundService.announceBackFromBackground();
+        });
+    });
   }
-
+  
   ngOnInit(): void {
+    this.networkListener = Network.addListener('networkStatusChange', (status) => {
+      if (status.connected) {
+        if (this.networkStatus && !this.networkStatus.connected) {
+          this.ionToastService.presentToast('Internet connection restored', 'Connected');
+          this.foregroundService.announceBackFromBackground();
+        }
+      } else
+        this.ionToastService.presentToast('No internet connection', 'Error');
+      this.networkStatus = status;
+    });
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
@@ -46,21 +72,24 @@ export class AppComponent implements OnInit,OnDestroy {
           }
       });
     }
+
     this.msalBroadcastService.msalSubject$
       .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
       takeUntil(this._destroying$))
       .subscribe((result: EventMessage)=>{
+        if (Capacitor.isNativePlatform())
+          this.pushNotificationService.initPush();
         const account = result.payload as AccountInfo;
         console.debug('login res: ',account);
         this.msalService.instance.setActiveAccount(account);
         if (this.isLoggedIn())
           this.router.navigate(['/']);
-      })
+      });
 
-      timer(0, 1000).subscribe(()=>{
-        this.dateTime = new Date();
-        this.salutation = this.getSalutation();
-      })
+    timer(0, 1000).subscribe(()=>{
+      this.dateTime = new Date();
+      this.salutation = this.getSalutation();
+    });
   }
 
   async setStatusBarColor(color:string) {
@@ -95,7 +124,6 @@ export class AppComponent implements OnInit,OnDestroy {
     if (this.msalService.instance.getActiveAccount() != null) {
       try {
         this.msalService.logoutRedirect();
-        localStorage.clear();
       } catch (error) {
           console.error('error while logout: ', error);
       }
@@ -105,5 +133,8 @@ export class AppComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this._destroying$.next(undefined);
     this._destroying$.complete();
+    if (this.networkListener) {
+      this.networkListener.remove;
+    }
   }
 }

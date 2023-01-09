@@ -7,7 +7,7 @@
     <test thread-count="5" name="LoginTest">
         <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>
-            <class name="com.tekvizion.iosTests.BasicTest"/>
+            <class name="com.tekvizion.iosTests.LoginTest"/>
         </classes>
     </test>
 </suite>
