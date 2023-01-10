@@ -29,7 +29,6 @@ export class PushNotificationsService {
     });
 
     PushNotifications.addListener('registration', (token: Token) => {
-      alert('Push registration success, token: ' + token.value);
       console.log("REGISTER PUSH");
       console.log('My token: ', token);
       localStorage.setItem("deviceToken", token.value);
@@ -53,13 +52,12 @@ export class PushNotificationsService {
        // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
        (notification: PushNotificationSchema) => {
-         alert('Push received: ' + JSON.stringify(notification));
+        alert('Push received: ' + JSON.stringify(notification));
     });
 
     PushNotifications.addListener(
       'pushNotificationActionPerformed',
       (notification: ActionPerformed) => {
-        alert('Push action performed: ' + JSON.stringify(notification));
         const data = notification.notification.data;
         console.log('Action performed: ' + JSON.stringify(notification.notification));
         if (data.detailsId) {
