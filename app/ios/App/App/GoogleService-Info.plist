@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb.apps.googleusercontent.com</string>
+	<string>433974285608-9v9aindhc8ca5amcqddo7d1govhtr3dp.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.874560354778-ho0mong3r9j7sukvclvdrhqq9k5242bb</string>
+	<string>com.googleusercontent.apps.433974285608-9v9aindhc8ca5amcqddo7d1govhtr3dp</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDcQbUbnTsMX7xzDPfl6Mn1L9yNpCdVHBI</string>
+	<string>AIzaSyDv7mduWMcsvo2UpRAcnqWct4J0Cbr8lnQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>874560354778</string>
+	<string>433974285608</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.tekvizion.spotlight</string>
 	<key>PROJECT_ID</key>
-	<string>notifications-test-805a4</string>
+	<string>spotlight-integration</string>
 	<key>STORAGE_BUCKET</key>
-	<string>notifications-test-805a4.appspot.com</string>
+	<string>spotlight-integration.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:874560354778:ios:16c85b1375d5c655abe8e3</string>
+	<string>1:433974285608:ios:83a8482747e24f8728ac1d</string>
 </dict>
 </plist>

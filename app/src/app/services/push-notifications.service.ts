@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
-import { PushNotifications, PushNotificationToken, PushNotificationActionPerformed, PushNotification } from '@capacitor/push-notifications';
+import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
 
@@ -20,20 +20,7 @@ export class PushNotificationsService {
   private registerPush() {
     let adminDeviceService = this.adminDeviceService;
     PushNotifications.requestPermissions().then((permission) => {
-      if (permission.receive) {
-        PushNotifications.addListener('registration', (token: PushNotificationToken) => {
-          console.log("REGISTER PUSH");
-          console.log('My token: ', token);
-          localStorage.setItem("deviceToken", token.value);
-          let deviceToken = {
-            deviceToken: token.value
-          };
-          adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
-            console.log(res);
-          },(err)=>{
-            console.error(err);
-          });
-        });
+      if (permission.receive === 'granted') {
         PushNotifications.register();
       } else {
         // No permission for push granted
@@ -41,29 +28,42 @@ export class PushNotificationsService {
       }
     });
 
+    PushNotifications.addListener('registration', (token: Token) => {
+      console.log("REGISTER PUSH");
+      console.log('My token: ', token);
+      localStorage.setItem("deviceToken", token.value);
+      let deviceToken = {
+        deviceToken: token.value
+      };
+      adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
+        console.log(res);
+      },(err)=>{
+        console.error(err);
+      });
+    });
     
 
+
     PushNotifications.addListener('registrationError', (error: any) => {
+      alert('Error on registration: ' + JSON.stringify(error));
       console.log('Error: ' + JSON.stringify(error));
     });
 
-    PushNotifications.addListener(
-      'pushNotificationReceived',
-      async (notification: PushNotification) => {
-        console.log('Push received: ' + JSON.stringify(notification));
-      }
-    );
+       // Show us the notification payload if the app is open on our device
+    PushNotifications.addListener('pushNotificationReceived',
+       (notification: PushNotificationSchema) => {
+        alert('Push received: ' + JSON.stringify(notification));
+    });
 
     PushNotifications.addListener(
       'pushNotificationActionPerformed',
-      async (notification: PushNotificationActionPerformed) => {
+      (notification: ActionPerformed) => {
         const data = notification.notification.data;
         console.log('Action performed: ' + JSON.stringify(notification.notification));
         if (data.detailsId) {
           this.router.navigateByUrl(`/home/${data.detailsId}`);
         }
-      }
-    );
+    });
   }
 
   public unregisterDevice() {
