@@ -123,7 +123,11 @@ export class AppComponent implements OnInit,OnDestroy {
   logout(){
     if (this.msalService.instance.getActiveAccount() != null) {
       try {
-        this.msalService.logoutRedirect();
+        this.pushNotificationService.unregisterDevice((success: boolean) => {
+          if (!success)
+            console.error('error while logout');
+          this.msalService.logoutRedirect();
+        });
       } catch (error) {
           console.error('error while logout: ', error);
       }

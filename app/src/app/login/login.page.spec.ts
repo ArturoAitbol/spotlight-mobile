@@ -93,7 +93,7 @@ describe('LoginPage', () => {
     expect(signInTitle.textContent).toBe('Spotlight');
     expect(loginButton.textContent).toContain('Login');
     expect(disclaimer.textContent).toContain('By clicking Login, I agree to the');
-    expect(copyright.textContent).toContain('2022 tekVizion PVS inc. All Rights Reserved');
+    expect(copyright.textContent).toContain('2023 tekVizion PVS inc. All Rights Reserved');
   });
 
   it('should navigate to "/" if there is a user logged in', () => {
