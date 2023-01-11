@@ -1,4 +1,4 @@
 export const PUSH_NOTIFICATIONS_SERVICE_MOCK = {
     initPush: ()=> {},
-    unregisterDevice: ()=> {}
+    unregisterDevice: (callback)=> { return callback(true); }
 }
