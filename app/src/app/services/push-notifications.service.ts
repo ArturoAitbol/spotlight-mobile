@@ -66,16 +66,20 @@ export class PushNotificationsService {
     );
   }
 
-  public unregisterDevice() {
+  public unregisterDevice(callback) {
     if (Capacitor.isNativePlatform()) {
       let deviceToken = localStorage.getItem("deviceToken");
       if (deviceToken) {
         this.adminDeviceService.deleteAdminDevice(deviceToken).subscribe((res)=>{
+          callback(true);
           console.log(res);
         },(err)=>{
+          callback(false);
           console.error(err);
         });
-      }
-    }
+      } else 
+        callback(true);
+    } else 
+      callback(true);
   }
 }

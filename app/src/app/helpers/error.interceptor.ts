@@ -18,7 +18,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 if (!err.status)
                     this.ionToastService.presentToast('No internet connection', 'Error');
                 else 
-                    this.ionToastService.presentToast(error, 'Error');
+                    this.ionToastService.presentToast(error.error, 'Error');
                 return throwError(error);
             })
         );

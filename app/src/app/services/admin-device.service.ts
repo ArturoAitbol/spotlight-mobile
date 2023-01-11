@@ -28,7 +28,7 @@ export class AdminDeviceService {
    * @returns: Observable 
    */
   public deleteAdminDevice(deviceToken:string): Observable<any>{
-    return this.httpClient.delete(`${this.API_URL}/${deviceToken}`);
+    return this.httpClient.delete(`${this.API_URL}/${encodeURIComponent(deviceToken)}`);
   }
 
 }
