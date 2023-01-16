@@ -32,10 +32,19 @@ public class IOSActions {
         params.put("direction", "down");
         driver.executeScript("mobile: scroll",params);
     }
+
+    public void click(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.click();
+    }
     
     public void checkElement(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));
     }
 
-
+    public String getText(WebElement element){
+        String text = "";
+        text = wait.until(ExpectedConditions.visibilityOf(element)).getText();
+        return text;
+    }
 }

@@ -38,7 +38,7 @@ public class IOSBaseTest extends AppiumUtils {
         properties.load(file);
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
-        service = startAppiumServer(ipAddress, Integer.parseInt(port));
+//        service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
         XCUITestOptions options = new XCUITestOptions();
         options.setUdid(System.getProperty("deviceUDID"));
@@ -47,8 +47,8 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
 
-        this.driver = new IOSDriver(service.getUrl(), options);
-//        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
+//        this.driver = new IOSDriver(service.getUrl(), options);
+        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
