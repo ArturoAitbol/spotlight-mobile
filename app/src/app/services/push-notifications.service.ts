@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
-import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
+import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, Channel } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
+import { Constants } from '../helpers/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,15 @@ export class PushNotificationsService {
 
   public initPush() {
     if (Capacitor.isNativePlatform()) {
+      if(Capacitor.getPlatform()===Constants.ANDROID_PLATFORM){
+        let channel : Channel = {
+          id: 'notes-notifications',
+          name: 'Notes notifications',
+          importance: 4, //IMPORTANCE_HIGH
+          vibration: true
+        }
+        PushNotifications.createChannel(channel);
+      }
       this.registerPush();
     }
   }
@@ -24,13 +34,11 @@ export class PushNotificationsService {
         PushNotifications.register();
       } else {
         // No permission for push granted
-        console.log("ERROR REGISTERING PUSH NOTIFICAITONS");
+        console.error("ERROR REGISTERING PUSH NOTIFICAITONS");
       }
     });
 
     PushNotifications.addListener('registration', (token: Token) => {
-      console.log("REGISTER PUSH");
-      console.log('My token: ', token);
       localStorage.setItem("deviceToken", token.value);
       let deviceToken = {
         deviceToken: token.value
@@ -46,7 +54,7 @@ export class PushNotificationsService {
 
     PushNotifications.addListener('registrationError', (error: any) => {
       alert('Error on registration: ' + JSON.stringify(error));
-      console.log('Error: ' + JSON.stringify(error));
+      console.error('Error: ' + error);
     });
 
        // Show us the notification payload if the app is open on our device
@@ -60,9 +68,7 @@ export class PushNotificationsService {
       (notification: ActionPerformed) => {
         const data = notification.notification.data;
         console.log('Action performed: ' + JSON.stringify(notification.notification));
-        if (data.detailsId) {
-          this.router.navigateByUrl(`/home/${data.detailsId}`);
-        }
+        this.router.navigateByUrl(`/tabs/notes`);
     });
   }
 
