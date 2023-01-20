@@ -3,6 +3,7 @@ import { Capacitor} from '@capacitor/core';
 import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
+import { Badge } from '@capawesome/capacitor-badge';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,11 @@ import { AdminDeviceService } from './admin-device.service';
 export class PushNotificationsService {
 
   constructor(private router: Router, public adminDeviceService: AdminDeviceService) { }
-
+  
   public initPush() {
     if (Capacitor.isNativePlatform()) {
       this.registerPush();
+      this.refreshBadgeCount();
     }
   }
 
@@ -31,6 +33,7 @@ export class PushNotificationsService {
     PushNotifications.addListener('registration', (token: Token) => {
       console.log("REGISTER PUSH");
       console.log('My token: ', token);
+      alert("token"+ token);
       localStorage.setItem("deviceToken", token.value);
       let deviceToken = {
         deviceToken: token.value
@@ -42,8 +45,6 @@ export class PushNotificationsService {
       });
     });
     
-
-
     PushNotifications.addListener('registrationError', (error: any) => {
       alert('Error on registration: ' + JSON.stringify(error));
       console.log('Error: ' + JSON.stringify(error));
@@ -52,6 +53,8 @@ export class PushNotificationsService {
        // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
        (notification: PushNotificationSchema) => {
+        this.increaseBadgeCount();
+        console.log("Push received: " + JSON.stringify(notification));
         alert('Push received: ' + JSON.stringify(notification));
     });
 
@@ -61,6 +64,7 @@ export class PushNotificationsService {
         const data = notification.notification.data;
         console.log('Action performed: ' + JSON.stringify(notification.notification));
         if (data.detailsId) {
+          this.decreaseBadgeCount();
           this.router.navigateByUrl(`/home/${data.detailsId}`);
         }
     });
@@ -81,5 +85,36 @@ export class PushNotificationsService {
         callback(true);
     } else 
       callback(true);
+  }
+  public async getBadgeCount(): Promise<number> {
+    const result = await Badge.get();
+    console.log("badge count: "+result.count);
+    return result.count;
+  }
+
+  public async setBadgeCount(): Promise<void> {
+    const badgeCount = localStorage.getItem("badgeCount");
+    let count;
+    if(count!= null)
+      count = Number(badgeCount);
+    else
+      count = 0;
+    await Badge.set({count});
+    await this.refreshBadgeCount();
+  }
+
+  public async increaseBadgeCount(): Promise<void> {
+    await Badge.increase();
+    await this.refreshBadgeCount();
+  }
+
+  public async decreaseBadgeCount(): Promise<void> {
+    await Badge.decrease();
+    await this.refreshBadgeCount();
+  }
+  private async refreshBadgeCount(): Promise<void> {
+    let deviceToken;
+    const badgeCount = await this.getBadgeCount();
+    localStorage.setItem("badgeCount", badgeCount.toString());
   }
 }
