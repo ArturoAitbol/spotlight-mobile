@@ -6,7 +6,7 @@ import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
-import { StatusBar, StatusBarInfo } from '@capacitor/status-bar';
+import { StatusBar } from '@capacitor/status-bar';
 import { PushNotificationsService } from './services/push-notifications.service';
 import { Platform } from '@ionic/angular';
 import { Capacitor, PluginListenerHandle } from '@capacitor/core';
@@ -60,6 +60,8 @@ export class AppComponent implements OnInit,OnDestroy {
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
+    }else{
+      this.pushNotificationService.AddActionAndReceivedListeners();
     }
 
     if(Capacitor.isNativePlatform()){
