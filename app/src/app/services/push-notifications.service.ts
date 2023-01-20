@@ -101,7 +101,7 @@ export class PushNotificationsService {
   async showInAppNotification(notification: PushNotificationSchema) {
 
     const buttons: AlertButton[] = [{
-        text: 'Close',
+        text: 'OK',
         role: 'cancel',
       }]
 
