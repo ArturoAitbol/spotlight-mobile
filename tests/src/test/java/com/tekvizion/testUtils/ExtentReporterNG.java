@@ -16,7 +16,7 @@ public class ExtentReporterNG {
             path =  path + "//reports//index.html";
 
         ExtentSparkReporter reporter = new ExtentSparkReporter(path);
-        reporter.config().setReportName("Spotlight Mobile Report");
+        reporter.config().setReportName("tekvizion 360 Report");
         reporter.config().setDocumentTitle("Functional Test Results");
 
         extent = new ExtentReports();
