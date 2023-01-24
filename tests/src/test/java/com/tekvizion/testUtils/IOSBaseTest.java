@@ -46,6 +46,9 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaLaunchTimeout(Duration.ofSeconds(180));
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
+//        options.setForceSimulatorSoftwareKeyboardPresence(false);
+//        options.setConnectHardwareKeyboard(true);
+
 
 //        this.driver = new IOSDriver(service.getUrl(), options);
         this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);

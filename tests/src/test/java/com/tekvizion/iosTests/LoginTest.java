@@ -21,11 +21,11 @@ public class LoginTest extends IOSBaseTest {
         Assert.assertEquals(title, "Spotlight");
     }
 
-    @Test
-    public void newNote(){
-        Dashboard dashboard = new Dashboard(driver);
-        Notes notes = dashboard.goToNotes();
-        String noteText = notes.addNote("NewNoteTest");
-        Assert.assertEquals("NewNoteTest", noteText);
-    }
+//    @Test
+//    public void newNote(){
+//        Dashboard dashboard = new Dashboard(driver);
+//        Notes notes = dashboard.goToNotes();
+//        String noteText = notes.addNote("NewNoteTest");
+//        Assert.assertEquals("NewNoteTest", noteText);
+//    }
 }

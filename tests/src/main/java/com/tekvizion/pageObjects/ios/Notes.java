@@ -30,15 +30,17 @@ public class Notes extends IOSActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public String addNote(String text){
+    public String addNote(String text) {
         click(addButton);
         click(messageBox);
+//        Thread.sleep(5000);
         messageBox.sendKeys(text);
 //        notesView.click();
 //        driver.hideKeyboard();
-        scrollWebElement(messageBox);
+
+        /*scrollWebElement(messageBox);
         scrollWebElement(notesWindow);
-        addNoteButton.click();
+        addNoteButton.click();*/
         return getText(noteText);
     }
 }

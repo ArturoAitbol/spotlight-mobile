@@ -44,7 +44,7 @@ public class Login extends IOSActions {
         signInButton.click();
         click(noStaySignedIn);
 //        click(allowNotifications);
-        click(errorMessage);
+//        click(errorMessage);
         return new Dashboard(this.driver);
     }
 }
