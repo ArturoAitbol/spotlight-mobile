@@ -3,4 +3,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 15px;
+    color: rgb(165, 165, 165);
+    font-size: 15px;
+}
+
+.title{
+    font-weight: bold;
+    font-size: 16px !important;
+}
+
+ion-icon{
+    font-size: 60px;
 }
