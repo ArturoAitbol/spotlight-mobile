@@ -27,7 +27,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   readonly DAILY: string = 'daily';
   readonly WEEKLY: string = 'weekly';
   selectedPeriod: string = this.DAILY;
-  
+
   foregroundSubscription: Subscription;
 
   constructor(private ctaasDashboardService: CtaasDashboardService,
@@ -51,24 +51,8 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   fetchData(event?: any) {
-    this.subaccountService.getSubAccountList().subscribe((res) => { 
-      if (res.subaccounts.length > 0) {
-        this.subaccountService.setSubAccount(res.subaccounts[0]);
-        this.subaccountId = this.subaccountService.getSubAccount().id;
-        this.fetchCtaasDashboard(event);
-      } else{
-      this.dashboardService.setReports(null);
-        this.isChartsDataLoading = false;
-        if (event)
-        event.target.complete();
-      }
-    }, (err) => {
-      this.dashboardService.setReports(null);
-      // console.error(err);
-      this.isChartsDataLoading = false;
-      if (event)
-        event.target.complete();
-    });
+    this.subaccountId = this.subaccountService.getSubAccount().id;
+    this.fetchCtaasDashboard(event);
   }
 
   handleRefresh(event) {
@@ -94,7 +78,7 @@ export class DashboardPage implements OnInit, OnDestroy {
         const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
         if (result.length > 0) {
           this.hasDashboardDetails = true;
-          const reportsIdentifiers: any[] = []; 
+          const reportsIdentifiers: any[] = [];
           result.forEach((e) => {
               let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
               reportsIdentifiers.push(reportIdentifier);
@@ -108,7 +92,7 @@ export class DashboardPage implements OnInit, OnDestroy {
         }
         this.dashboardService.announceDashboardRefresh();
       }
-      if (event) 
+      if (event)
         event.target.complete();
       this.isChartsDataLoading = false;
     }, (e) => {
@@ -131,8 +115,8 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   /**
    * get report name by report type
-   * @param reportType: string 
-   * @returns: string 
+   * @param reportType: string
+   * @returns: string
    */
   getReportNameByType(reportType: string): string {
     switch (reportType) {

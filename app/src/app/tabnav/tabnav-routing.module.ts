@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RoleGuard } from '../security/role.guard';
+import { ServiceGuard } from '../security/service.guard';
 
 import { TabnavPage } from './tabnav.page';
 
@@ -13,12 +14,12 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardPageModule),
-        canActivate:[RoleGuard]
+        canActivate:[RoleGuard,ServiceGuard]
       },
       {
         path: 'notes',
         loadChildren: () => import('../notes/notes.module').then(m => m.SettingsPageModule),
-        canActivate:[RoleGuard]
+        canActivate:[RoleGuard,ServiceGuard]
       },
       {
         path: '',
