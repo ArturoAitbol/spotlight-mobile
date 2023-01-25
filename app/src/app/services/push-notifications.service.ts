@@ -1,13 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
-// import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
-import {
-  FirebaseMessaging,
-  GetTokenOptions,
-  Notification,
-} from '@capacitor-firebase/messaging';import { Router } from '@angular/router';
+// import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, Channel } from '@capacitor/push-notifications';
+import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
+import { Constants } from '../helpers/constants';
+import { AlertController, AlertButton } from '@ionic/angular';
+import { DataRefresherService } from './data-refresher.service';
 import { Badge } from '@capawesome/capacitor-badge';
+import { FirebaseMessaging, GetTokenOptions, Notification } from '@capacitor-firebase/messaging';
+
 const LOGTAG = '[FirebaseMessagingPage]';
 @Injectable({
   providedIn: 'root'
@@ -16,32 +17,20 @@ export class PushNotificationsService {
   public token = '';
   public deliveredNotifications: Notification[] = [];
 
-  constructor(private router: Router, public adminDeviceService: AdminDeviceService, private readonly ngZone: NgZone) { 
-    FirebaseMessaging.removeAllListeners().then(() => {
-      FirebaseMessaging.addListener('tokenReceived', (event) => {
-        console.log(`${LOGTAG} tokenReceived`, { event });
-        this.ngZone.run(() => {
-          this.token = event.token;
-          localStorage.setItem("deviceToken", this.token);
-        });
-      });
-      FirebaseMessaging.addListener('notificationReceived', (event) => {
-        console.log(`${LOGTAG} notificationReceived`, { event });
-        this.increaseBadgeCount();
-      });
-      FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
-        console.log(`${LOGTAG} notificationActionPerformed`, { event });
-      });
-    });
-    if (!Capacitor.isNativePlatform()) {
-      navigator.serviceWorker.addEventListener('message', (event: any) => {
-        console.log(`${LOGTAG} serviceWorker message`, { event });
-      });
-    }
-  }
-  
+  constructor(private router: Router, public adminDeviceService: AdminDeviceService,
+    private alertController: AlertController,private dataRefresherService: DataRefresherService, private readonly ngZone: NgZone) { }
+
   public initPush() {
     if (Capacitor.isNativePlatform()) {
+      // if(Capacitor.getPlatform()===Constants.ANDROID_PLATFORM){
+      //   let channel : Channel = {
+      //     id: 'notes-notifications',
+      //     name: 'Notes notifications',
+      //     importance: 4, //IMPORTANCE_HIGH
+      //     vibration: true
+      //   }
+      //   PushNotifications.createChannel(channel);
+      // }
       this.registerPush();
       this.refreshBadgeCount();
     }
@@ -49,46 +38,43 @@ export class PushNotificationsService {
 
   private registerPush() {
     let adminDeviceService = this.adminDeviceService;
+    FirebaseMessaging.requestPermissions().then(function(permission){
+      if(permission.receive === "granted"){
+        FirebaseMessaging.addListener('tokenReceived', (event) => {
+          let deviceToken = {
+            deviceToken: event.token
+          };
+          console.log("new token: " +deviceToken);
+          localStorage.setItem("deviceToken", event.token);
+          adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
+            console.log(res);
+          },(err)=>{
+            console.error(err);
+          });
+        });
+      }
+      else{
+        console.error("ERROR REGISTERING PUSH NOTIFICAITONS");
+      }
+    });
+    this.AddActionAndReceivedListeners();
+  }
 
+  public AddActionAndReceivedListeners(){
+    FirebaseMessaging.addListener('notificationReceived', (event) => {
+      if(event.notification.body != null)
+        this.showInAppNotification(event.notification);
 
-  //   PushNotifications.addListener('registration', (token: Token) => {
-  //     console.log("REGISTER PUSH");
-  //     console.log('My token: ', token);
-  //     alert("token"+ token);
-  //     localStorage.setItem("deviceToken", token.value);
-  //     let deviceToken = {
-  //       deviceToken: token.value
-  //     };
-  //     adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
-  //       console.log(res);
-  //     },(err)=>{
-  //       console.error(err);
-  //     });
-  //   });
-    
-  //   PushNotifications.addListener('registrationError', (error: any) => {
-  //     alert('Error on registration: ' + JSON.stringify(error));
-  //     console.log('Error: ' + JSON.stringify(error));
-  //   });
+      if(this.router.url==='/tabs/notes')
+        this.dataRefresherService.announceBackFromBackground();
+      this.increaseBadgeCount();
 
-  //      // Show us the notification payload if the app is open on our device
-  //   PushNotifications.addListener('pushNotificationReceived',
-  //      (notification: PushNotificationSchema) => {
-  //       this.increaseBadgeCount();
-  //       console.log("Push received: " + JSON.stringify(notification));
-  //       alert('Push received: ' + JSON.stringify(notification));
-  //   });
-
-  //   PushNotifications.addListener(
-  //     'pushNotificationActionPerformed',
-  //     (notification: ActionPerformed) => {
-  //       const data = notification.notification.data;
-  //       console.log('Action performed: ' + JSON.stringify(notification.notification));
-  //       if (data.detailsId) {
-  //         this.decreaseBadgeCount();
-  //         this.router.navigateByUrl(`/home/${data.detailsId}`);
-  //       }
-  //   });
+    });
+    FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
+      this.router.navigateByUrl(`/tabs/notes`);
+      this.resetBadgeCount();
+      this.removeAllDeliveredNotifications();
+    });
   }
 
   public async requestPermissions(): Promise<void> {
@@ -97,23 +83,12 @@ export class PushNotificationsService {
 
   public async getToken(): Promise<void> {
     const result = await FirebaseMessaging.getToken();
-    console.log("token: "+result.token);
     this.token = result.token;
   }
-
-  public async deleteToken(): Promise<void> {
-    await FirebaseMessaging.deleteToken();
-    this.token = '';
-  }
-
-  public async getDeliveredNotifications(): Promise<void> {
-    const result = await FirebaseMessaging.getDeliveredNotifications();
-    this.deliveredNotifications = result.notifications;
-  }
-
+  
   public async removeAllDeliveredNotifications(): Promise<void> {
     await FirebaseMessaging.removeAllDeliveredNotifications();
-    await this.getDeliveredNotifications();
+    // await this.getDeliveredNotifications();
   }
 
   public async removeDeliveredNotifications(
@@ -129,6 +104,7 @@ export class PushNotificationsService {
     if (Capacitor.isNativePlatform()) {
       let deviceToken = localStorage.getItem("deviceToken");
       if (deviceToken) {
+        FirebaseMessaging.removeAllListeners();
         this.adminDeviceService.deleteAdminDevice(deviceToken).subscribe((res)=>{
           callback(true);
           console.log(res);
@@ -141,9 +117,45 @@ export class PushNotificationsService {
     } else 
       callback(true);
   }
+
+  async showInAppNotification(notification: Notification) {
+
+    const buttons: AlertButton[] = [{
+        text: 'OK',
+        role: 'cancel',
+      }]
+
+    if(this.router.url!=='/tabs/notes'){
+      buttons.push({
+        text: 'Go to Notes',
+        handler: () => {
+          this.router.navigateByUrl('/tabs/notes');
+        }
+      })
+    }
+
+    const alert = await this.alertController.create({
+      header: notification.title,
+      message: notification.body, 
+      buttons: buttons,
+    });
+    await alert.present();
+
+    await alert.onDidDismiss();
+    FirebaseMessaging.removeAllDeliveredNotifications();
+    if(this.router.url!=='/tabs/notes')
+      this.dataRefresherService.announceBackFromBackground();
+  }
+
+
+  public async getDeliveredNotifications(): Promise<void> {
+    const result = await FirebaseMessaging.getDeliveredNotifications();
+    this.deliveredNotifications = result.notifications;
+    // return this.deliveredNotifications[this.getDeliveredNotifications.length - 1];
+  }
+
   public async getBadgeCount(): Promise<number> {
     const result = await Badge.get();
-    console.log("badge count: "+result.count);
     return result.count;
   }
 
@@ -171,5 +183,10 @@ export class PushNotificationsService {
     let deviceToken;
     const badgeCount = await this.getBadgeCount();
     localStorage.setItem("badgeCount", badgeCount.toString());
+  }
+  private async resetBadgeCount(): Promise<void> {
+    let count = 0;
+    await Badge.set({count});
+    localStorage.setItem("badgeCount", count.toString());
   }
 }
