@@ -88,6 +88,9 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
             androidDeviceDesiredCapabilities.setCapability(desiredCapability.getOptionName(), desiredCapability.getValue());
         }
         try {
+//            androidDeviceDesiredCapabilities.setCapability("unicodeKeyboard", true);
+//            androidDeviceDesiredCapabilities.setCapability("resetKeyboard", true);
+//            androidDeviceDesiredCapabilities.setCapability("autoWebview", true);
             System.out.println("Starting driver initialization for " + this.udid + " using system port " + this.automationPort);
             this.setDriver(new AndroidDriver(new URL(this.appiumServerURL), androidDeviceDesiredCapabilities));
         } catch (MalformedURLException malformedURLException) {
@@ -104,7 +107,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(this.platformName);
         desiredCapabilities.add(this.platformVersion);
         desiredCapabilities.add(this.udid);
-        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
+//        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.ANDROID_TIMEOUT, 150000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.SERVER_TIMEOUT, 150000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_PACKAGE_WAIT_TIMEOUT, 150000));

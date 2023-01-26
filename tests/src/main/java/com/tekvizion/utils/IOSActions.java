@@ -13,10 +13,11 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IOSActions {
+public class IOSActions extends MobileActions {
     IOSDriver driver;
     WebDriverWait wait;
     public IOSActions(IOSDriver driver){
+//        super(driver);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.driver = driver;
     }

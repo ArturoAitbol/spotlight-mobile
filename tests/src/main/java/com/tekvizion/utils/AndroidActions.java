@@ -3,22 +3,52 @@ package com.tekvizion.utils;
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Base64;
 
 public class AndroidActions {
     AndroidDriver driver;
+    WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.driver = driver;
+    }
+
+    public void click(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.click();
+    }
+
+    public void checkElement(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public String getText(WebElement element){
+        String text = "";
+        text = wait.until(ExpectedConditions.visibilityOf(element)).getText();
+        return text;
+    }
+    public void sendKeys(WebElement element, String text){
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.sendKeys(text);
+    }
+
+    public void sendKeys(By selector, String text){
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(selector));
+        element.sendKeys(text);
     }
 
     public void longPress(WebElement element){

@@ -37,7 +37,7 @@ public class AndroidBaseTest extends AppiumUtils {
         AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
         androidDevice.initializeIfNeeded();
         this.driver = androidDevice.getDriver();
-        this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+//        this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @AfterClass
