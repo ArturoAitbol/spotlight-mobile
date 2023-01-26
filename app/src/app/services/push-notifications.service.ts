@@ -2,11 +2,11 @@ import { Injectable, NgZone } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
 import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
-import { Constants } from '../helpers/constants';
 import { AlertController, AlertButton } from '@ionic/angular';
 import { DataRefresherService } from './data-refresher.service';
 import { Badge } from '@capawesome/capacitor-badge';
-import { FirebaseMessaging, GetTokenOptions, Notification } from '@capacitor-firebase/messaging';
+import { FirebaseMessaging, Notification } from '@capacitor-firebase/messaging';
+import { Subject } from 'rxjs';
 
 const LOGTAG = '[FirebaseMessagingPage]';
 @Injectable({
@@ -16,8 +16,15 @@ export class PushNotificationsService {
   public token = '';
   public deliveredNotifications: Notification[] = [];
 
+  private newPushNotificationSource = new Subject<void>();
+  newPushNotification$ = this.newPushNotificationSource.asObservable();
+
   constructor(private router: Router, public adminDeviceService: AdminDeviceService,
     private alertController: AlertController,private dataRefresherService: DataRefresherService, private readonly ngZone: NgZone) { }
+
+  announceNewPushNotification() {
+    this.newPushNotificationSource.next();
+  }
 
   public initPush() {
     if (Capacitor.isNativePlatform()) {
@@ -56,7 +63,7 @@ export class PushNotificationsService {
         this.showInAppNotification(event.notification);
 
       if(this.router.url==='/tabs/notes')
-        this.dataRefresherService.announceBackFromBackground();
+        this.announceNewPushNotification();
       this.increaseBadgeCount();
 
     });
@@ -75,7 +82,7 @@ export class PushNotificationsService {
     const result = await FirebaseMessaging.getToken();
     this.token = result.token;
   }
-  
+
   public async removeAllDeliveredNotifications(): Promise<void> {
     await FirebaseMessaging.removeAllDeliveredNotifications();
   }
@@ -87,7 +94,7 @@ export class PushNotificationsService {
       notifications: [notification],
     });
     await this.getDeliveredNotifications();
-  }   
+  }
 
   public unregisterDevice(callback) {
     if (Capacitor.isNativePlatform()) {
@@ -101,9 +108,9 @@ export class PushNotificationsService {
           callback(false);
           console.error(err);
         });
-      } else 
+      } else
         callback(true);
-    } else 
+    } else
       callback(true);
   }
 
@@ -114,9 +121,11 @@ export class PushNotificationsService {
         role: 'cancel',
       }]
 
-    if(this.router.url!=='/tabs/notes'){
+    const isNotesPageOpen = this.router.url==='/tabs/notes';
+    if(!isNotesPageOpen){
       buttons.push({
         text: 'Go to Notes',
+        role: 'notes',
         handler: () => {
           this.router.navigateByUrl('/tabs/notes');
         }
@@ -125,15 +134,15 @@ export class PushNotificationsService {
 
     const alert = await this.alertController.create({
       header: notification.title,
-      message: notification.body, 
+      message: notification.body,
       buttons: buttons,
     });
     await alert.present();
 
     await alert.onDidDismiss();
+    if(!isNotesPageOpen)
+      this.announceNewPushNotification();
     FirebaseMessaging.removeAllDeliveredNotifications();
-    if(this.router.url!=='/tabs/notes')
-      this.dataRefresherService.announceBackFromBackground();
   }
 
 
