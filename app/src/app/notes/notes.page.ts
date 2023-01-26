@@ -27,6 +27,7 @@ export class NotesPage implements OnInit, OnDestroy {
   currentReport: string;
   foregroundSubscription: Subscription;
   dashboardSubscription: Subscription;
+  pushNotificationsSubscription: Subscription;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
@@ -44,7 +45,7 @@ export class NotesPage implements OnInit, OnDestroy {
                   if(this.notes.length>0)
                     this.tagNotes(this.notes);
                 })
-                this.foregroundSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
+                this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
                   this.fetchNotes();
                 });
                }
@@ -59,6 +60,8 @@ export class NotesPage implements OnInit, OnDestroy {
       this.foregroundSubscription.unsubscribe();
     if (this.dashboardSubscription)
       this.dashboardSubscription.unsubscribe();
+    if (this.pushNotificationsSubscription)
+      this.pushNotificationsSubscription.unsubscribe();
   }
 
   async openAddNoteModal(){
