@@ -1,6 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Capacitor} from '@capacitor/core';
-// import { ActionPerformed, PushNotificationSchema, PushNotifications, Token, Channel } from '@capacitor/push-notifications';
 import { Router } from '@angular/router';
 import { AdminDeviceService } from './admin-device.service';
 import { Constants } from '../helpers/constants';
@@ -22,15 +21,6 @@ export class PushNotificationsService {
 
   public initPush() {
     if (Capacitor.isNativePlatform()) {
-      // if(Capacitor.getPlatform()===Constants.ANDROID_PLATFORM){
-      //   let channel : Channel = {
-      //     id: 'notes-notifications',
-      //     name: 'Notes notifications',
-      //     importance: 4, //IMPORTANCE_HIGH
-      //     vibration: true
-      //   }
-      //   PushNotifications.createChannel(channel);
-      // }
       this.registerPush();
       this.refreshBadgeCount();
     }
@@ -44,7 +34,7 @@ export class PushNotificationsService {
           let deviceToken = {
             deviceToken: event.token
           };
-          console.log("new token: " +deviceToken);
+          console.log("new token: " + event.token);
           localStorage.setItem("deviceToken", event.token);
           adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
             console.log(res);
@@ -88,7 +78,6 @@ export class PushNotificationsService {
   
   public async removeAllDeliveredNotifications(): Promise<void> {
     await FirebaseMessaging.removeAllDeliveredNotifications();
-    // await this.getDeliveredNotifications();
   }
 
   public async removeDeliveredNotifications(
@@ -184,9 +173,10 @@ export class PushNotificationsService {
     const badgeCount = await this.getBadgeCount();
     localStorage.setItem("badgeCount", badgeCount.toString());
   }
-  private async resetBadgeCount(): Promise<void> {
+  public async resetBadgeCount(): Promise<void> {
     let count = 0;
     await Badge.set({count});
+    this.removeAllDeliveredNotifications();
     localStorage.setItem("badgeCount", count.toString());
   }
 }
