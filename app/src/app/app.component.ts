@@ -45,7 +45,7 @@ export class AppComponent implements OnInit,OnDestroy {
         });
     });
   }
-  
+
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
       if (status.connected) {
@@ -85,8 +85,15 @@ export class AppComponent implements OnInit,OnDestroy {
         console.debug('login res: ',account);
         this.msalService.instance.setActiveAccount(account);
         if (this.isLoggedIn())
-          this.router.navigate(['/']);
+          this.router.navigate(['/login/redirect']);
       });
+
+    this.msalBroadcastService.msalSubject$
+      .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGOUT_SUCCESS),
+      takeUntil(this._destroying$))
+      .subscribe((result: EventMessage)=>{
+        localStorage.clear();
+    });
 
     timer(0, 1000).subscribe(()=>{
       this.dateTime = new Date();
