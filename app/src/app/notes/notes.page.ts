@@ -11,6 +11,7 @@ import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
 import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
+import { Badge } from '@capawesome/capacitor-badge';
 
 @Component({
   selector: 'app-notes',
@@ -121,6 +122,7 @@ export class NotesPage implements OnInit, OnDestroy {
       if (event)
         event.target.complete();
     });
+    this.resetBadgeCount();
   }
 
   tagNotes(notes){
@@ -154,4 +156,9 @@ export class NotesPage implements OnInit, OnDestroy {
    
   }
 
+  private async resetBadgeCount(): Promise<void> {
+    let count = 0;
+    await Badge.set({count});
+    localStorage.setItem("badgeCount", count.toString());
+  }
 }

@@ -9,9 +9,13 @@ const config: CapacitorConfig = {
     splashScreen: {
       launchShowDuration: 0
     },
-    PushNotifications: {
-      presentationOptions: ['badge', 'sound', 'alert']
-    }
+    FirebaseMessaging: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
+    Badge: {
+      persist: true,
+      autoClear: false,
+    },
   },
 };
 
