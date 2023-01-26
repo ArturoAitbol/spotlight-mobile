@@ -1,4 +1,4 @@
-name: Spotlight Mobile CI/CD
+name: tekvizion 360 CI/CD
 on:
   push:
     branches: [main]

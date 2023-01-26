@@ -6,7 +6,7 @@ import { CustomNavigationClient } from './helpers/customNavigationClient';
 import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
-import { StatusBar, StatusBarInfo } from '@capacitor/status-bar';
+import { StatusBar } from '@capacitor/status-bar';
 import { PushNotificationsService } from './services/push-notifications.service';
 import { Platform } from '@ionic/angular';
 import { Capacitor, PluginListenerHandle } from '@capacitor/core';
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit,OnDestroy {
         });
     });
   }
-  
+
   ngOnInit(): void {
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
       if (status.connected) {
@@ -60,6 +60,8 @@ export class AppComponent implements OnInit,OnDestroy {
     this.isIframe = window !== window.parent && !window.opener;
     if(!this.isLoggedIn()){
       this.router.navigate(['/login']);
+    }else{
+      this.pushNotificationService.AddActionAndReceivedListeners();
     }
 
     if(Capacitor.isNativePlatform()){
@@ -83,8 +85,15 @@ export class AppComponent implements OnInit,OnDestroy {
         console.debug('login res: ',account);
         this.msalService.instance.setActiveAccount(account);
         if (this.isLoggedIn())
-          this.router.navigate(['/']);
+          this.router.navigate(['/login/redirect']);
       });
+
+    this.msalBroadcastService.msalSubject$
+      .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGOUT_SUCCESS),
+      takeUntil(this._destroying$))
+      .subscribe((result: EventMessage)=>{
+        localStorage.clear();
+    });
 
     timer(0, 1000).subscribe(()=>{
       this.dateTime = new Date();
@@ -123,7 +132,11 @@ export class AppComponent implements OnInit,OnDestroy {
   logout(){
     if (this.msalService.instance.getActiveAccount() != null) {
       try {
-        this.msalService.logoutRedirect();
+        this.pushNotificationService.unregisterDevice((success: boolean) => {
+          if (!success)
+            console.error('error while logout');
+          this.msalService.logoutRedirect();
+        });
       } catch (error) {
           console.error('error while logout: ', error);
       }

@@ -31,10 +31,8 @@ export class CustomNavigationClient extends NavigationClient {
           window.location.href = url;
         }
         if (event.url.includes('logoutsession')) {
-          this.pushNotificationService.unregisterDevice();
           browser.close();
           window.location.href = environment.REDIRECT_URL_APP;
-          localStorage.clear();
         }
       });
     } else {

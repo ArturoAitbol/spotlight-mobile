@@ -7,7 +7,7 @@ import { IonToastService } from "../services/ion-toast.service";
 import { RoleGuard } from "./role.guard";
 
 const mockRouter = {
-    navigate: jasmine.createSpy('navigate'),
+  navigate: jasmine.createSpy('navigate'),
 };
 let guard: RoleGuard
 
@@ -69,7 +69,7 @@ describe('When roles are loaded for username@test.com the app', () => {
             expect(guard.canActivate({url: [{path: route, parameters: {}}]} as ActivatedRouteSnapshot)).toBeFalse();
         });
     });
-    
+
 });
 
 describe('When roles are not loaded for username@test.com', () => {
