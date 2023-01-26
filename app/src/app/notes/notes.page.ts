@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
 import { Badge } from '@capawesome/capacitor-badge';
-import { PushNotificationsService } from '../services/push-notifications.service';
 
 @Component({
   selector: 'app-notes',
@@ -35,7 +34,6 @@ export class NotesPage implements OnInit, OnDestroy {
               private dashboardService: DashboardService,
               private foregroundService: DataRefresherService,
               private noteService: NoteService,
-              private pushNotificationService: PushNotificationsService,
               private router: Router) {
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
                   this.fetchNotes();
@@ -124,7 +122,7 @@ export class NotesPage implements OnInit, OnDestroy {
       if (event)
         event.target.complete();
     });
-    this.pushNotificationService.resetBadgeCount();
+    this.resetBadgeCount();
   }
 
   tagNotes(notes){
@@ -156,5 +154,11 @@ export class NotesPage implements OnInit, OnDestroy {
       this.ionToastService.presentToast("There are not reports associated with this note", "OK");
     }
    
+  }
+
+  private async resetBadgeCount(): Promise<void> {
+    let count = 0;
+    await Badge.set({count});
+    localStorage.setItem("badgeCount", count.toString());
   }
 }
