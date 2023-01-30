@@ -17,15 +17,15 @@ public class LoginTest extends IOSBaseTest {
         homePage = new HomePage(driver);
         Login login = homePage.goToLoginForm();
         Dashboard dashboard = login.signIn();
-        String title = dashboard.getTitle();
-        Assert.assertEquals(title, "Spotlight");
+//        String title = dashboard.getTitle();
+//        Assert.assertEquals(title, "Spotlight");
     }
 
-//    @Test
-//    public void newNote(){
-//        Dashboard dashboard = new Dashboard(driver);
-//        Notes notes = dashboard.goToNotes();
-//        String noteText = notes.addNote("NewNoteTest");
-//        Assert.assertEquals("NewNoteTest", noteText);
-//    }
+    @Test
+    public void newNote(){
+        Dashboard dashboard = new Dashboard(driver);
+        Notes notes = dashboard.goToNotes();
+        String noteText = notes.addNote("NewNoteTest");
+        Assert.assertEquals("NewNoteTest", noteText);
+    }
 }

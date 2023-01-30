@@ -33,9 +33,19 @@ public class IOSActions extends MobileActions {
         params.put("direction", "down");
         driver.executeScript("mobile: scroll",params);
     }
-
     public void click(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));
+        element.click();
+    }
+
+    public void clickSpecial(WebElement element){
+        WebElement newElement = wait.until(ExpectedConditions.visibilityOf(element));
+        newElement.clear();
+/*        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }*/
         element.click();
     }
     
@@ -45,6 +55,7 @@ public class IOSActions extends MobileActions {
 
     public String getText(WebElement element){
         String text = "";
+//        wait.until(ExpectedConditions.invisibilityOf(element));
         text = wait.until(ExpectedConditions.visibilityOf(element)).getText();
         return text;
     }

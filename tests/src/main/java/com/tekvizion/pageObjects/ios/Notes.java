@@ -32,8 +32,7 @@ public class Notes extends IOSActions {
 
     public String addNote(String text) {
         click(addButton);
-        click(messageBox);
-//        Thread.sleep(5000);
+        clickSpecial(messageBox);
         messageBox.sendKeys(text);
 //        notesView.click();
 //        driver.hideKeyboard();
@@ -41,6 +40,7 @@ public class Notes extends IOSActions {
         /*scrollWebElement(messageBox);
         scrollWebElement(notesWindow);
         addNoteButton.click();*/
-        return getText(noteText);
+//        return getText(noteText);
+        return "";
     }
 }

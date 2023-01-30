@@ -63,18 +63,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         this.androidDriver = (AndroidDriver) appiumDriver;
     }
 
-    public void clickElementById(String webElementId) {
-        this.getDriver().findElement(By.id(webElementId)).click();
-    }
-
-    public void clickElementByXpath(String xpath) {
-        this.getDriver().findElement(By.xpath(xpath)).click();
-    }
-
-    public void sendKeysToElementById(String keys, String webElementId) {
-        this.getDriver().findElement(By.id(webElementId)).sendKeys(keys);
-    }
-
     public void sendKeysToElementByXpath(String keys, String xpath) {
         this.getDriver().findElement(By.xpath(xpath)).sendKeys(keys);
     }

@@ -35,12 +35,12 @@ public class Login extends IOSActions {
     public Dashboard signIn() {
         checkElement(loginHeader);
         click(emailInput);
-//        emailInput.sendKeys("test-functional-subaccount-admin@tekvizion360.com");
-        emailInput.sendKeys("test-customer-subaccount-admin@tekvizionlabs.com");
+        emailInput.sendKeys("test-functional-subaccount-admin@tekvizion360.com");
+//        emailInput.sendKeys("test-customer-subaccount-admin@tekvizionlabs.com");
         nextButton.click();
         click(passwordInput);
-//        passwordInput.sendKeys("Zuwo8872a");
-        passwordInput.sendKeys("Faga9645a");
+        passwordInput.sendKeys("Zuwo8872a");
+//        passwordInput.sendKeys("Faga9645a");
         signInButton.click();
         click(noStaySignedIn);
 //        click(allowNotifications);
