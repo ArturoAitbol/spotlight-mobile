@@ -8,6 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -23,12 +24,16 @@ public class AndroidActions {
     AndroidDriver driver;
     WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         this.driver = driver;
     }
 
     public void click(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));
+        element.click();
+    }
+    public void click(By selector){
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.click();
     }
 
@@ -47,7 +52,8 @@ public class AndroidActions {
     }
 
     public void sendKeys(By selector, String text){
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(selector));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.sendKeys(text);
     }
 
