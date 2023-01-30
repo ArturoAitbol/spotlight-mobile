@@ -88,9 +88,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
             androidDeviceDesiredCapabilities.setCapability(desiredCapability.getOptionName(), desiredCapability.getValue());
         }
         try {
-//            androidDeviceDesiredCapabilities.setCapability("unicodeKeyboard", true);
-//            androidDeviceDesiredCapabilities.setCapability("resetKeyboard", true);
-//            androidDeviceDesiredCapabilities.setCapability("autoWebview", true);
             System.out.println("Starting driver initialization for " + this.udid + " using system port " + this.automationPort);
             this.setDriver(new AndroidDriver(new URL(this.appiumServerURL), androidDeviceDesiredCapabilities));
         } catch (MalformedURLException malformedURLException) {
@@ -115,6 +112,8 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.UNICODE_KEYBOARD, true));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.RESET_KEYBOARD, true));
         return desiredCapabilities;
     }
 

@@ -16,10 +16,12 @@ import java.util.List;
 
 public class LoginAndroid extends AndroidActions {
     AndroidDriver driver;
-    @AndroidFindBy(className = "android.widget.EditText")
-    private WebElement input;
+    By inputSelector = By.className("android.widget.EditText");
+
     @AndroidFindBy(xpath = "//android.widget.Button[@text='Next']")
     private WebElement nextButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[@text='Sign in']")
+    private WebElement signInButton;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='No']")
     private WebElement noButton;
     public LoginAndroid(AndroidDriver driver) {
@@ -27,21 +29,12 @@ public class LoginAndroid extends AndroidActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public DashboardAndroid signIn() throws InterruptedException {
-/*        List<WebElement> elements = driver.findElement(By.xpath("//*[contains(@class,'android.widget.EditText')]"));
-        int productListSize = elements.size();
-        for (int i=0; i<productListSize; i++){
-            String productPrice = elements.get(i).getText();
-        }*/
-        String res = driver.findElement(By.xpath("//*[contains(@class,'android.widget.EditText')]")).getAttribute("clickable");
-        System.out.println(res);
-//        sendKeys(By.className("android.widget.EditText"), "test-functional-subaccount-admin@tekvizion360.com");
-
-//        sendKeys(input, "test-functional-subaccount-admin@tekvizion360.com");
-//        nextButton.click();
-//        sendKeys(input, "Zuwo8872a");
-//        nextButton.click();
-        noButton.click();
+    public DashboardAndroid signIn() {
+        sendKeys(inputSelector, "test-functional-subaccount-admin@tekvizion360.com");
+        nextButton.click();
+        sendKeys(inputSelector, "Zuwo8872a");
+        signInButton.click();
+        click(noButton);
         return new DashboardAndroid(this.driver);
     }
 }

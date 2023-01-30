@@ -10,7 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class DashboardAndroid extends AndroidActions {
     AndroidDriver driver;
-    @AndroidFindBy(xpath = "//android.widget.Button")
+    @AndroidFindBy(xpath = "//android.view.View[@resource-id='service-name']")
     WebElement spotlightTitle;
     @AndroidFindBy(xpath = "//android.view.View[@resource-id='tab-button-notes']")
     WebElement notesButton;
@@ -20,9 +20,9 @@ public class DashboardAndroid extends AndroidActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-//    public String getTitle(){
-//        return getText(spotlightTitle);
-//    }
+    public String getTitle(){
+        return getText(spotlightTitle);
+    }
 
     public NotesAndroid goToNotes(){
         click(notesButton);
