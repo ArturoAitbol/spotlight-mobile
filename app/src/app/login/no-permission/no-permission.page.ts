@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { NoPermissionMessage } from 'src/app/model/no-permission-message.model';
+import { NoPermissionErrorService } from 'src/app/services/no-permission-error.service';
 
 @Component({
   selector: 'app-no-permission',
@@ -7,8 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NoPermissionPage implements OnInit {
 
-  constructor() { }
+  title: string;
+  messages: NoPermissionMessage[];
+  errorSubscription:Subscription;
 
-  ngOnInit() {}
+  constructor(private noPermissionErrorService: NoPermissionErrorService) {
+    this.errorSubscription = this.noPermissionErrorService.errorUpdated$.subscribe(()=>{
+      this.updateError();
+    })
+   }
+
+  ngOnInit(): void {
+    this.updateError();
+  }
+
+  ngOnDestroy(): void {
+    if (this.errorSubscription)
+      this.errorSubscription.unsubscribe();
+  }
+
+  updateError(){
+    this.title = this.noPermissionErrorService.getErrorTitle();
+    this.messages = this.noPermissionErrorService.getErrorMessage();
+  }
 
 }

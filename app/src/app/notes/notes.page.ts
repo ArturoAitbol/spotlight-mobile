@@ -11,6 +11,8 @@ import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
 import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
+import { Badge } from '@capawesome/capacitor-badge';
+import { PushNotificationsService } from '../services/push-notifications.service';
 
 @Component({
   selector: 'app-notes',
@@ -25,6 +27,7 @@ export class NotesPage implements OnInit, OnDestroy {
   currentReport: string;
   foregroundSubscription: Subscription;
   dashboardSubscription: Subscription;
+  pushNotificationsSubscription: Subscription;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
@@ -32,6 +35,7 @@ export class NotesPage implements OnInit, OnDestroy {
               private subaccountService: SubaccountService,
               private dashboardService: DashboardService,
               private foregroundService: DataRefresherService,
+              private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
               private router: Router) {
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
@@ -41,6 +45,9 @@ export class NotesPage implements OnInit, OnDestroy {
                   if(this.notes.length>0)
                     this.tagNotes(this.notes);
                 })
+                this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
+                  this.fetchNotes();
+                });
                }
 
   ngOnInit() {
@@ -53,6 +60,8 @@ export class NotesPage implements OnInit, OnDestroy {
       this.foregroundSubscription.unsubscribe();
     if (this.dashboardSubscription)
       this.dashboardSubscription.unsubscribe();
+    if (this.pushNotificationsSubscription)
+      this.pushNotificationsSubscription.unsubscribe();
   }
 
   async openAddNoteModal(){
@@ -121,6 +130,7 @@ export class NotesPage implements OnInit, OnDestroy {
       if (event)
         event.target.complete();
     });
+    this.resetBadgeCount();
   }
 
   tagNotes(notes){
@@ -129,7 +139,7 @@ export class NotesPage implements OnInit, OnDestroy {
       notes.forEach(note => {
         note.current = isEqual(note.reports,this.currentReport);
       });
-    }   
+    }
   }
 
   async seeHistoricalReports(note) {
@@ -143,7 +153,7 @@ export class NotesPage implements OnInit, OnDestroy {
           handleBehavior: "cycle"
         });
         modal.present();
-    
+
         const {data,role} = await modal.onWillDismiss();
       }else{
         this.router.navigate(['/tabs/dashboard']);
@@ -151,7 +161,12 @@ export class NotesPage implements OnInit, OnDestroy {
     }else{
       this.ionToastService.presentToast("There are not reports associated with this note", "OK");
     }
-   
+
   }
 
+  private async resetBadgeCount(): Promise<void> {
+    let count = 0;
+    await Badge.set({count});
+    localStorage.setItem("badgeCount", count.toString());
+  }
 }
