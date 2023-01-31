@@ -68,15 +68,15 @@ platform :ios do
     keychain_name = TEMP_KEYCHAIN_USER
     keychain_password = TEMP_KEYCHAIN_PASSWORD
     ensure_temp_keychain(keychain_name, keychain_password)
-  
+
     api_key = app_store_connect_api_key(
       key_id: APPLE_KEY_ID,
       issuer_id: APPLE_ISSUER_ID,
-      key_content: APPLE_KEY_CONTENT,            
-      duration: 1200,            
+      key_content: APPLE_KEY_CONTENT,
+      duration: 1200,
       in_house: false
     )
-    
+
     match(
       type: 'appstore',
       git_basic_authorization: "#{GIT_CREDENTIALS}",
@@ -91,11 +91,11 @@ platform :ios do
       workspace: "./ios/App/App.xcworkspace",
       scheme: "App",
       export_method: "app-store"
-      # export_options: {
-      #   provisioningProfiles: { 
-      #     DEVELOPER_APP_IDENTIFIER => "#{PROVISIONING_PROFILE_SPECIFIER}"
-      #   }
-      # }
+      export_options: {
+        provisioningProfiles: {
+          DEVELOPER_APP_ID => "#{PROVISIONING_PROFILE_SPECIFIER}"
+        }
+      }
     )
 
     # pilot(
@@ -105,7 +105,7 @@ platform :ios do
     #   skip_submission: true,
     #   distribute_external: false,
     #   notify_external_testers: false,
-    #   ipa: "./ios/App/App.xcarchive/Products/Applications/App.ipa"
+    #   ipa: "./App.ipa"
     # )
 
     delete_temp_keychain(keychain_name)
