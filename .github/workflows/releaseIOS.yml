@@ -161,7 +161,7 @@ jobs:
         uses: maierj/fastlane-action@v2.3.0
         env:
           DEVELOPER_APP_IDENTIFIER: com.tekvizion.spotlight #App bundle ID
-          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }} #Get From AppConnect
+          DEVELOPER_APP_ID: 1660817666 #Get From AppConnect
           PROVISIONING_PROFILE_SPECIFIER: NewAppProvisioning #App Bundle ID
           TEMP_KEYCHAIN_USER: login.keychain #Anything
           TEMP_KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }} #Anything
@@ -172,7 +172,7 @@ jobs:
           GIT_USERNAME: ${{ secrets.GIT_USERNAME }} #GIT USERNAME
           GIT_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} #GIT TOKEN
           GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }} #GIT TOKEN
-          FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }} #apple id
+          FASTLANE_APPLE_ID: 1660817666 #apple id
           MATCH_USERNAME: ${{ secrets.FASTLANE_APPLE_ID }} #apple id
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} #any password
           APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }} #team ID
