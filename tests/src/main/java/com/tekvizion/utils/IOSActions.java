@@ -56,11 +56,6 @@ public class IOSActions extends MobileActions {
     public void clickSpecial(WebElement element){
         WebElement newElement = wait.until(ExpectedConditions.visibilityOf(element));
         newElement.clear();
-/*        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/
         element.click();
     }
     
@@ -79,13 +74,16 @@ public class IOSActions extends MobileActions {
     }
 
     public String getText(By selector){
-        String text = "";
-        text = wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getText();
-        return text;
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getText();
     }
 
     public String addTimeStamp(String text){
         String timeStamp = DriverManager.getInstance().getTimeStamp();
         return text + "-" + timeStamp;
+    }
+
+    public String getAttributeValue(WebElement element, String attribute, String value){
+        wait.until(ExpectedConditions.attributeContains(element, attribute, value));
+        return element.getDomAttribute(attribute);
     }
 }

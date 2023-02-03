@@ -56,16 +56,15 @@ public class Notes extends IOSActions {
 
     public String closeNote(String note) {
         noteText = addTimeStamp(note);
-//        String noteTextSelector = String.format("//XCUIElementTypeStaticText[@name='%s']", noteText);
-//        "**/XCUIElementTypeOther/XCUIElementTypeStaticText[`label == 'NewNoteTest'`]";
-        String noteTextSelector = String.format("**/XCUIElementTypeOther[`label == 'note-label'`][$name == '%s'$]", noteText);
-        By closeNoteSelector = AppiumBy.iOSClassChain(noteTextSelector + "/XCUIElementTypeOther/XCUIElementTypeImage[`label CONTAINS 'close'`]");
+        String noteTextSelector = String.format("**/XCUIElementTypeOther[`label == 'note-label'`][$name == '%s'$]", noteText); //Get grandparent which descendant has that name
+        By closeNoteSelector = AppiumBy.iOSClassChain(noteTextSelector + "/XCUIElementTypeOther/XCUIElementTypeImage[`label CONTAINS 'close'`]"); //Get grandchild with that predicate string
         try {
             click(closeNoteSelector);
             click(closeNoteButton);
             By messageSelector = AppiumBy.iOSClassChain("**/XCUIElementTypeStaticText[`label == 'Note closed successfully!'`]");
-            checkElement(messageSelector);
-            return "Note closed successfully!";
+//            checkElement(messageSelector);
+//            return "Note closed successfully";
+            return getText(messageSelector);
         } catch (Exception e) {
             System.out.println("Verify if Close Note button or Note Closed message were displayed for:" + noteText);
             System.out.println(e.toString());

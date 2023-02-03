@@ -8,9 +8,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public class Dashboard extends IOSActions {
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeStaticText[`label == \"Spotlight\"`]")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeOther[`label == 'tekVizion'`]")
+    WebElement tekVizionHeader;
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeStaticText[`label == 'Spotlight'`]")
     WebElement spotlightTitle;
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == \"document Notes\"`]")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'document Notes'`]")
     WebElement notesButton;
     IOSDriver driver;
     public Dashboard(IOSDriver driver){
@@ -19,8 +21,17 @@ public class Dashboard extends IOSActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public String getTitle(){
-        return getText(spotlightTitle);
+    public String getHeader(){
+        return getAttributeValue(tekVizionHeader, "name", "tekVizion");
+    }
+
+    public void verifyTitle(){
+        try {
+            checkElement(spotlightTitle);
+        } catch (Exception e) {
+            System.out.println("spotlight title wasn't displayed");
+            System.out.println(e.toString());
+        }
     }
 
     public Notes goToNotes(){

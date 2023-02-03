@@ -13,12 +13,13 @@ import java.util.Set;
 public class LoginTest extends IOSBaseTest {
     HomePage homePage;
     @Test
-    public void successfullyLogin(){
+    public void loginSuccessfully(){
         homePage = new HomePage(driver);
         Login login = homePage.goToLoginForm();
         Dashboard dashboard = login.signIn();
-//        String title = dashboard.getTitle();
-//        Assert.assertEquals(title, "Spotlight");
+        dashboard.verifyTitle();
+        String title = dashboard.getHeader();
+        Assert.assertEquals(title, "tekVizion");
     }
 
     @Test
@@ -26,7 +27,7 @@ public class LoginTest extends IOSBaseTest {
         Dashboard dashboard = new Dashboard(driver);
         Notes notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
-        String actualNote =notes.verifyNote();
+        String actualNote = notes.verifyNote();
         Assert.assertEquals(expectedNote, actualNote);
     }
 
