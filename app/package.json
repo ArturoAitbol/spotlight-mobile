@@ -38,7 +38,7 @@
     "@ionic/angular": "^6.3.2",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-inappbrowser": "^5.0.0",
-    "firebase": "^9.16.0",
+    "firebase": "9.16.0",
     "ionicons": "^6.0.3",
     "jquery": "^3.6.1",
     "lodash-es": "^4.17.21",
