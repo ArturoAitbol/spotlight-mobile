@@ -177,7 +177,6 @@ export class PushNotificationsService {
 
   public async increaseBadgeCount(): Promise<void> {
     await Badge.increase();
-    console.log("aumenta el badge");
     await this.refreshBadgeCount();
   }
 
