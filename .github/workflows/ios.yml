@@ -30,6 +30,10 @@ jobs:
 
       - name: Set device_id
         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+
+  # Debug (ssh into running host)
+      - name: Debug on failure
+        uses: mxschmitt/action-tmate@v3
           
       - name: run emulator
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
