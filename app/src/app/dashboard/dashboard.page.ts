@@ -15,7 +15,7 @@ import { SubaccountService } from '../services/subaccount.service';
 export class DashboardPage implements OnInit, OnDestroy {
 
   serviceName:string;
-
+  isiOS = false;
   charts: any[] = [];
   reports: any = {};
 
@@ -42,6 +42,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.serviceName = 'Spotlight';
+    this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.fetchData();
   }
 
