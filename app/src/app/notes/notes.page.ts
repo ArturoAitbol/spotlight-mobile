@@ -171,7 +171,6 @@ export class NotesPage implements OnInit, OnDestroy {
   private async resetBadgeCount(): Promise<void> {
     let count = 0;
     await Badge.set({count});
-    console.log("RESET BADGE COUNT");
     localStorage.setItem("badgeCount", count.toString());
   }
 }
