@@ -1,4 +1,8 @@
-<ion-content>
+<ion-content class="padding has-header">
+  <div *ngIf="isiOS">
+    <div style=" margin-top: 120px;">
+    </div>
+  </div>
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
