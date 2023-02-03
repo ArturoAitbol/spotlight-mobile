@@ -28,6 +28,7 @@ export class NotesPage implements OnInit, OnDestroy {
   foregroundSubscription: Subscription;
   dashboardSubscription: Subscription;
   pushNotificationsSubscription: Subscription;
+  isiOS = false;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
@@ -52,6 +53,7 @@ export class NotesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
+    this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.fetchNotes();
   }
 

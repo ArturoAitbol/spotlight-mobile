@@ -33,7 +33,10 @@
       </ion-grid>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <ion-router-outlet *ngIf="!isIframe"></ion-router-outlet>
-  </ion-content>
+    <ion-content *ngIf="!isiOS">
+      <ion-router-outlet *ngIf="!isIframe"></ion-router-outlet>
+    </ion-content>
+    <div *ngIf="isiOS">
+      <ion-router-outlet *ngIf="!isIframe"></ion-router-outlet>
+    </div>
 </ion-app>
