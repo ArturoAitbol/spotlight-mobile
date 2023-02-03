@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@capacitor/network": "^4.1.0",
+    "@capacitor/push-notifications": "^4.1.2"
+  }
+}

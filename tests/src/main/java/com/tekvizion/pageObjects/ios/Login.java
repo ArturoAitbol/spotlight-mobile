@@ -22,20 +22,33 @@ public class Login extends IOSActions {
     WebElement signInButton;
     @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == \"No\"`]")
     WebElement noStaySignedIn;
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == \"Allow\"`]")
+    WebElement allowNotifications;
+    @iOSXCUITFindBy(accessibility = "Ok")
+    WebElement errorMessage;
     IOSDriver driver;
     public Login(IOSDriver driver) {
         super(driver);
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public void signIn() {
+    public Dashboard signIn() {
         checkElement(loginHeader);
-        emailInput.click();
-        emailInput.sendKeys("test-tekvizion-full-admin@tekvizionlabs.com");
+        click(emailInput);
+        emailInput.sendKeys("test-functional-subaccount-admin@tekvizion360.com");
+//        emailInput.sendKeys("test-customer-subaccount-admin@tekvizionlabs.com");
         nextButton.click();
-        passwordInput.click();
-        passwordInput.sendKeys("Varu7293a");
+        click(passwordInput);
+        passwordInput.sendKeys("Zuwo8872a");
+//        passwordInput.sendKeys("Faga9645a");
         signInButton.click();
-        noStaySignedIn.click();
+        click(noStaySignedIn);
+        try {
+            click(allowNotifications);
+        } catch (Exception e) {
+            System.out.println("Allow notification message wasn't displayed");
+            System.out.println(e.toString());
+        }
+        return new Dashboard(this.driver);
     }
 }

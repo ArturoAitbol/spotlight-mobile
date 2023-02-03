@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { HistoricalDashboardPage } from '../dashboard/historical-dashboard/historical-dashboard.page';
 import { Note } from '../model/note.model';
@@ -9,35 +9,59 @@ import { SubaccountService } from '../services/subaccount.service';
 import { AddNoteComponent } from './add-note/add-note.component';
 import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
+import { DataRefresherService } from '../services/data-refresher.service';
+import { Subscription } from 'rxjs';
+import { Badge } from '@capawesome/capacitor-badge';
+import { PushNotificationsService } from '../services/push-notifications.service';
 
 @Component({
   selector: 'app-notes',
   templateUrl: './notes.page.html',
   styleUrls: ['./notes.page.scss'],
 })
-export class NotesPage implements OnInit {
+export class NotesPage implements OnInit, OnDestroy {
 
   notes: Note[] = [];
   subaccountId: string = null;
   isNoteDataLoading: boolean = true;
   currentReport: string;
+  foregroundSubscription: Subscription;
+  dashboardSubscription: Subscription;
+  pushNotificationsSubscription: Subscription;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
               private ionToastService: IonToastService,
               private subaccountService: SubaccountService,
               private dashboardService: DashboardService,
+              private foregroundService: DataRefresherService,
+              private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
               private router: Router) {
-                dashboardService.dashboardRefreshed$.subscribe(()=>{
+                this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+                  this.fetchNotes();
+                });
+                this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
                   if(this.notes.length>0)
                     this.tagNotes(this.notes);
                 })
+                this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
+                  this.fetchNotes();
+                });
                }
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
     this.fetchNotes();
+  }
+
+  ngOnDestroy(): void {
+    if (this.foregroundSubscription)
+      this.foregroundSubscription.unsubscribe();
+    if (this.dashboardSubscription)
+      this.dashboardSubscription.unsubscribe();
+    if (this.pushNotificationsSubscription)
+      this.pushNotificationsSubscription.unsubscribe();
   }
 
   async openAddNoteModal(){
@@ -102,11 +126,11 @@ export class NotesPage implements OnInit {
         event.target.complete();
     }, (err) => {
       console.error(err);
-      this.ionToastService.presentToast("Error getting notes", "Error");
       this.isNoteDataLoading = false;
       if (event)
         event.target.complete();
     });
+    this.resetBadgeCount();
   }
 
   tagNotes(notes){
@@ -115,24 +139,34 @@ export class NotesPage implements OnInit {
       notes.forEach(note => {
         note.current = isEqual(note.reports,this.currentReport);
       });
-    }   
-  }
-
-  async seeHistoricalReports(note) {
-    if (!note.current) {
-      const modal = await this.modalCtrl.create({
-        component: HistoricalDashboardPage,
-        componentProps: { note: note },
-        initialBreakpoint: 1,
-        breakpoints: [0, 1],
-        handleBehavior: "cycle"
-      });
-      modal.present();
-  
-      const {data,role} = await modal.onWillDismiss();
-    }else{
-      this.router.navigate(['/tabs/dashboard']);
     }
   }
 
+  async seeHistoricalReports(note) {
+    if(note.reports!==null){
+      if (!note.current) {
+        const modal = await this.modalCtrl.create({
+          component: HistoricalDashboardPage,
+          componentProps: { note: note },
+          initialBreakpoint: 1,
+          breakpoints: [0, 1],
+          handleBehavior: "cycle"
+        });
+        modal.present();
+
+        const {data,role} = await modal.onWillDismiss();
+      }else{
+        this.router.navigate(['/tabs/dashboard']);
+      }
+    }else{
+      this.ionToastService.presentToast("There are not reports associated with this note", "OK");
+    }
+
+  }
+
+  private async resetBadgeCount(): Promise<void> {
+    let count = 0;
+    await Badge.set({count});
+    localStorage.setItem("badgeCount", count.toString());
+  }
 }

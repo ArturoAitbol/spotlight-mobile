@@ -9,10 +9,13 @@ import { ROUTER_MOCK } from 'src/test/components/utils/router.mock';
 import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
+import { PUSH_NOTIFICATIONS_SERVICE_MOCK } from 'src/test/services/push-notifications.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
+import { ReportType } from '../helpers/report-type';
 import { DashboardService } from '../services/dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
+import { PushNotificationsService } from '../services/push-notifications.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { SharedModule } from '../shared/shared.module';
 
@@ -42,12 +45,16 @@ describe('NotesPage', () => {
           useValue: SUBACCOUNT_SERVICE_MOCK
         },
         {
+          provide:PushNotificationsService,
+          useValue: PUSH_NOTIFICATIONS_SERVICE_MOCK
+        },
+        {
           provide:IonToastService,
           useValue:ION_TOAST_SERVICE_MOCK
         },
         {
          provide: ModalController,
-         useValue:MODAL_CONTROLLER_MOCK 
+         useValue:MODAL_CONTROLLER_MOCK
         },
         {
           provide:ActionSheetController,
@@ -74,24 +81,28 @@ describe('NotesPage', () => {
   });
 
   it('should get the notes and current reports when initializing',()=>{
+    dashboardService.setReports([{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+                                {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY}]);
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes');
+    spyOn(component,'fetchNotes').and.callThrough();
+    spyOn(component,'tagNotes').and.callThrough();
 
     fixture.detectChanges();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
+    expect(component.tagNotes).toHaveBeenCalled();
   })
 
-  it('should tag the notes if dashboard was refreshed when initializing',()=>{
+  it('should tag the notes if dashboard was refreshed',()=>{
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes').and.callThrough();;
+    spyOn(component,'fetchNotes').and.callThrough();
     spyOn(component,'tagNotes');
     fixture.detectChanges();
 
     dashboardService.announceDashboardRefresh();
 
-    expect(component.tagNotes).toHaveBeenCalled();
+    expect(component.tagNotes).toHaveBeenCalledTimes(2);
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{
@@ -105,7 +116,6 @@ describe('NotesPage', () => {
 
   it('should set the loading flags to false when the call to fetchNotes() throws an error',()=>{
     spyOn(NOTE_SERVICE_MOCK,'getNoteList').and.returnValue(throwError("Some error"));
-    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'fetchNotes').and.callThrough();
     component.isNoteDataLoading = true;
 
@@ -114,7 +124,6 @@ describe('NotesPage', () => {
     expect(NOTE_SERVICE_MOCK.getNoteList).toHaveBeenCalled();
     expect(component.isNoteDataLoading).toBeFalse();
     expect(component.notes.length).toBe(0);
-    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Error getting notes","Error");
   })
 
   it('should refresh the current reports and notes when calling handleRefresh()',()=>{
@@ -139,7 +148,7 @@ describe('NotesPage', () => {
   it('should close a note when calling closeNote() if the user confirm the action',fakeAsync(()=>{
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'fetchNotes');
-    
+
     component.closeNote("000-000");
     flush();
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note closed successfully!');
@@ -153,7 +162,7 @@ describe('NotesPage', () => {
 
     component.closeNote("000-000");
     flush();
-    
+
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error closing a note','Error');
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
@@ -179,5 +188,5 @@ describe('NotesPage', () => {
 
     expect(MODAL_CONTROLLER_MOCK.create).toHaveBeenCalled();
   }))
-  
+
 });

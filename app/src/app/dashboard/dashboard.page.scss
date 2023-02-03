@@ -13,9 +13,7 @@
 #container p {
   font-size: 16px;
   line-height: 22px;
-
   color: #8c8c8c;
-
   margin: 0;
 }
 
@@ -27,9 +25,16 @@
   padding: 20px;
   font-style: bold;
   font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #service-description strong{
   font-size: 1.2em;
+}
+.title{
+  justify-content: space-between !important;
+  width: 100vw;
 }
 
 
@@ -37,8 +42,26 @@ ion-card{
   border-radius: 15px;
 }
 ion-button{
-  color:#203c66;
+  --background: #f8f8f8;
+  --color: rgb(0, 0, 0);
+  --box-shadow: none;
+  --border-color: #e0e0e0;
+  --border-style: solid;
+  --border-width: 1px;
   text-transform: none;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+ion-button.left{
+  --border-radius: 3px 0px 0px 3px;
+}
+ion-button.right{
+  --border-radius: 0px 3px 3px 0px;
+}
+
+.active{
+  --background: #e0e0e0;
 }
 
 ion-icon{

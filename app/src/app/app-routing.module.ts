@@ -20,7 +20,11 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
+  {
+    path: 'home/:id',
+    loadChildren: () => import('./tabnav/tabnav.module').then(m=> m.TabnavPageModule)
+  }
 ];
 
 @NgModule({

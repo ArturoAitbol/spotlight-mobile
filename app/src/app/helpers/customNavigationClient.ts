@@ -3,9 +3,10 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { Capacitor } from "@capacitor/core";
 import { environment } from "src/environments/environment";
 import { Constants } from "./constants";
+import { PushNotificationsService } from "../services/push-notifications.service";
 
 export class CustomNavigationClient extends NavigationClient {
-  constructor(private iab: InAppBrowser) {
+  constructor(private iab: InAppBrowser, private pushNotificationService: PushNotificationsService) {
     super();
   }
 

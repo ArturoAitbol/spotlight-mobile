@@ -1,6 +1,7 @@
 package com.tekvizion.testUtils;
 
 import com.tekvizion.appium.android.AutomatedAndroidDevice;
+import com.tekvizion.appium.ios.AutomatedIOSDevice;
 import com.tekvizion.utils.AppiumUtils;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -38,7 +39,6 @@ public class IOSBaseTest extends AppiumUtils {
         properties.load(file);
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
-        service = startAppiumServer(ipAddress, Integer.parseInt(port));
 
         XCUITestOptions options = new XCUITestOptions();
         options.setUdid(System.getProperty("deviceUDID"));
@@ -46,10 +46,13 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaLaunchTimeout(Duration.ofSeconds(180));
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
-
+        service = startAppiumServer(ipAddress, Integer.parseInt(port));
         this.driver = new IOSDriver(service.getUrl(), options);
 //        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
-        this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+//        AutomatedIOSDevice iosDevice = new AutomatedIOSDevice("9CC554AD-528D-4AB2-A519-00A86F89367D");
+//        iosDevice.initializeIfNeeded();
+//        this.driver = iosDevice.getDriver();
     }
 
     @AfterClass
