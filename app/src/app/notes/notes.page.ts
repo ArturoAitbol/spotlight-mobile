@@ -38,6 +38,7 @@ export class NotesPage implements OnInit, OnDestroy {
               private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
               private router: Router) {
+                this.resetBadgeCount();
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
                   this.fetchNotes();
                 });
@@ -52,6 +53,7 @@ export class NotesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
+    this.resetBadgeCount();
     this.fetchNotes();
   }
 
@@ -111,6 +113,7 @@ export class NotesPage implements OnInit, OnDestroy {
 
   handleRefresh(event) {
     this.fetchNotes(event);
+    this.resetBadgeCount();
   };
 
   fetchNotes(event?: any) {
@@ -130,7 +133,6 @@ export class NotesPage implements OnInit, OnDestroy {
       if (event)
         event.target.complete();
     });
-    this.resetBadgeCount();
   }
 
   tagNotes(notes){
@@ -167,6 +169,7 @@ export class NotesPage implements OnInit, OnDestroy {
   private async resetBadgeCount(): Promise<void> {
     let count = 0;
     await Badge.set({count});
+    console.log("RESET BADGE COUNT");
     localStorage.setItem("badgeCount", count.toString());
   }
 }
