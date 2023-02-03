@@ -13,7 +13,7 @@ import java.util.Set;
 public class LoginTest extends IOSBaseTest {
     HomePage homePage;
     @Test
-    public void loginSuccessfully(){
+    public void successfullyLogin(){
         homePage = new HomePage(driver);
         Login login = homePage.goToLoginForm();
         Dashboard dashboard = login.signIn();
@@ -22,10 +22,20 @@ public class LoginTest extends IOSBaseTest {
     }
 
     @Test
-    public void newNote(){
+    public void addNote(){
         Dashboard dashboard = new Dashboard(driver);
         Notes notes = dashboard.goToNotes();
-        String noteText = notes.addNote("NewNoteTest");
-        Assert.assertEquals("NewNoteTest", noteText);
+        String expectedNote = notes.addNote("note");
+        String actualNote =notes.verifyNote();
+        Assert.assertEquals(expectedNote, actualNote);
     }
+
+    @Test
+    public void closeNote(){
+        Notes notes = new Notes(driver);
+        String expectedMessage = "Note closed successfully!";
+        String actualMessage = notes.closeNote("note");
+        Assert.assertEquals(expectedMessage, actualMessage);
+    }
+
 }

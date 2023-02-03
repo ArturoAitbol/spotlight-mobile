@@ -1,9 +1,13 @@
 package com.tekvizion.pageObjects.ios;
 
 import com.tekvizion.utils.IOSActions;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
@@ -12,18 +16,13 @@ public class Notes extends IOSActions {
     WebElement addButton;
     @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeTextView[`label == \"Note message\"`]" )
     WebElement messageBox;
-
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeStaticText[`label == \"Note message\"`]")
-    WebElement notesTitle;
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeOther[`label == \"web dialog\"`]")
-    WebElement notesWindow;
-
     @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeOther[`label == \"web dialog\"`]/XCUIElementTypeOther[3]")
     WebElement addNoteButton;
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'Close'`]")
+    WebElement closeNoteButton;
 
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeStaticText[`label == \"NewNoteTest\"`]" )
-    WebElement noteText;
     IOSDriver driver;
+    String noteText;
     public Notes(IOSDriver driver) {
         super(driver);
         this.driver = driver;
@@ -33,14 +32,44 @@ public class Notes extends IOSActions {
     public String addNote(String text) {
         click(addButton);
         clickSpecial(messageBox);
-        messageBox.sendKeys(text);
-//        notesView.click();
-//        driver.hideKeyboard();
+        noteText = addTimeStamp(text);
+        messageBox.sendKeys(noteText);
+        Rectangle rectangle = messageBox.getRect();
+//        int x = rectangle.getX() + 35; //Tap "Cancel" button
+        int x = rectangle.getX() + rectangle.getWidth() - 50;
+        int y = rectangle.getY() + rectangle.getHeight() + 60;
+        tapWebElement(x, y);
+        return noteText;
+    }
 
-        /*scrollWebElement(messageBox);
-        scrollWebElement(notesWindow);
-        addNoteButton.click();*/
-//        return getText(noteText);
-        return "";
+    public String verifyNote() {
+//        By noteTextSelector = By.xpath(String.format("//XCUIElementTypeStaticText[@name='%s']", noteText));
+        By noteTextSelector = AppiumBy.iOSClassChain(String.format("**/XCUIElementTypeStaticText[`label == '%s'`]", noteText));
+        try {
+            return getText(noteTextSelector);
+        } catch (Exception e) {
+            System.out.println("Note wasn't found");
+            System.out.println(e.toString());
+            return "Error";
+        }
+    }
+
+    public String closeNote(String note) {
+        noteText = addTimeStamp(note);
+//        String noteTextSelector = String.format("//XCUIElementTypeStaticText[@name='%s']", noteText);
+//        "**/XCUIElementTypeOther/XCUIElementTypeStaticText[`label == 'NewNoteTest'`]";
+        String noteTextSelector = String.format("**/XCUIElementTypeOther[`label == 'note-label'`][$name == '%s'$]", noteText);
+        By closeNoteSelector = AppiumBy.iOSClassChain(noteTextSelector + "/XCUIElementTypeOther/XCUIElementTypeImage[`label CONTAINS 'close'`]");
+        try {
+            click(closeNoteSelector);
+            click(closeNoteButton);
+            By messageSelector = AppiumBy.iOSClassChain("**/XCUIElementTypeStaticText[`label == 'Note closed successfully!'`]");
+            checkElement(messageSelector);
+            return "Note closed successfully!";
+        } catch (Exception e) {
+            System.out.println("Verify if Close Note button or Note Closed message were displayed for:" + noteText);
+            System.out.println(e.toString());
+            return "Error";
+        }
     }
 }
