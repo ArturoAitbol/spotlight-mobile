@@ -6,6 +6,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
@@ -52,5 +53,24 @@ public class NotesAndroid extends AndroidActions {
 
     public void closeNote(String text) {
 
+    }
+
+    public String closeNote() {
+        try{
+            By noteSelector = By.xpath("//android.view.View[@resource-id='items-0']");
+            WebElement element = getElement(noteSelector);
+            Rectangle rectangle = element.getRect();
+            int x = rectangle.getWidth() - 200;
+            int y = rectangle.getY() + 120;
+            System.out.println(rectangle.getDimension());
+            System.out.println(rectangle.getX() + " " + rectangle.getY());
+            clickGesture(x, y);
+//            okButton.click();
+            return "";
+        } catch (Exception e) {
+            System.out.println("New note alert was not displayed");
+            System.out.println(e.toString());
+            return "Error";
+        }
     }
 }
