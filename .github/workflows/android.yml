@@ -6,16 +6,24 @@ on:
 jobs:
   test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
 
     steps:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: npm install
+      - name: Install ionic
+        run: npm install -g @ionic/cli
+
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
-        
+
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -30,7 +38,9 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -DdeviceUDID="emulator-5554" -q
+          script: |
+            ionic capacitor run ios --no-sync --target Pixel
+            mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
