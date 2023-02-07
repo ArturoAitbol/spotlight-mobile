@@ -14,7 +14,7 @@
             <ion-list-header>
                 <ion-label>{{notes.length}} open notes</ion-label>
             </ion-list-header>
-            <ion-item *ngFor="let note of notes" detail="false" expand="block">
+            <ion-item *ngFor="let note of notes" detail="false" expand="block" id="note-id" aria-label="note-label">
                 <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card'">
                     <ion-card-header>
                     <ion-card-subtitle>

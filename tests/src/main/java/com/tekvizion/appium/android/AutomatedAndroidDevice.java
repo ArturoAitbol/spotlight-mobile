@@ -63,18 +63,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         this.androidDriver = (AndroidDriver) appiumDriver;
     }
 
-    public void clickElementById(String webElementId) {
-        this.getDriver().findElement(By.id(webElementId)).click();
-    }
-
-    public void clickElementByXpath(String xpath) {
-        this.getDriver().findElement(By.xpath(xpath)).click();
-    }
-
-    public void sendKeysToElementById(String keys, String webElementId) {
-        this.getDriver().findElement(By.id(webElementId)).sendKeys(keys);
-    }
-
     public void sendKeysToElementByXpath(String keys, String xpath) {
         this.getDriver().findElement(By.xpath(xpath)).sendKeys(keys);
     }
@@ -104,7 +92,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(this.platformName);
         desiredCapabilities.add(this.platformVersion);
         desiredCapabilities.add(this.udid);
-        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
+//        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_NAME, getAppPath()));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.ANDROID_TIMEOUT, 150000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.SERVER_TIMEOUT, 150000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_PACKAGE_WAIT_TIMEOUT, 150000));
@@ -112,6 +100,8 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.UNICODE_KEYBOARD, true));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.RESET_KEYBOARD, true));
         return desiredCapabilities;
     }
 
