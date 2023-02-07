@@ -40,7 +40,7 @@ jobs:
           disable-animations: true
           working-directory: ./app
           script: |
-            ionic capacitor run ios --no-sync --target Pixel
+            ionic capacitor run android --no-sync --target Pixel
             cd ../tests
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
 
