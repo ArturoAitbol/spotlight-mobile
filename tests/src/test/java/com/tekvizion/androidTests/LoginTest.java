@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
-
     @Test
     public void loginSuccessfully() throws InterruptedException {
         homePage = new HomePageAndroid(driver);

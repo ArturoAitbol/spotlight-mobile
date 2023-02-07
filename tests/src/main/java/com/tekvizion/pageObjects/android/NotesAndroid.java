@@ -39,6 +39,7 @@ public class NotesAndroid extends AndroidActions {
         noteMessageInput.sendKeys("newNoteTest");
         addNoteButton.click();
         return text;
+        
 /*        try{
             checkElement(newNoteAlert);
             String rawText = noteMessage.getText();
@@ -54,9 +55,8 @@ public class NotesAndroid extends AndroidActions {
     }
 
     public void closeNote(String text) {
-
     }
-
+    
     public String closeNote() {
         try{
             By noteSelector = By.xpath("//android.view.View[@resource-id='items-0']");
