@@ -38,8 +38,10 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
+          working-directory: ./app
           script: |
             ionic capacitor run ios --no-sync --target Pixel
+            cd ../tests
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
 
       - name: Archive test results
@@ -47,4 +49,4 @@ jobs:
         if: success() || failure()
         with:
           name: functional-test-report
-          path: tests/reports
+          path: ${{ github.workspace }}/tests/reports
