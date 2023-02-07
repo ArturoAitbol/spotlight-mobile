@@ -40,7 +40,15 @@ public class AndroidActions {
     public void checkElement(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));
     }
+    public WebElement getElement(By selector){
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+    }
 
+    public void clickGesture(int x, int y){
+        ((JavascriptExecutor)driver).executeScript("mobile: clickGesture", ImmutableMap.of(
+                "x", x,
+                "y", y));
+    }
     public String getText(WebElement element){
         String text = "";
         text = wait.until(ExpectedConditions.visibilityOf(element)).getText();
