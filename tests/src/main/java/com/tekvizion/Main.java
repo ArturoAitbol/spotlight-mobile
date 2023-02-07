@@ -4,6 +4,8 @@ import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Main {
     @Test
@@ -12,12 +14,10 @@ public class Main {
 //            AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
 //            mia2.initializeIfNeeded();
 //            mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
-            String string = "test-functional-subaccount-admin: newNoteTest";
-            String[] parts = string.split(": ");
-            String part1 = parts[0]; // 004
-            String part2 = parts[1];
-            System.out.println(part1);
-            System.out.println(part2);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            String timeStamp = sdf1.format(timestamp);
+            System.out.println(timeStamp);
         }
         catch (Exception exception){
             System.out.println(exception.getMessage());

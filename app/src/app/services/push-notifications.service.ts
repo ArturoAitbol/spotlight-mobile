@@ -59,12 +59,12 @@ export class PushNotificationsService {
 
   public AddActionAndReceivedListeners(){
     FirebaseMessaging.addListener('notificationReceived', (event) => {
+      this.increaseBadgeCount();
       if(event.notification.body != null)
         this.showInAppNotification(event.notification);
 
       if(this.router.url==='/tabs/notes')
         this.announceNewPushNotification();
-      this.increaseBadgeCount();
 
     });
     FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
@@ -116,18 +116,25 @@ export class PushNotificationsService {
 
   async showInAppNotification(notification: Notification) {
 
+    const isNotesPageOpen = this.router.url==='/tabs/notes';
     const buttons: AlertButton[] = [{
         text: 'OK',
         role: 'cancel',
+        handler: () => {
+          if(isNotesPageOpen)
+            this.resetBadgeCount();
+          else
+            this.decreaseBadgeCount();
+        }
       }]
 
-    const isNotesPageOpen = this.router.url==='/tabs/notes';
     if(!isNotesPageOpen){
       buttons.push({
         text: 'Go to Notes',
         role: 'notes',
         handler: () => {
           this.router.navigateByUrl('/tabs/notes');
+          this.resetBadgeCount();
         }
       })
     }

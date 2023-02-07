@@ -43,8 +43,12 @@ public class Login extends IOSActions {
 //        passwordInput.sendKeys("Faga9645a");
         signInButton.click();
         click(noStaySignedIn);
-//        click(allowNotifications);
-//        click(errorMessage);
+        try {
+            click(allowNotifications);
+        } catch (Exception e) {
+            System.out.println("Allow notification message wasn't displayed");
+            System.out.println(e.toString());
+        }
         return new Dashboard(this.driver);
     }
 }

@@ -96,7 +96,6 @@ public class AutomatedIOSDevice extends AutomatedMobileDevice implements AutoClo
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.WDA_LAUNCH_TIME, 180000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.WDA_RETRIES, 4));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.WDA_RETRY_INTERVAL, 20));
-
         return desiredCapabilities;
     }
 
