@@ -14,4 +14,24 @@
             </class>
         </classes>
     </test>
+    <test thread-count="5" name="CreateNoteTest">
+        <parameter name="deviceUDID" value="emulator-5554"/>
+        <classes>
+            <class name="com.tekvizion.androidTests.LoginTest">
+                <methods>
+                    <include name="addNote"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test thread-count="5" name="CloseNoteTest">
+        <parameter name="deviceUDID" value="emulator-5554"/>
+        <classes>
+            <class name="com.tekvizion.androidTests.LoginTest">
+                <methods>
+                    <include name="closeNote"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite>

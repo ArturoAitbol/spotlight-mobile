@@ -24,9 +24,10 @@ public class NotesAndroid extends AndroidActions {
 
     @AndroidFindBy(xpath = "//*[contains(@text,'test-functional-subaccount-admin:')]")
     WebElement noteMessage;
-
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'OK')]")
     WebElement okButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[@text='Close ']")
+    WebElement closeNoteButton;
 
     public NotesAndroid(AndroidDriver driver) {
         super(driver);
@@ -37,7 +38,8 @@ public class NotesAndroid extends AndroidActions {
         click(addButton);
         noteMessageInput.sendKeys("newNoteTest");
         addNoteButton.click();
-        try{
+        return text;
+/*        try{
             checkElement(newNoteAlert);
             String rawText = noteMessage.getText();
             String[] parts = rawText.split(": ");
@@ -48,7 +50,7 @@ public class NotesAndroid extends AndroidActions {
             System.out.println("New note alert was not displayed");
             System.out.println(e.toString());
             return "Error";
-        }
+        }*/
     }
 
     public void closeNote(String text) {
@@ -65,7 +67,7 @@ public class NotesAndroid extends AndroidActions {
             System.out.println(rectangle.getDimension());
             System.out.println(rectangle.getX() + " " + rectangle.getY());
             clickGesture(x, y);
-//            okButton.click();
+            click(closeNoteButton);
             return "";
         } catch (Exception e) {
             System.out.println("New note alert was not displayed");

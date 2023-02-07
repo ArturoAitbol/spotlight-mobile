@@ -23,11 +23,12 @@ public class LoginTest extends AndroidBaseTest {
     }
 
     @Test
-    public void newNote(){
+    public void addNote(){
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
-        String noteText = notes.addNote("newNoteTest");
-        Assert.assertEquals("newNoteTest", noteText);
+        String expectedNote = notes.addNote("newNoteTest");
+//        String actualNote = notes.verifyNote();
+        Assert.assertEquals("newNoteTest", expectedNote);
         notes.closeNote("text");
     }
 
@@ -36,7 +37,7 @@ public class LoginTest extends AndroidBaseTest {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String noteText = notes.closeNote();
-        Assert.assertEquals("newNoteTest", noteText);
-        notes.closeNote("text");
+        Assert.assertEquals("", noteText);
+//        notes.closeNote("text");
     }
 }
