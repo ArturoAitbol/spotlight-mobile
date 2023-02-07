@@ -24,6 +24,7 @@ jobs:
           npm install -g appium@next
           appium driver install uiautomator2
           chmod +x ./android/gradlew
+          export JAVA_HOME=$JAVA_HOME_11_X64
 
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -41,9 +42,11 @@ jobs:
           disable-animations: true
           working-directory: ./app
           script: |
-            ionic capacitor run android --no-sync --target Pixel
             cd ../tests
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
+      
+      - name: Debug on failure
+        uses: mxschmitt/action-tmate@v3
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
