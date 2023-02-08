@@ -3,23 +3,41 @@ name: Android CI with macOS
 on:
   workflow_dispatch:
 
+env:
+  JAVA_VERSION: '11'
+
 jobs:
   test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
 
     steps:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+      - name: Install ionic
+        run: npm install -g @ionic/cli
+
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
-        
+          chmod +x ./android/gradlew
+
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 26
+          api-level: 28
           target: google_apis
           arch: x86_64
           profile: pixel_xl
@@ -30,11 +48,19 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -q
+          working-directory: ./app
+          script: |
+            ionic capacitor run android --no-sync --target Pixel
+            cd ../tests
+            mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
+      
+      # - name: Debug on failure
+      #   if: success() || failure()
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
           name: functional-test-report
-          path: tests/reports
+          path: ${{ github.workspace }}/tests/reports

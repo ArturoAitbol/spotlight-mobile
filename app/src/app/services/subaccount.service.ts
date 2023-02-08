@@ -9,13 +9,13 @@ import { SubAccount } from '../model/subaccount.model';
 })
 export class SubaccountService {
   private readonly API_URL: string = environment.apiEndpoint + '/subaccounts';
-  private selectedSubAccount: SubAccount;
+  private selectedSubAccount: SubAccount = null;
 
   constructor(private httpClient:HttpClient) { }
 
   //set the selected subaccount
   setSubAccount(subaccount: SubAccount) {
-    localStorage.setItem(Constants.SELECTED_SUBACCOUNT, JSON.stringify(subaccount)),
+    localStorage.setItem(Constants.SELECTED_SUBACCOUNT, JSON.stringify(subaccount));
     this.selectedSubAccount = subaccount;
   }
 

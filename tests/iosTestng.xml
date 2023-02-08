@@ -4,10 +4,34 @@
     <listeners>
         <listener class-name="com.tekvizion.testUtils.Listeners"/>
     </listeners>
-    <test thread-count="5" name="LoginTest">
-        <parameter name="deviceUDID" value="emulator-5554"/>
+    <test verbose="2" thread-count="5" name="LoginTest">
+        <parameter name="deviceUDID" value="iPhone 13 Pro"/>
         <classes>
-            <class name="com.tekvizion.iosTests.LoginTest"/>
+            <class name="com.tekvizion.iosTests.LoginTest">
+                <methods>
+                    <include name="loginSuccessfully"/>
+                </methods>
+            </class>
         </classes>
     </test>
+<!--    <test thread-count="5" name="CreateNoteTest">
+        <parameter name="deviceUDID" value="iPhone 13 Pro"/>
+        <classes>
+            <class name="com.tekvizion.iosTests.LoginTest">
+                <methods>
+                    <include name="addNote"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test thread-count="5" name="CloseNoteTest">
+        <parameter name="deviceUDID" value="iPhone 13 Pro"/>
+        <classes>
+            <class name="com.tekvizion.iosTests.LoginTest">
+                <methods>
+                    <include name="closeNote"/>
+                </methods>
+            </class>
+        </classes>
+    </test>-->
 </suite>

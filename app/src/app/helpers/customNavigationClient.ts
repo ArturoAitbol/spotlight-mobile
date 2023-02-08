@@ -33,7 +33,6 @@ export class CustomNavigationClient extends NavigationClient {
         if (event.url.includes('logoutsession')) {
           browser.close();
           window.location.href = environment.REDIRECT_URL_APP;
-          localStorage.clear();
         }
       });
     } else {

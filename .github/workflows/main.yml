@@ -1,4 +1,4 @@
-name: Spotlight Mobile CI/CD
+name: tekvizion 360 CI/CD
 on:
   push:
     branches: [main]
@@ -379,7 +379,7 @@ jobs:
         run: ionic capacitor build ios --minifycss --optimizejs --minifyjs --no-open --configuration=integration
 
       - name: Build with xCode
-        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App clean archive -configuration Release -sdk iphoneos DEVELOPMENT_TEAM=${{secrets.APPLE_DEV_TEAM}} -archivePath ios/App/App.xcarchive -authenticationKeyIssuerID ${{secrets.AUTH_KEY_ISSUER_ID}} -authenticationKeyID ${{secrets.KEY_ID}} -authenticationKeyPath ${{ env.KEY_PATH }} -allowProvisioningUpdates
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App clean archive -configuration Debug -sdk iphoneos DEVELOPMENT_TEAM=${{secrets.APPLE_DEV_TEAM}} -archivePath ios/App/App.xcarchive -authenticationKeyIssuerID ${{secrets.AUTH_KEY_ISSUER_ID}} -authenticationKeyID ${{secrets.KEY_ID}} -authenticationKeyPath ${{ env.KEY_PATH }} -allowProvisioningUpdates
 
       - name: Generate IPA file
         run: |

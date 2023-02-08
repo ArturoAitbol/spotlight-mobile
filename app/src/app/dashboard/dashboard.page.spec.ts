@@ -79,36 +79,19 @@ describe('DashboardPage', () => {
     expect(errorMessage).not.toBeNull();
   })
 
-  it('should get the subaccount related to the user logged and the charts when calling fetchData()',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.callThrough();
+  it('should get the charts when calling fetchData()',()=>{
     spyOn(component,'fetchCtaasDashboard');
-
     component.fetchData();
-    expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
     expect(component.fetchCtaasDashboard).toHaveBeenCalled();
   })
 
-  it('should set the loading flags to false when calling fetchData() and no subaccounts found',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(of({subaccounts:[]}));
-    spyOn(component,'fetchCtaasDashboard');
-    component.isChartsDataLoading = true;
-
-    component.fetchData();
-
-    expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
-    expect(component.fetchCtaasDashboard).not.toHaveBeenCalled();
-    expect(component.isChartsDataLoading).toBeFalse();
-  })
-
   it('should set the loading flags to false when the call to fetchData() throws an error',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(throwError("Some error"));
-    spyOn(component,'fetchCtaasDashboard');
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
     component.isChartsDataLoading = true;
 
     component.fetchData();
 
-    expect(SUBACCOUNT_SERVICE_MOCK.getSubAccountList).toHaveBeenCalled();
-    expect(component.fetchCtaasDashboard).not.toHaveBeenCalled();
+    expect(CTAAS_DASHBOARD_SERVICE_MOCK.getCtaasDashboardDetails).toHaveBeenCalled();
     expect(component.isChartsDataLoading).toBeFalse();
   })
 
@@ -119,17 +102,6 @@ describe('DashboardPage', () => {
     component.fetchCtaasDashboard(customEvent);
 
     expect(component.charts.length).toBeGreaterThan(0);
-  })
-
-  it('should set the loading flag to false when the call to getSubAccountList() throws an error', () => {
-    spyOn(SUBACCOUNT_SERVICE_MOCK, 'getSubAccountList').and.returnValue(throwError("Some error"));
-    const customEvent = { target: { complete: () => { } } };
-    component.isChartsDataLoading = true;
-
-    component.fetchData(customEvent);
-
-    expect(component.isChartsDataLoading).toBeFalse();
-    expect(component.charts.length).toBe(0);
   })
 
   it('should set the loading flag to false when the call to fetchCtaasDashboard() throws an error', () => {
@@ -151,17 +123,6 @@ describe('DashboardPage', () => {
     expect(component.fetchCtaasDashboard).toHaveBeenCalled();
   })
 
-  it('should set the loading flags to false if no subaccounts are found when calling handleRefresh()',()=>{
-    spyOn(component,'fetchCtaasDashboard');
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccountList').and.returnValue(of({subaccounts:[]}));
-
-    component.handleRefresh({ target: {complete:()=>{} } });
-
-    expect(component.isChartsDataLoading).toBeFalse();
-  })
-
-
-  
   it('should change the charts list when calling onClickToggleButton()',()=>{
     component.reports = {daily:[1,2],weekly:[3,4]}
 

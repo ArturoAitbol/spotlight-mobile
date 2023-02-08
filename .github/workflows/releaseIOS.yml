@@ -161,9 +161,9 @@ jobs:
         uses: maierj/fastlane-action@v2.3.0
         env:
           DEVELOPER_APP_IDENTIFIER: com.tekvizion.spotlight #App bundle ID
-          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }} #Get From AppConnect
+          DEVELOPER_APP_ID: 1660817666 #Get From AppConnect
           PROVISIONING_PROFILE_SPECIFIER: NewAppProvisioning #App Bundle ID
-          TEMP_KEYCHAIN_USER: login.keychain #Anything
+          TEMP_KEYCHAIN_USER: temp_keychain #Anything
           TEMP_KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }} #Anything
           APPLE_ISSUER_ID: ${{ secrets.AUTH_KEY_ISSUER_ID }} #API Key Issuer ID
           APPLE_KEY_ID: ${{ secrets.KEY_ID }} #API Key ID
@@ -172,7 +172,7 @@ jobs:
           GIT_USERNAME: ${{ secrets.GIT_USERNAME }} #GIT USERNAME
           GIT_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} #GIT TOKEN
           GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }} #GIT TOKEN
-          FASTLANE_APPLE_ID: ${{ secrets.FASTLANE_APPLE_ID }} #apple id
+          FASTLANE_APPLE_ID: 1660817666 #apple id
           MATCH_USERNAME: ${{ secrets.FASTLANE_APPLE_ID }} #apple id
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} #any password
           APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }} #team ID
@@ -181,18 +181,18 @@ jobs:
           subdirectory: ${{ env.WORKING_DIR }}
           lane: ios release_appstore
 
-      - name: Upload release
-        uses: actions/upload-artifact@v2
-        with:
-          name: ios-release-Build-${{steps.updated_ios_version.outputs.result}}
-          path: ${{ env.WORKING_DIR }}/ios/App/App.xcarchive/Products/Applications/App.ipa
-          retention-days: 60
+      # - name: Upload release
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ios-release-Build-${{steps.updated_ios_version.outputs.result}}
+      #     path: ${{ env.WORKING_DIR }}/ios/App/App.xcarchive/Products/Applications/App.ipa
+      #     retention-days: 60
 
-      - name: Print deployed Release Version
-        run: echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
+      # - name: Print deployed Release Version
+      #   run: echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
 
-      - name: Archive iOS Code Version
-        uses: actions/upload-artifact@v3
-        with:
-          name: ios-production-released-version
-          path: ./iOSVersionCode.txt
+      # - name: Archive iOS Code Version
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ios-production-released-version
+      #     path: ./iOSVersionCode.txt
