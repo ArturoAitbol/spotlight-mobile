@@ -18,11 +18,12 @@ public class LoginAndroid extends AndroidActions {
     AndroidDriver driver;
     By inputSelector = By.className("android.widget.EditText");
 
-    @AndroidFindBy(xpath = "//android.widget.Button[@text='Next']")
+//    @AndroidFindBy(xpath = "//android.widget.Button[@text='Next']")
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc='Next']")
     private WebElement nextButton;
-    @AndroidFindBy(xpath = "//android.widget.Button[@text='Sign in']")
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc='Sign in']")
     private WebElement signInButton;
-    @AndroidFindBy(xpath = "//android.widget.Button[@text='No']")
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc='No']")
     private WebElement noButton;
     public LoginAndroid(AndroidDriver driver) {
         super(driver);
