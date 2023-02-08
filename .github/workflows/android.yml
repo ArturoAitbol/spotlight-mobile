@@ -1,8 +1,5 @@
 name: Android CI with macOS
 
-env:
-  JAVA_VERSION: '11'
-
 on:
   workflow_dispatch:
 
