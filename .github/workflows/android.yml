@@ -3,6 +3,9 @@ name: Android CI with macOS
 on:
   workflow_dispatch:
 
+env:
+  JAVA_VERSION: '11'
+
 jobs:
   test:
     runs-on: macos-latest
@@ -14,6 +17,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
       - name: Install dependencies
         run: npm install
       - name: Install ionic
@@ -23,6 +32,7 @@ jobs:
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
+          chmod +x ./android/gradlew
 
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -43,6 +53,10 @@ jobs:
             ionic capacitor run android --no-sync --target Pixel
             cd ../tests
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
+      
+      - name: Debug on failure
+        if: success() || failure()
+        uses: mxschmitt/action-tmate@v3
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
