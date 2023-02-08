@@ -7,7 +7,7 @@ import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mo
 import { Constants } from '../helpers/constants';
 import { DashboardService } from '../services/dashboard.service';
 import { SharedModule } from '../shared/shared.module';
-
+import { HttpClientModule } from '@angular/common/http';
 import { TabnavPage } from './tabnav.page';
 
 const dashboardService = new DashboardService();
@@ -19,7 +19,7 @@ describe('TabnavPage', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TabnavPage ],
-      imports: [SharedModule,IonicModule.forRoot()],
+      imports: [SharedModule,IonicModule.forRoot(),HttpClientModule],
       providers:[
         {
           provide: ActivatedRoute,
