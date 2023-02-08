@@ -3,6 +3,8 @@ name: Android CI with macOS
 on:
   workflow_dispatch:
 
+permissions: write-all
+
 env:
   JAVA_VERSION: '11'
 
