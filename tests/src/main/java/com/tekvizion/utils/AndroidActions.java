@@ -110,4 +110,9 @@ public class AndroidActions {
                 "percent", 0.75
         ));
     }
+
+    public String addTimeStamp(String text){
+        String timeStamp = DriverManager.getInstance().getTimeStamp();
+        return text + "-" + timeStamp;
+    }
 }

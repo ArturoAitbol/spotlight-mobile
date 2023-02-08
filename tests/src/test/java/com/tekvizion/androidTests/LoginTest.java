@@ -25,7 +25,7 @@ public class LoginTest extends AndroidBaseTest {
     public void addNote(){
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
-        String expectedNote = notes.addNote("newNoteTest");
+        String expectedNote = notes.addNote("note");
 //        String actualNote = notes.verifyNote();
         Assert.assertEquals("newNoteTest", expectedNote);
         notes.closeNote("text");

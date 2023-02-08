@@ -2,6 +2,7 @@ package com.tekvizion.pageObjects.android;
 
 import com.tekvizion.pageObjects.ios.Notes;
 import com.tekvizion.utils.AndroidActions;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -28,7 +29,7 @@ public class NotesAndroid extends AndroidActions {
     WebElement okButton;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='Close ']")
     WebElement closeNoteButton;
-
+    String noteText;
     public NotesAndroid(AndroidDriver driver) {
         super(driver);
         this.driver = driver;
@@ -36,22 +37,21 @@ public class NotesAndroid extends AndroidActions {
     }
     public String addNote(String text) {
         click(addButton);
-        noteMessageInput.sendKeys("newNoteTest");
+        noteText = addTimeStamp(text);
+        noteMessageInput.sendKeys(noteText);
         addNoteButton.click();
-        return text;
-        
-/*        try{
-            checkElement(newNoteAlert);
-            String rawText = noteMessage.getText();
-            String[] parts = rawText.split(": ");
-            String note = parts[1];
-            okButton.click();
-            return note;
+        return noteText;
+    }
+
+    public String verifyNote() {
+        By noteTextSelector = By.xpath(String.format("//XCUIElementTypeStaticText[@name='%s']", noteText));
+        try {
+            return "getText(noteTextSelector)";
         } catch (Exception e) {
-            System.out.println("New note alert was not displayed");
+            System.out.println("Note wasn't found");
             System.out.println(e.toString());
             return "Error";
-        }*/
+        }
     }
 
     public void closeNote(String text) {
