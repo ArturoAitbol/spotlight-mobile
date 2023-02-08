@@ -11,7 +11,6 @@ import { isEqual } from 'lodash-es';
 import { Router } from '@angular/router';
 import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
-import { Badge } from '@capawesome/capacitor-badge';
 import { PushNotificationsService } from '../services/push-notifications.service';
 
 @Component({
@@ -39,8 +38,10 @@ export class NotesPage implements OnInit, OnDestroy {
               private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
               private router: Router) {
-                this.resetBadgeCount();
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+                  const isNotesPageOpen = this.router.url==='/tabs/notes';
+                  if(isNotesPageOpen)
+                    this.resetBadgeCount();
                   this.fetchNotes();
                 });
                 this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
@@ -54,11 +55,14 @@ export class NotesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
-    this.resetBadgeCount();
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
+    this.resetBadgeCount();
     this.fetchNotes();
   }
-
+  ionViewWillEnter(){
+    this.resetBadgeCount();
+  }
+  
   ngOnDestroy(): void {
     if (this.foregroundSubscription)
       this.foregroundSubscription.unsubscribe();
@@ -115,7 +119,6 @@ export class NotesPage implements OnInit, OnDestroy {
 
   handleRefresh(event) {
     this.fetchNotes(event);
-    this.resetBadgeCount();
   };
 
   fetchNotes(event?: any) {
@@ -168,9 +171,7 @@ export class NotesPage implements OnInit, OnDestroy {
 
   }
 
-  private async resetBadgeCount(): Promise<void> {
-    let count = 0;
-    await Badge.set({count});
-    localStorage.setItem("badgeCount", count.toString());
+  public async resetBadgeCount(): Promise<void> {
+    await this.pushNotificationsService.resetBadgeCount();
   }
 }
