@@ -1,7 +1,6 @@
 name: Android CI with macOS
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - 'releases/**'
