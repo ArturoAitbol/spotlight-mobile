@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
-
     @Test
     public void loginSuccessfully() throws InterruptedException {
         homePage = new HomePageAndroid(driver);
@@ -23,11 +22,21 @@ public class LoginTest extends AndroidBaseTest {
     }
 
     @Test
-    public void newNote(){
+    public void addNote(){
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
-        String noteText = notes.addNote("NewNoteTest");
-        Assert.assertEquals("newNoteTest", noteText);
+        String expectedNote = notes.addNote("newNoteTest");
+//        String actualNote = notes.verifyNote();
+        Assert.assertEquals("newNoteTest", expectedNote);
         notes.closeNote("text");
+    }
+
+    @Test
+    public void closeNote(){
+        DashboardAndroid dashboard = new DashboardAndroid(driver);
+        NotesAndroid notes = dashboard.goToNotes();
+        String noteText = notes.closeNote();
+        Assert.assertEquals("", noteText);
+//        notes.closeNote("text");
     }
 }

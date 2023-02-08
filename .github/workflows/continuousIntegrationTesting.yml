@@ -1,85 +1,88 @@
-name: Continuous testing in Integration
-on:
-  schedule:
-    - cron: '0 */2 * * *'
-permissions: write-all
-env:
-  WORKING_DIR: "./app"
-jobs:
-  android-test:
-    runs-on: macos-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
+# name: Continuous testing in Integration
 
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install uiautomator2
+# on:
+#   schedule:
+#     - cron: '0 */2 * * *'
+# permissions: write-all
+# env:
+#   WORKING_DIR: "./app"
 
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          npm install
+# jobs:
+#   android-test:
+#     if: github.repository == 'octo-org/octo-repo-prod'
+#     runs-on: macos-latest
+#     steps:
+#       - name: checkout
+#         uses: actions/checkout@v3
+#       - name: Install Appium
+#         run: |
+#           npm install -g appium@next
+#           appium driver install uiautomator2
 
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 26
-          target: google_apis
-          arch: x86_64
-          profile: pixel_xl
-          cores: 2
-          ram-size: 5120M
-          sdcard-path-or-size: 2000M
-          avd-name: Pixel
-          force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
-          disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -q
+#       - name: Install dependencies
+#         working-directory: ${{ env.WORKING_DIR }}
+#         run: |
+#           npm install
 
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        if: success() || failure()
-        with:
-          name: android-functional-test-report
-          path: tests/reports
-  ios-test:
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./app
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
+#       - name: Run tests
+#         uses: reactivecircus/android-emulator-runner@v2
+#         with:
+#           api-level: 26
+#           target: google_apis
+#           arch: x86_64
+#           profile: pixel_xl
+#           cores: 2
+#           ram-size: 5120M
+#           sdcard-path-or-size: 2000M
+#           avd-name: Pixel
+#           force-avd-creation: false
+#           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+#           disable-animations: true
+#           script: mvn test -PandroidTests -f ./tests/pom.xml -q
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Archive test results
+#         uses: actions/upload-artifact@v3
+#         if: success() || failure()
+#         with:
+#           name: android-functional-test-report
+#           path: tests/reports
+#   ios-test:
+#     if: github.repository == 'octo-org/octo-repo-prod'
+#     runs-on: macos-latest
+#     defaults:
+#       run:
+#         working-directory: ./app
+#     steps:
+#       - name: checkout
+#         uses: actions/checkout@v3
 
-      - name: Install ionic
-        run: npm install -g @ionic/cli
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install xcuitest
+#       - name: Install ionic
+#         run: npm install -g @ionic/cli
 
-      - name: emulators list
-        run: ionic cap run ios --list
+#       - name: Install Appium
+#         run: |
+#           npm install -g appium@next
+#           appium driver install xcuitest
 
-      - name: Set device_id
-        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+#       - name: emulators list
+#         run: ionic cap run ios --list
 
-      - name: run emulator
-        working-directory: ${{ env.WORKING_DIR }}
-        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+#       - name: Set device_id
+#         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
-      - name: Run functional tests
-        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+#       - name: run emulator
+#         working-directory: ${{ env.WORKING_DIR }}
+#         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        if: success() || failure()
-        with:
-          name: ios-functional-test-report
-          path: ${{ github.workspace }}/tests/reports
+#       - name: Run functional tests
+#         run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+
+#       - name: Archive test results
+#         uses: actions/upload-artifact@v3
+#         if: success() || failure()
+#         with:
+#           name: ios-functional-test-report
+#           path: ${{ github.workspace }}/tests/reports

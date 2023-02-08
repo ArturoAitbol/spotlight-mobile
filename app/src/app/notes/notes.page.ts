@@ -28,6 +28,7 @@ export class NotesPage implements OnInit, OnDestroy {
   foregroundSubscription: Subscription;
   dashboardSubscription: Subscription;
   pushNotificationsSubscription: Subscription;
+  isiOS = false;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
@@ -38,6 +39,7 @@ export class NotesPage implements OnInit, OnDestroy {
               private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
               private router: Router) {
+                this.resetBadgeCount();
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
                   this.fetchNotes();
                 });
@@ -52,6 +54,8 @@ export class NotesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subaccountId = this.subaccountService.getSubAccount().id;
+    this.resetBadgeCount();
+    this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.fetchNotes();
   }
 
@@ -111,6 +115,7 @@ export class NotesPage implements OnInit, OnDestroy {
 
   handleRefresh(event) {
     this.fetchNotes(event);
+    this.resetBadgeCount();
   };
 
   fetchNotes(event?: any) {
@@ -130,7 +135,6 @@ export class NotesPage implements OnInit, OnDestroy {
       if (event)
         event.target.complete();
     });
-    this.resetBadgeCount();
   }
 
   tagNotes(notes){
