@@ -1,4 +1,4 @@
-name: iOS tests
+name: iOS tests workflow
 on: 
   workflow_dispatch:
 jobs:
