@@ -25,8 +25,8 @@ public class HomePageAndroid extends AndroidActions {
     }
     public LoginAndroid goToLoginForm(){
 //        homeView.click();
-        loginButton.click();
-//        click(loginButton);
+//        loginButton.click();
+        click(loginButton);
         return new LoginAndroid(driver);
     }
 }
