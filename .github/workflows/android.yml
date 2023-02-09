@@ -37,7 +37,7 @@ jobs:
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: 27
           target: google_apis
           arch: x86_64
           profile: pixel_xl
@@ -51,12 +51,11 @@ jobs:
           working-directory: ./app
           script: |
             ionic capacitor run android --no-sync --target Pixel
-            cd ../tests
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
       
-      # - name: Debug on failure
-      #   if: success() || failure()
-      #   uses: mxschmitt/action-tmate@v3
+      - name: Debug on failure
+        if: success() || failure()
+        uses: mxschmitt/action-tmate@v3
 
       - name: Archive test results
         uses: actions/upload-artifact@v3

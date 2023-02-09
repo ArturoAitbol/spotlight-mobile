@@ -13,7 +13,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
-    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'add')]")
+    @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
     WebElement addButton;
     @AndroidFindBy(className = "android.widget.EditText")
     WebElement noteMessageInput;
