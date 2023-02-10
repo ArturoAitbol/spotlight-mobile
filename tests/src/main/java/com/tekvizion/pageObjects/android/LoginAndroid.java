@@ -33,6 +33,11 @@ public class LoginAndroid extends AndroidActions {
     public DashboardAndroid signIn() {
         sendKeys(inputSelector, "test-functional-subaccount-admin@tekvizion360.com");
         clickAndroid(nextButton, 1770, 930);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         sendKeys(inputSelector, "Zuwo8872a");
         clickAndroid(signInButton, 1770, 930);
         clickAndroid(noButton, 770, 970);
