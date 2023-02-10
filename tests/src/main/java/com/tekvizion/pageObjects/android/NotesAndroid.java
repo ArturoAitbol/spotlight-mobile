@@ -36,6 +36,11 @@ public class NotesAndroid extends AndroidActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
     public String addNote(String text) {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         click(addButton);
         noteText = addTimeStamp(text);
         noteMessageInput.sendKeys(noteText);
