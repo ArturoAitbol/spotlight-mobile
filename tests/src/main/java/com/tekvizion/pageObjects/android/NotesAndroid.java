@@ -39,7 +39,7 @@ public class NotesAndroid extends AndroidActions {
         click(addButton);
         noteText = addTimeStamp(text);
         noteMessageInput.sendKeys(noteText);
-        addNoteButton.click();
+//        addNoteButton.click();
         return noteText;
     }
 
