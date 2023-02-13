@@ -23,10 +23,10 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Install dependencies
-        run: npm install
-      - name: Install ionic
-        run: npm install -g @ionic/cli
+      # - name: Install dependencies
+      #   run: npm install
+      # - name: Install ionic
+      #   run: npm install -g @ionic/cli
 
       - name: Install Appium
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 26
           target: google_apis
           arch: x86_64
           profile: pixel_xl
@@ -46,11 +46,10 @@ jobs:
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on --no-snapshot
           disable-animations: true
           working-directory: ./app
           script: |
-            ionic capacitor run android --no-sync --target Pixel
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
       
       - name: Debug on failure
