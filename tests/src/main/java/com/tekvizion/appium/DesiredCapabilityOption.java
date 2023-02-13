@@ -35,7 +35,8 @@ public enum DesiredCapabilityOption {
     RESET_KEYBOARD("resetKeyboard"),
     WDA_LAUNCH_TIME("setWdaLaunchTimeout"),
     WDA_RETRIES("setWdaStartupRetries"),
-    WDA_RETRY_INTERVAL("setWdaStartupRetryInterval");
+    WDA_RETRY_INTERVAL("setWdaStartupRetryInterval"),
+    FULL_RESET("fullReset");
 
     private final String name;
 

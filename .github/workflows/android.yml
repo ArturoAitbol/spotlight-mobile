@@ -50,8 +50,8 @@ jobs:
           disable-animations: true
           working-directory: ./app
           script: |
+            mvn test -PpreTest -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
             ionic capacitor run android --no-sync --target Pixel
-            adb shell ime disable io.appium.settings/.UnicodeIME
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
       
       - name: Debug on failure
