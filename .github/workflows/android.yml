@@ -51,6 +51,7 @@ jobs:
           working-directory: ./app
           script: |
             ionic capacitor run android --no-sync --target Pixel
+            adb shell am start -n com.tekvizion.spotlight/com.tekvizion.spotlight.MainActivity
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
       
       - name: Debug on failure
