@@ -44,16 +44,15 @@ public class NotesAndroid extends AndroidActions {
         } finally {
             noteText = addTimeStamp(text);
             sendKeys(noteMessageInput, noteText);
-//            noteMessageInput.sendKeys(noteText);
-//        addNoteButton.click();
+            addNoteButton.click();
         }
         return noteText;
     }
 
     public String verifyNote() {
-        By noteTextSelector = By.xpath(String.format("//XCUIElementTypeStaticText[@name='%s']", noteText));
+        By noteTextSelector = By.xpath(String.format("//android.view.View[@text='%s']", noteText));
         try {
-            return "getText(noteTextSelector)";
+            return getText(noteTextSelector);
         } catch (Exception e) {
             System.out.println("Note wasn't found");
             System.out.println(e.toString());
