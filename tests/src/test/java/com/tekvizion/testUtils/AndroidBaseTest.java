@@ -32,7 +32,7 @@ public class AndroidBaseTest extends AppiumUtils {
         properties.load(file);
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
-//        service = startAppiumServer(ipAddress, Integer.parseInt(port));
+        service = startAppiumServer(ipAddress, Integer.parseInt(port));
         AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(System.getProperty("deviceUDID"));
         androidDevice.initializeIfNeeded();
