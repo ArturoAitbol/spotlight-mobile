@@ -25,7 +25,7 @@ public class Notes extends IOSActions {
     WebElement closeNoteButton;
 
     IOSDriver driver;
-    String noteText;
+    String noteText = "";
     public Notes(IOSDriver driver) {
         super(driver);
         this.driver = driver;
@@ -39,7 +39,6 @@ public class Notes extends IOSActions {
             click(addButton);
             System.out.println("There aren't notes for this user!");
             System.out.println(e.toString());
-            return "Error";
         } finally {
             clickSpecial(messageBox);
             noteText = addTimeStamp(text);

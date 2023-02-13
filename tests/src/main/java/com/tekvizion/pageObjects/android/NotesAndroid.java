@@ -15,14 +15,12 @@ public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
     WebElement addButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'ADD')]")
+    WebElement addNote;
     @AndroidFindBy(className = "android.widget.EditText")
     WebElement noteMessageInput;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='add-note-button']")
     WebElement addNoteButton;
-    @AndroidFindBy(xpath = "//*[@text='New Note!']")
-//    @AndroidFindBy(xpath = "//android.view.View[(@text='New Note!') and not (contains(@resource-id,'overlay'))]")
-    WebElement newNoteAlert;
-
     @AndroidFindBy(xpath = "//*[contains(@text,'test-functional-subaccount-admin:')]")
     WebElement noteMessage;
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'OK')]")
@@ -37,14 +35,17 @@ public class NotesAndroid extends AndroidActions {
     }
     public String addNote(String text) {
         try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        click(addButton);
-        noteText = addTimeStamp(text);
-        noteMessageInput.sendKeys(noteText);
+            click(addNote);
+            System.out.println("");
+        } catch (Exception e) {
+            click(addButton);
+            System.out.println("There aren't notes for this user!");
+            System.out.println(e.toString());
+        } finally {
+            noteText = addTimeStamp(text);
+            noteMessageInput.sendKeys(noteText);
 //        addNoteButton.click();
+        }
         return noteText;
     }
 
