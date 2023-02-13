@@ -46,7 +46,7 @@ jobs:
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on --no-snapshot
+          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on -no-snapshot -wipe-data
           disable-animations: true
           working-directory: ./app
           script: |
