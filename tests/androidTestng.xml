@@ -14,7 +14,7 @@
             </class>
         </classes>
     </test>
-<!--    <test thread-count="5" name="CreateNoteTest">
+    <test thread-count="5" name="CreateNoteTest">
         <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>
             <class name="com.tekvizion.androidTests.LoginTest">
@@ -23,7 +23,7 @@
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 <!--    <test thread-count="5" name="CloseNoteTest">
         <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>

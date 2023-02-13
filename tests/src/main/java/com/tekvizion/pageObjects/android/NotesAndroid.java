@@ -36,14 +36,15 @@ public class NotesAndroid extends AndroidActions {
     public String addNote(String text) {
         try {
             click(addNote);
-            System.out.println("");
+            System.out.println("First note");
         } catch (Exception e) {
             click(addButton);
             System.out.println("There aren't notes for this user!");
             System.out.println(e.toString());
         } finally {
             noteText = addTimeStamp(text);
-            noteMessageInput.sendKeys(noteText);
+            sendKeys(noteMessageInput, noteText);
+//            noteMessageInput.sendKeys(noteText);
 //        addNoteButton.click();
         }
         return noteText;
