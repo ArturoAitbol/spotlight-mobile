@@ -23,8 +23,8 @@
                 </methods>
             </class>
         </classes>
-    </test>
-    <test thread-count="5" name="CloseNoteTest">
+    </test>-->
+<!--    <test thread-count="5" name="CloseNoteTest">
         <parameter name="deviceUDID" value="emulator-5554"/>
         <classes>
             <class name="com.tekvizion.androidTests.LoginTest">

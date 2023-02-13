@@ -12,17 +12,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public class Notes extends IOSActions {
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == \"add\"`]" )
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'add'`]" )
     WebElement addButton;
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeTextView[`label == \"Note message\"`]" )
-    WebElement messageBox;
-    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeOther[`label == \"web dialog\"`]/XCUIElementTypeOther[3]")
+    @iOSXCUITFindBy(accessibility = "Add a note" )
+//    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'Add a note'`]" )
     WebElement addNoteButton;
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeTextView[`label == 'Note message'`]" )
+    WebElement messageBox;
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeOther[`label == 'web dialog'`]/XCUIElementTypeOther[3]")
+    WebElement addNote;
     @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'Close'`]")
     WebElement closeNoteButton;
 
     IOSDriver driver;
-    String noteText;
+    String noteText = "";
     public Notes(IOSDriver driver) {
         super(driver);
         this.driver = driver;
@@ -30,16 +33,23 @@ public class Notes extends IOSActions {
     }
 
     public String addNote(String text) {
-        click(addButton);
-        clickSpecial(messageBox);
-        noteText = addTimeStamp(text);
-        messageBox.sendKeys(noteText);
-        Rectangle rectangle = messageBox.getRect();
+        try {
+            click(addNoteButton);
+        } catch (Exception e) {
+            click(addButton);
+            System.out.println("There aren't notes for this user!");
+            System.out.println(e.toString());
+        } finally {
+            clickSpecial(messageBox);
+            noteText = addTimeStamp(text);
+            messageBox.sendKeys(noteText);
+            Rectangle rectangle = messageBox.getRect();
 //        int x = rectangle.getX() + 35; //Tap "Cancel" button
-        int x = rectangle.getX() + rectangle.getWidth() - 50;
-        int y = rectangle.getY() + rectangle.getHeight() + 60;
-        tapWebElement(x, y);
-        return noteText;
+            int x = rectangle.getX() + rectangle.getWidth() - 50;
+            int y = rectangle.getY() + rectangle.getHeight() + 60;
+            tapWebElement(x, y);
+            return noteText;
+        }
     }
 
     public String verifyNote() {

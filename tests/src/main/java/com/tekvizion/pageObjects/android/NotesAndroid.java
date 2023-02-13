@@ -13,16 +13,14 @@ import org.openqa.selenium.support.PageFactory;
 
 public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
-    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'add')]")
+    @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
     WebElement addButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'ADD')]")
+    WebElement addNote;
     @AndroidFindBy(className = "android.widget.EditText")
     WebElement noteMessageInput;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='add-note-button']")
     WebElement addNoteButton;
-    @AndroidFindBy(xpath = "//*[@text='New Note!']")
-//    @AndroidFindBy(xpath = "//android.view.View[(@text='New Note!') and not (contains(@resource-id,'overlay'))]")
-    WebElement newNoteAlert;
-
     @AndroidFindBy(xpath = "//*[contains(@text,'test-functional-subaccount-admin:')]")
     WebElement noteMessage;
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'OK')]")
@@ -36,10 +34,18 @@ public class NotesAndroid extends AndroidActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
     public String addNote(String text) {
-        click(addButton);
-        noteText = addTimeStamp(text);
-        noteMessageInput.sendKeys(noteText);
-        addNoteButton.click();
+        try {
+            click(addNote);
+            System.out.println("");
+        } catch (Exception e) {
+            click(addButton);
+            System.out.println("There aren't notes for this user!");
+            System.out.println(e.toString());
+        } finally {
+            noteText = addTimeStamp(text);
+            noteMessageInput.sendKeys(noteText);
+//        addNoteButton.click();
+        }
         return noteText;
     }
 

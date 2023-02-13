@@ -14,8 +14,8 @@ public class HomePageAndroid extends AndroidActions {
     @AndroidFindBy(className = "android.webkit.WebView")
     private WebElement homeView;
 //    @AndroidFindBy(xpath = "//android.widget.Button[@text='login-button']")
-    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc='login-button']")
-//    @AndroidFindBy(className = "android.widget.Button")
+//    @AndroidFindBy(xpath = "//android.widget.Button[(@content-desc='login-button') or (@text='login-button')]")
+    @AndroidFindBy(xpath = "//android.widget.Button[@*='login-button']")
     private WebElement loginButton;
 
     public HomePageAndroid(AndroidDriver driver) {
@@ -25,8 +25,8 @@ public class HomePageAndroid extends AndroidActions {
     }
     public LoginAndroid goToLoginForm(){
 //        homeView.click();
-        loginButton.click();
-//        click(loginButton);
+//        loginButton.click();
+        click(loginButton);
         return new LoginAndroid(driver);
     }
 }
