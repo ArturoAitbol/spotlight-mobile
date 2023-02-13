@@ -37,9 +37,9 @@ jobs:
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: 25
           target: google_apis
-          arch: x86
+          arch: x86_64
           profile: pixel_xl
           cores: 2
           ram-size: 5120M 
