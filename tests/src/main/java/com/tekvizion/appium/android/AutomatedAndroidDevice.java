@@ -102,6 +102,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.UNICODE_KEYBOARD, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.RESET_KEYBOARD, true));
+//        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.FULL_RESET, false));
         return desiredCapabilities;
     }
 

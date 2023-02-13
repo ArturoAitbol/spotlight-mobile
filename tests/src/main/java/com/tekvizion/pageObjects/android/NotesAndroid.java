@@ -36,23 +36,23 @@ public class NotesAndroid extends AndroidActions {
     public String addNote(String text) {
         try {
             click(addNote);
-            System.out.println("");
+            System.out.println("First note");
         } catch (Exception e) {
             click(addButton);
             System.out.println("There aren't notes for this user!");
             System.out.println(e.toString());
         } finally {
             noteText = addTimeStamp(text);
-            noteMessageInput.sendKeys(noteText);
-//        addNoteButton.click();
+            sendKeys(noteMessageInput, noteText);
+            addNoteButton.click();
         }
         return noteText;
     }
 
     public String verifyNote() {
-        By noteTextSelector = By.xpath(String.format("//XCUIElementTypeStaticText[@name='%s']", noteText));
+        By noteTextSelector = By.xpath(String.format("//android.view.View[@text='%s']", noteText));
         try {
-            return "getText(noteTextSelector)";
+            return getText(noteTextSelector);
         } catch (Exception e) {
             System.out.println("Note wasn't found");
             System.out.println(e.toString());

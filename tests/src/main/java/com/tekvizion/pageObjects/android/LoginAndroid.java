@@ -34,7 +34,7 @@ public class LoginAndroid extends AndroidActions {
         sendKeys(inputSelector, "test-functional-subaccount-admin@tekvizion360.com");
         clickAndroid(nextButton, 1770, 930);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
