@@ -6,5 +6,6 @@ public class Constants {
     public static final String DEFAULT_APPIUM_SERVER_URL = "http://127.0.0.1:4723/";
     public static final String ANDROID_PLATFORM_NAME = "Android";
     public static final String UI_AUTOMATOR_2 = "UIAutomator2";
-    public static final String IOS_PLATFORM_NAME = "iOS";
+    public static final String XCUITEST = "XCUITest";
+    public static final String IOS_PLATFORM_NAME = "IOS";
 }

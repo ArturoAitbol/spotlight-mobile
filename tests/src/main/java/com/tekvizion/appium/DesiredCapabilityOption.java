@@ -1,5 +1,7 @@
 package com.tekvizion.appium;
 
+import java.time.Duration;
+
 public enum DesiredCapabilityOption {
 
     // related documentation https://appium.io/docs/en/writing-running-appium/caps/
@@ -26,7 +28,15 @@ public enum DesiredCapabilityOption {
     ANDROID_TIMEOUT("androidInstallTimeout"),
     SERVER_TIMEOUT("uiautomator2ServerInstallTimeout"),
     ADB_EXEC("adbExecTimeout"),
-    APP_NAME("app");
+    APP_NAME("app"),
+    FORCE_SOFTWARE_KEYBOARD("setForceSimulatorSoftwareKeyboardPresence"),
+    HARDWARE_KEYBOARDS("setConnectHardwareKeyboard"),
+    UNICODE_KEYBOARD("unicodeKeyboard"),
+    RESET_KEYBOARD("resetKeyboard"),
+    WDA_LAUNCH_TIME("setWdaLaunchTimeout"),
+    WDA_RETRIES("setWdaStartupRetries"),
+    WDA_RETRY_INTERVAL("setWdaStartupRetryInterval"),
+    FULL_RESET("fullReset");
 
     private final String name;
 

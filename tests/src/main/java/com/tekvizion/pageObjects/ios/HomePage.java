@@ -11,7 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 public class HomePage extends IOSActions {
     IOSDriver driver;
 
-    @iOSXCUITFindBy(accessibility = "Login")
+    @iOSXCUITFindBy(accessibility = "login-button")
     WebElement loginButton;
 
     public HomePage(IOSDriver driver){

@@ -1,17 +1,19 @@
 name: Continuous testing in Integration
+
 on:
   schedule:
     - cron: '0 */2 * * *'
 permissions: write-all
 env:
   WORKING_DIR: "./app"
+
 jobs:
   android-test:
+    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     steps:
       - name: checkout
         uses: actions/checkout@v3
-
       - name: Install Appium
         run: |
           npm install -g appium@next
@@ -45,6 +47,7 @@ jobs:
           name: android-functional-test-report
           path: tests/reports
   ios-test:
+    if: github.repository == 'octo-org/octo-repo-prod'
     runs-on: macos-latest
     defaults:
       run:
