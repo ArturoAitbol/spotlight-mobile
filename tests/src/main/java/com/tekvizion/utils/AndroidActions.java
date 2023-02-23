@@ -3,22 +3,87 @@ package com.tekvizion.utils;
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Base64;
 
 public class AndroidActions {
     AndroidDriver driver;
+    WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         this.driver = driver;
+    }
+
+    public void click(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.click();
+    }
+    public void clickAndroid(WebElement element, int x, int y){
+        try {
+            wait.until(ExpectedConditions.visibilityOf(element));
+            element.click();
+        } catch (Exception e) {
+            System.out.println("Button wasn't displayed!");
+            System.out.println(e.toString());
+            clickGesture(x, y);
+        }
+    }
+    public void click(By selector){
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        element.click();
+    }
+
+    public void specialClick(By selector){
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+                .ignoring(StaleElementReferenceException.class)
+                .until((WebDriver d) -> {
+                    d.findElement(selector).click();
+                    return true;
+                });
+    }
+
+    public void checkElement(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+    public WebElement getElement(By selector){
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+    }
+
+    public void clickGesture(int x, int y){
+        ((JavascriptExecutor)driver).executeScript("mobile: clickGesture", ImmutableMap.of(
+                "x", x,
+                "y", y));
+    }
+    public String getText(WebElement element){
+        String text = "";
+        text = wait.until(ExpectedConditions.visibilityOf(element)).getText();
+        return text;
+    }
+
+    public String getText(By selector){
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getText();
+    }
+
+    public void sendKeys(WebElement element, String text){
+        wait.until(ExpectedConditions.visibilityOf(element));
+        element.sendKeys(text);
+    }
+
+    public void sendKeys(By selector, String text){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        element.sendKeys(text);
     }
 
     public void longPress(WebElement element){
@@ -65,5 +130,10 @@ public class AndroidActions {
                 "direction", direction,
                 "percent", 0.75
         ));
+    }
+
+    public String addTimeStamp(String text){
+        String timeStamp = DriverManager.getInstance().getTimeStamp();
+        return text + "-" + timeStamp;
     }
 }

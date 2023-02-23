@@ -9,11 +9,13 @@ import { ROUTER_MOCK } from 'src/test/components/utils/router.mock';
 import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
+import { PUSH_NOTIFICATIONS_SERVICE_MOCK } from 'src/test/services/push-notifications.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
 import { ReportType } from '../helpers/report-type';
 import { DashboardService } from '../services/dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
+import { PushNotificationsService } from '../services/push-notifications.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { SharedModule } from '../shared/shared.module';
 
@@ -43,12 +45,16 @@ describe('NotesPage', () => {
           useValue: SUBACCOUNT_SERVICE_MOCK
         },
         {
+          provide:PushNotificationsService,
+          useValue: PUSH_NOTIFICATIONS_SERVICE_MOCK
+        },
+        {
           provide:IonToastService,
           useValue:ION_TOAST_SERVICE_MOCK
         },
         {
          provide: ModalController,
-         useValue:MODAL_CONTROLLER_MOCK 
+         useValue:MODAL_CONTROLLER_MOCK
         },
         {
           provide:ActionSheetController,
@@ -142,7 +148,7 @@ describe('NotesPage', () => {
   it('should close a note when calling closeNote() if the user confirm the action',fakeAsync(()=>{
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(component,'fetchNotes');
-    
+
     component.closeNote("000-000");
     flush();
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Note closed successfully!');
@@ -156,7 +162,7 @@ describe('NotesPage', () => {
 
     component.closeNote("000-000");
     flush();
-    
+
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith('Error closing a note','Error');
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
@@ -182,5 +188,5 @@ describe('NotesPage', () => {
 
     expect(MODAL_CONTROLLER_MOCK.create).toHaveBeenCalled();
   }))
-  
+
 });

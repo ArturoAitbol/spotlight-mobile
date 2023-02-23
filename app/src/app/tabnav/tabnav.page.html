@@ -1,14 +1,12 @@
-<ion-content>
   <ion-tabs>
     <ion-tab-bar slot="bottom">
       <ion-tab-button tab="dashboard">
         <ion-icon name="grid"></ion-icon>
         <ion-label>Dashboard</ion-label>
       </ion-tab-button>
-      <ion-tab-button tab="notes">
+      <ion-tab-button tab="notes" (click)="resetBadgeCount()">
         <ion-icon name="document"></ion-icon>
         <ion-label>Notes</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>
-</ion-content>

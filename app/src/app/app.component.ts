@@ -21,6 +21,7 @@ import { IonToastService } from './services/ion-toast.service';
 })
 export class AppComponent implements OnInit,OnDestroy {
   isIframe = false;
+  isiOS = false;
   @ViewChild('popover') popover;
   isPopoverOpen = false;
   dateTime : Date;
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.networkListener = Network.addListener('networkStatusChange', (status) => {
       if (status.connected) {
         if (this.networkStatus && !this.networkStatus.connected) {
