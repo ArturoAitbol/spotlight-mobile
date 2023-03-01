@@ -14,31 +14,37 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm install
+      - name: Install ionic
+        run: npm install -g @ionic/cli
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
-
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          npm install
-
+          chmod +x ./android/gradlew
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' app/src/environments/environment.ts > changed.ts && mv changed.ts app/src/environments/environment.ts
+          
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 26
+          api-level: 29
           target: google_apis
           arch: x86_64
           profile: pixel_xl
           cores: 2
-          ram-size: 5120M
+          ram-size: 5120M 
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
           disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -q
+          working-directory: ./app
+          script: |
+            ionic capacitor run android --no-sync --target Pixel
+            mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
