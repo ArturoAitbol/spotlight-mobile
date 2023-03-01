@@ -22,6 +22,10 @@ const routes: Routes = [
         canActivate:[RoleGuard,ServiceGuard]
       },
       {
+        path: 'ctaas-dashboard',
+        loadChildren: () => import('../ctaas-dashboard/ctaas-dashboard.module').then(m => m.CtaasDashboardPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/dashboard',
         pathMatch: 'full'

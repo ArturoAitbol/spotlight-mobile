@@ -1,0 +1,25 @@
+<ion-content class="padding has-header">
+  <div *ngIf="isiOS">
+    <div style=" margin-top: 60px;">
+    </div>
+  </div>
+  <div id="container">
+
+    <div id="service-description">
+      <strong class="ion-text-left">{{serviceName}}</strong>
+        <ion-button class="left" (click)="onClickToggleButton(DAILY)" [ngClass]="{'active':selectedPeriod===DAILY}">{{DAILY | titlecase}}</ion-button>
+        <ion-button class="right" (click)="onClickToggleButton(WEEKLY)" [ngClass]="{'active':selectedPeriod===WEEKLY}">{{WEEKLY | titlecase}}</ion-button>
+    </div>
+    <!-- <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher> -->
+  </div>
+ 
+  <div class="reportArea">
+    <powerbi-report
+    [embedConfig]="reportConfig" 
+    [phasedEmbedding]=false
+    [eventHandlers]="eventHandlersMap">
+    </powerbi-report>
+  </div>
+</ion-content>

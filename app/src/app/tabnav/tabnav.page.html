@@ -1,8 +1,14 @@
   <ion-tabs>
     <ion-tab-bar slot="bottom">
+      <div *ngIf = "isFeatureEnabled">
+        <ion-tab-button tab="ctaas-dashboard">
+          <ion-icon name="grid"></ion-icon>
+          <ion-label>Dashboard</ion-label>
+        </ion-tab-button>
+      </div>
       <ion-tab-button tab="dashboard">
         <ion-icon name="grid"></ion-icon>
-        <ion-label>Dashboard</ion-label>
+        <ion-label>Dashboard Legacy</ion-label>
       </ion-tab-button>
       <ion-tab-button tab="notes" (click)="resetBadgeCount()">
         <ion-icon name="document"></ion-icon>
