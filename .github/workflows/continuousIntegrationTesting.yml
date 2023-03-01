@@ -11,6 +11,9 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
     steps:
       - name: checkout
         uses: actions/checkout@v3
