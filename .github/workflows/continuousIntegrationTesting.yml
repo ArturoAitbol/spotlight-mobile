@@ -25,7 +25,7 @@ jobs:
           npm install -g appium@next
           appium driver install uiautomator2
           chmod +x ./android/gradlew
-          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' app/src/environments/environment.ts > changed.ts && mv changed.ts app/src/environments/environment.ts
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
