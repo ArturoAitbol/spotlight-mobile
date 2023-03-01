@@ -11,9 +11,6 @@ public class Main {
     @Test
     public void simpleTest() throws IOException, InterruptedException {
         try {
-//            AutomatedAndroidDevice mia2 = new AutomatedAndroidDevice("emulator-5554");
-//            mia2.initializeIfNeeded();
-//            mia2.clickElementByXpath("//android.widget.TextView[@content-desc='Messages']");
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             String timeStamp = sdf1.format(timestamp);
