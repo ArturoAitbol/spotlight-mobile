@@ -3,6 +3,7 @@ name: Continuous testing in Integration
 on:
   schedule:
     - cron: '0 */2 * * *'
+  workflow_dispatch:
 permissions: write-all
 env:
   WORKING_DIR: "./app"
