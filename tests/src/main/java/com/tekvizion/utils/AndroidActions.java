@@ -87,14 +87,16 @@ public class AndroidActions {
         element.sendKeys(text);
     }
 
-    public void sendKeysSpecial(By locator, String text){
+    public void sendKeysSpecial(By selector, String text){
 /*        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.refreshed(
-                ExpectedConditions.elementToBeClickable(locator)));
-        driver.findElement(locator).sendKeys(text);*/
-        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(locator,"password", "true"));
-//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(locator));
-        driver.findElement(locator).sendKeys(text);
+                ExpectedConditions.elementToBeClickable(selector)));
+        driver.findElement(selector).sendKeys(text);*/
+//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(selector));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(selector,"password", "true"));
+//        driver.findElement(selector).sendKeys(text);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        element.sendKeys(text);
     }
 
     public void longPress(WebElement element){
