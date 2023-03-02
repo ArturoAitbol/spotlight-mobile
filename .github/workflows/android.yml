@@ -54,9 +54,9 @@ jobs:
             ionic capacitor run android --no-sync --target Pixel
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
       
-      - name: Debug on failure
-        if: success() || failure()
-        uses: mxschmitt/action-tmate@v3
+      # - name: Debug on failure
+      #   if: success() || failure()
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
