@@ -78,12 +78,20 @@ public class AndroidActions {
     public void sendKeys(WebElement element, String text){
         wait.until(ExpectedConditions.visibilityOf(element));
         element.sendKeys(text);
+//        wait.until(ExpectedConditions.domAttributeToBe(element,"password", "true"));
     }
 
     public void sendKeys(By selector, String text){
         wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.sendKeys(text);
+    }
+
+    public void sendKeysSpecial(By locator, String text){
+        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.refreshed(
+                ExpectedConditions.elementToBeClickable(locator)));
+        driver.findElement(locator).sendKeys(text);
     }
 
     public void longPress(WebElement element){
