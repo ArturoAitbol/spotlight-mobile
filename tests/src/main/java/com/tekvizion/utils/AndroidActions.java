@@ -88,9 +88,12 @@ public class AndroidActions {
     }
 
     public void sendKeysSpecial(By locator, String text){
-        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+/*        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.refreshed(
                 ExpectedConditions.elementToBeClickable(locator)));
+        driver.findElement(locator).sendKeys(text);*/
+        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(locator,"password", "true"));
+//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(locator));
         driver.findElement(locator).sendKeys(text);
     }
 
