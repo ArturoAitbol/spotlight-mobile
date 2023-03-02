@@ -18,8 +18,6 @@ public class LoginTest extends AndroidBaseTest {
         LoginAndroid login = homePage.goToLoginForm();
         DashboardAndroid dashboard = login.signIn();
         dashboard.checkUserName();
-//        String title = dashboard.getTitle();
-//        Assert.assertEquals(title, "Spotlight");
     }
 
     @Test
