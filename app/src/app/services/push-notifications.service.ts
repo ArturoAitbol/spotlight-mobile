@@ -42,7 +42,6 @@ export class PushNotificationsService {
           let deviceToken = {
             deviceToken: event.token
           };
-          console.log("new token: " + event.token);
           localStorage.setItem("deviceToken", event.token);
           adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
             console.log(res);
