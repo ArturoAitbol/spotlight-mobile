@@ -36,13 +36,13 @@ export class PushNotificationsService {
   private registerPush() {
     let deviceTokenFromStorage = localStorage.getItem("deviceToken");
     let adminDeviceService = this.adminDeviceService;
-    FirebaseMessaging.requestPermissions().then(function(permission){
+    FirebaseMessaging.requestPermissions().then(async function(permission){
       if(permission.receive === "granted"){
+        await FirebaseMessaging.getToken();
         FirebaseMessaging.addListener('tokenReceived', (event) => {
           let deviceToken = {
             deviceToken: event.token
           };
-          console.log("new token: " + event.token);
           localStorage.setItem("deviceToken", event.token);
           if(deviceTokenFromStorage != event.token){
             adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
@@ -104,6 +104,7 @@ export class PushNotificationsService {
       let deviceToken = localStorage.getItem("deviceToken");
       if (deviceToken) {
         FirebaseMessaging.removeAllListeners();
+        FirebaseMessaging.deleteToken();
         this.adminDeviceService.deleteAdminDevice(deviceToken).subscribe((res)=>{
           callback(true);
           console.log(res);
