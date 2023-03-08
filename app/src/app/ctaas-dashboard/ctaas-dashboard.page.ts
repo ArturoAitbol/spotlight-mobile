@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { PowerBIEmbedModule } from 'powerbi-client-angular';
 import { IReportEmbedConfiguration, Dashboard, models, Embed, IDashboardEmbedConfiguration, service } from 'powerbi-client';
-import { EventHandler, PowerbiEmbedComponent } from './powerbi-embed/powerbi-embed.component';
 import { IonToastService } from '../services/ion-toast.service';
 import { IPowerBiReponse } from 'src/app/model/powerbi-response.model';
 import { SubaccountService } from '../services/subaccount.service';
