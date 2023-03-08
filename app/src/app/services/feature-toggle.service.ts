@@ -42,10 +42,14 @@ export class FeatureToggleService {
         if (subaccountId) {
             const exception = this.featureToggle?.exceptions?.find(exception => exception.subaccountId == subaccountId);
             // If the exception exists it takes priority
-            if (exception) return exception.status;
-            else return this.featureToggle.status;
-        } else return this.featureToggle.status;
-    } else return true;
+            if (exception)
+              return exception.status;
+            else
+              return this.featureToggle.status;
+        } else
+          return this.featureToggle.status;
+    } else
+      return true;
   }
 
   private setUpPeriodicRefresh(): void {

@@ -31,10 +31,9 @@ export class TabnavPage implements OnInit {
    }
 
   ngOnInit() {
-   if(localStorage.getItem(Constants.SELECTED_SUBACCOUNT))
-    this.disableNotes = false;
+    if(localStorage.getItem(Constants.SELECTED_SUBACCOUNT))
+      this.disableNotes = false;
     this.isFeatureEnabled = this.featureToggleService.isFeatureEnabled("powerbiMobileFeature", this.subaccountId);
-    console.log("Feature enabled: " + this.isFeatureEnabled);
   }
 
   ionViewWillEnter() {

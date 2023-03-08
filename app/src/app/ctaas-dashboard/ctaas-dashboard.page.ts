@@ -16,9 +16,6 @@ import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service'
   styleUrls: ['./ctaas-dashboard.page.scss'],
 })
 export class CtaasDashboardPage implements OnInit {
-  
-  // @Input() reportConfig!: IDashboardEmbedConfiguration;
-  // @ViewChild('dashboardContainer') private containerRef!: ElementRef<HTMLDivElement>;
   isiOS = false;
   private _embed?: Embed;
   private readonly FETCH_POWERBI_DASHBOARD_REPORT_URL: string = environment.apiEndpoint+"/spotlightDashboard/";
@@ -32,7 +29,6 @@ export class CtaasDashboardPage implements OnInit {
   featureToggleKey: string = 'daily';
   subaccountId: string = null;
   hasDashboardDetails = false;
-  // reportConfig: IReportEmbedConfiguration;
   phasedEmbeddingFlag = false;
   reportClass = 'report-container';
   isLoadingResults = false;
@@ -48,7 +44,7 @@ export class CtaasDashboardPage implements OnInit {
   reportConfig: IReportEmbedConfiguration = {
     type: "report",
     embedUrl: undefined,
-    accessToken: undefined, // Keep as empty string, null or undefined
+    accessToken: undefined,
     tokenType: models.TokenType.Embed,
     hostname: "https://app.powerbi.com",
     settings: {
@@ -80,7 +76,6 @@ export class CtaasDashboardPage implements OnInit {
   }
 
   ionViewWillEnter(){
-    console.log("ionViewWillEnter");
     window.screen.orientation.unlock();
     window.screen.orientation.lock('landscape');
     this.viewDashboardByMode();
@@ -90,16 +85,8 @@ export class CtaasDashboardPage implements OnInit {
     window.screen.orientation.lock('portrait-primary');
     window.screen.orientation.unlock();
   }
-  handleRefresh(event) {
-  };
-
-  // Setter for this._embed
-  private set embed(newEmbedInstance: Embed | undefined) {
-    this._embed = newEmbedInstance;
-  }
 
   configurePowerbiEmbeddedReport(embedUrl: string, accessToken: string) {
-    console.log("Dashboard config");
     if (embedUrl && accessToken) {
       this.reportConfig = {
           ... this.reportConfig,
@@ -176,7 +163,6 @@ export class CtaasDashboardPage implements OnInit {
 
 
   async viewDashboardByMode(): Promise<any> {
-    console.log("viewDashboardByMode");
     if (!this.powerbiReportResponse) 
         await this.fetchSpotlightPowerBiDashboardDetailsBySubaccount();
     if (this.powerbiReportResponse) {
