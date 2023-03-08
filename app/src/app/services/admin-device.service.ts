@@ -18,7 +18,6 @@ export class AdminDeviceService {
    * @returns: Observable 
   */
   public createAdminDevice(data: any): Observable<any>{
-    console.log("deviceToken", data);
     return this.httpClient.post(this.API_URL, data);
   }
 

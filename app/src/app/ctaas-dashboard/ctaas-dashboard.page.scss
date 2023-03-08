@@ -1,91 +1,86 @@
 .reportArea
 {
-    // height: 60vh !important;
-    // vertical-align: middle;
     margin: auto;
-    // background: yellowgreen;
 }
 
 ::ng-deep powerbi-report > div {
-    height: 90vh !important;
+    height: 72vh !important;
     width: 87% !important;
     margin: auto;
 }
 
 #container { 
-    width: auto !important;
-
+  width: auto !important;
+  margin: auto;
+  justify-content: space-between;
 }
 
 #container strong {
     font-size: 20px;
     line-height: 26px;
 }
+
+.center {
+  margin: auto; 
+  margin-left: 0% !important; 
+  text-align: left;
+}
   
-//   #container p {
-//     font-size: 16px;
-//     line-height: 22px;
-//     color: #8c8c8c;
-//     margin: 0;
-//   }
-  
-//   #container a {
-//     text-decoration: none;
-//   }
-  
-  #service-description{
-    padding: 20px;
-    font-style: bold;
-    font-size: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #service-description strong{
-    font-size: 1.2em;
-  }
-  .title{
-    justify-content: space-between !important;
-    width: 100vw;
-  }
-  
-  
-  ion-card{
-    border-radius: 15px;
-  }
-  ion-button{
-    --background: #f8f8f8;
-    --color: rgb(0, 0, 0);
-    --box-shadow: none;
-    --border-color: #e0e0e0;
-    --border-style: solid;
-    --border-width: 1px;
-    text-transform: none;
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-  
-  ion-button.left{
-    --border-radius: 3px 0px 0px 3px;
-  }
-  ion-button.right{
-    --border-radius: 0px 3px 3px 0px;
-  }
-  
-  .active{
-    --background: #e0e0e0;
-  }
-  
-  ion-icon{
-    cursor: pointer;
-  }
-  
-  .error-message{
-    color: rgb(209, 209, 209);
-    margin: 40px 0px;
-  }
-  
-  .error-message > ion-icon {
-    font-size: 50px;
-  }
-  
+#service-description{
+  width: auto !important;
+  margin: auto;
+  justify-content: space-between;
+  padding: 20px;
+  font-style: bold;
+  font-size: 1em;
+  display: flex;
+}
+
+#service-description strong{
+  font-size: 1.2em;
+}
+
+.title{
+  justify-content: space-between !important;
+  width: 100vw;
+}
+
+
+ion-card{
+  border-radius: 15px;
+}
+ion-button{
+  --background: #f8f8f8;
+  --color: rgb(0, 0, 0);
+  --box-shadow: none;
+  --border-color: #e0e0e0;
+  --border-style: solid;
+  --border-width: 1px;
+  text-transform: none;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+ion-button.left{
+  --border-radius: 3px 0px 0px 3px;
+}
+ion-button.right{
+  --border-radius: 0px 3px 3px 0px;
+}
+
+.active{
+  --background: #e0e0e0;
+}
+
+ion-icon{
+  cursor: pointer;
+}
+
+.error-message{
+  color: rgb(209, 209, 209);
+  margin: 40px 0px;
+}
+
+.error-message > ion-icon {
+  font-size: 50px;
+}
