@@ -46,6 +46,10 @@ export class DashboardPage implements OnInit, OnDestroy {
     this.fetchData();
   }
 
+  ionViewWillEnter(){
+    window.screen.orientation.lock('portrait');
+  }
+
   ngOnDestroy(): void {
     if (this.foregroundSubscription)
       this.foregroundSubscription.unsubscribe();

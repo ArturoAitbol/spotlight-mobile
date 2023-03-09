@@ -24,6 +24,10 @@ const routes: Routes = [
   {
     path: 'home/:id',
     loadChildren: () => import('./tabnav/tabnav.module').then(m=> m.TabnavPageModule)
+  },
+  {
+    path: 'ctaas-dashboard',
+    loadChildren: () => import('./ctaas-dashboard/ctaas-dashboard.module').then( m => m.CtaasDashboardPageModule)
   }
 ];
 

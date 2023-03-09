@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 export class CtaasDashboardService {
   private readonly API_URL: string = environment.apiEndpoint + '/ctaasDashboard';
   private readonly FETCH_DASHBOARD_URL: string = this.API_URL + '/{subaccountId}/{reportType}';
+  private readonly FETCH_POWERBI_DASHBOARD_REPORT_URL: string = `${environment.apiEndpoint}/spotlightDashboard/{subaccountId}`;
+
   constructor(private httpClient: HttpClient) { }
   /**
    * fetch Spotlight Power BI reports
@@ -23,5 +25,10 @@ export class CtaasDashboardService {
       params = new HttpParams().append('timestampId', timestampId);
     const url = this.FETCH_DASHBOARD_URL.replace(/{subaccountId}/g, subaccountId).replace(/{reportType}/g, reportType);
     return this.httpClient.get(url,{params});
+  }
+
+  public getCtaasPowerBiDashboardDetails(subaccountId: string): Observable<any> {
+    const url = this.FETCH_POWERBI_DASHBOARD_REPORT_URL.replace(/{subaccountId}/g, subaccountId);
+    return this.httpClient.get(url);
   }
 }

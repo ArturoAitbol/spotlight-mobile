@@ -61,8 +61,10 @@ export class NotesPage implements OnInit, OnDestroy {
   }
   ionViewWillEnter(){
     this.resetBadgeCount();
+    window.screen.orientation.lock('portrait');
+    window.screen.orientation.unlock();
   }
-  
+
   ngOnDestroy(): void {
     if (this.foregroundSubscription)
       this.foregroundSubscription.unsubscribe();
