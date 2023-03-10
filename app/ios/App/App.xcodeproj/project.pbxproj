@@ -381,12 +381,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
+				CODE_SIGN_IDENTITY = "Apple Distribution";
+				// "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6W94SHSZB6;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6W94SHSZB6;
+				// "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6W94SHSZB6;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "tekvizion 360";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -395,8 +395,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tekvizion.spotlight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = NewAppProvisioning;
+				PROVISIONING_PROFILE_SPECIFIER = NewAppProvisioning;
+				// "PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = NewAppProvisioning;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
