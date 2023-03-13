@@ -181,18 +181,18 @@ jobs:
           subdirectory: ${{ env.WORKING_DIR }}
           lane: ios release_appstore
 
-      # - name: Upload release
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: ios-release-Build-${{steps.updated_ios_version.outputs.result}}
-      #     path: ${{ env.WORKING_DIR }}/ios/App/App.xcarchive/Products/Applications/App.ipa
-      #     retention-days: 60
+      - name: Upload release
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-release-Build-${{steps.updated_ios_version.outputs.result}}
+          path: ${{ env.WORKING_DIR }}/App.ipa
+          retention-days: 60
 
-      # - name: Print deployed Release Version
-      #   run: echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
+      - name: Print deployed Release Version
+        run: echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
 
-      # - name: Archive iOS Code Version
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ios-production-released-version
-      #     path: ./iOSVersionCode.txt
+      - name: Archive iOS Code Version
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-production-released-version
+          path: ./iOSVersionCode.txt
