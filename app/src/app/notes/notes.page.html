@@ -9,7 +9,7 @@
       </ion-refresher>
     <ion-spinner class="container" *ngIf="isNoteDataLoading else notesContent" name="dots"></ion-spinner>
 <ng-template #notesContent>
-    <div class = "container" *ngIf = "true">
+    <div class = "container" *ngIf = "maintenance">
         <div id="service-description">
             <div class="banner-container"> 
               <strong>
@@ -56,7 +56,7 @@
        <div>
             <ion-icon name="document-text-outline"></ion-icon>
             <div class="ion-margin-top">No Notes yet.</div>
-            <ion-button *lcAccessControl="'addNote'" class="ion-margin-top" [class.button-disabled]="maintenance" (click)="openAddNoteModal()">Add a note</ion-button>
+            <ion-button *lcAccessControl="'addNote'" class="ion-margin-top" [disabled]="maintenance" (click)="openAddNoteModal()">Add a note</ion-button>
        </div>
     </div>
    <ion-fab *lcAccessControl="'addNote'" slot="fixed" vertical="bottom" horizontal="end">

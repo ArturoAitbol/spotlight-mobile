@@ -65,14 +65,6 @@ export class NotesPage implements OnInit, OnDestroy {
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.resetBadgeCount();
     this.fetchNotes();
-    this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
-      this.ctaasSetupDetails = response['ctaasSetups'][0];
-      const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
-      this.isOnboardingComplete = onBoardingComplete;
-      this.setupStatus = status;
-      this.maintenance = maintenance;
-      console.log(maintenance);
-    });
   }
   ionViewWillEnter(){
     this.resetBadgeCount();
@@ -154,6 +146,13 @@ export class NotesPage implements OnInit, OnDestroy {
       this.isNoteDataLoading = false;
       if (event)
         event.target.complete();
+    });
+    this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
+      this.ctaasSetupDetails = response['ctaasSetups'][0];
+      const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
+      this.isOnboardingComplete = onBoardingComplete;
+      this.setupStatus = status;
+      this.maintenance = maintenance;
     });
   }
 
