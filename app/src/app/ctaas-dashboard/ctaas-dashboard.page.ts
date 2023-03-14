@@ -9,6 +9,8 @@ import { SubaccountService } from '../services/subaccount.service';
 import { FeatureToggleService } from '../services/feature-toggle.service';
 import { MsalService } from '@azure/msal-angular';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
+import { CtaasSetupService } from '../services/ctaasSetup.service';
+import { ISetup } from '../model/setup.model';
 
 @Component({
   selector: 'app-ctaas-dashboard',
@@ -56,13 +58,18 @@ export class CtaasDashboardPage implements OnInit {
         }
     },
     viewMode: models.ViewMode.View
-};
+  };
+  ctaasSetupDetails: any = {};
+  setupStatus = '';
+  isOnboardingComplete: boolean;
+  maintenance = false;
   
   constructor(private ionToastService: IonToastService, 
     private httpClient: HttpClient, 
     private subaccountService: SubaccountService,
     private ctaasDashboardService: CtaasDashboardService,
-    private msalService: MsalService) {
+    private msalService: MsalService,
+    private ctaasSetupService: CtaasSetupService) {
     this.subaccountId = this.subaccountService.getSubAccount().id;
   
   }
@@ -71,8 +78,6 @@ export class CtaasDashboardPage implements OnInit {
     this.serviceName = 'Spotlight Power BI';
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.subaccountDetails = this.subaccountService.getSelectedSubAccount();
-    const accountDetails = this.getAccountDetails();
-    this.viewDashboardByMode();
   }
 
   ionViewWillEnter(){
@@ -166,6 +171,15 @@ export class CtaasDashboardPage implements OnInit {
     if (!this.powerbiReportResponse) 
         await this.fetchSpotlightPowerBiDashboardDetailsBySubaccount();
     if (this.powerbiReportResponse) {
+      this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
+        this.ctaasSetupDetails = response['ctaasSetups'][0];
+        const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
+        this.isOnboardingComplete = onBoardingComplete;
+        this.setupStatus = status;
+        this.maintenance = maintenance;
+        if (maintenance) {
+          this.featureToggleKey = 'weekly';
+        }
         this.hasDashboardDetails = true;
         const { daily, weekly } = this.powerbiReportResponse;
         if (this.featureToggleKey === this.DAILY) {
@@ -175,6 +189,7 @@ export class CtaasDashboardPage implements OnInit {
             const { embedUrl, embedToken } = weekly;
             this.configurePowerbiEmbeddedReport(embedUrl, embedToken);
         }
+      });
     } else {
         this.hasDashboardDetails = false;
     }
@@ -193,5 +208,5 @@ export class CtaasDashboardPage implements OnInit {
 
   private getAccountDetails(): any | null {
     return this.msalService.instance.getActiveAccount() || null;
-}
+  }
 }

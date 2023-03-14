@@ -8,11 +8,14 @@ import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock
 import { MSAL_SERVICE_MOCK } from 'src/test/services/msal.service.mock';
 import { NOTE_SERVICE_MOCK } from 'src/test/services/note.service.mock';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
+import { CTAASSETUP_SERVICE_MOCK } from 'src/test/services/ctaasSetup.service.mock';
 import { CtaasDashboardService } from '../services/ctaas-dashboard.service';
 import { IonToastService } from '../services/ion-toast.service';
 import { NoteService } from '../services/note.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { SharedModule } from '../shared/shared.module';
+import { CtaasSetupService } from '../services/ctaasSetup.service';
+import { Observable } from "rxjs"
 
 import { DashboardPage } from './dashboard.page';
 import { ImageCardComponent } from './image-card/image-card.component';
@@ -45,6 +48,10 @@ describe('DashboardPage', () => {
         {
           provide: IonToastService,
           useValue: ION_TOAST_SERVICE_MOCK
+        },
+        {
+          provide: CtaasSetupService,
+          useValue: CTAASSETUP_SERVICE_MOCK
         },
         {
           provide: CtaasDashboardService,
