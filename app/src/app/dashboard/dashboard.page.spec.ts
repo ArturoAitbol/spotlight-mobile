@@ -54,10 +54,6 @@ describe('DashboardPage', () => {
           useValue: CTAASSETUP_SERVICE_MOCK
         },
         {
-          provide: CtaasSetupService,
-          useValue: {onBoardingComplete: true} 
-        },
-        {
           provide: CtaasDashboardService,
           useValue: CTAAS_DASHBOARD_SERVICE_MOCK
         }]
