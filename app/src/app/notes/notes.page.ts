@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { DataRefresherService } from '../services/data-refresher.service';
 import { Subscription } from 'rxjs';
 import { PushNotificationsService } from '../services/push-notifications.service';
+import { CtaasSetupService } from '../services/ctaasSetup.service';
+import { ISetup } from '../model/setup.model';
 
 @Component({
   selector: 'app-notes',
@@ -28,6 +30,10 @@ export class NotesPage implements OnInit, OnDestroy {
   dashboardSubscription: Subscription;
   pushNotificationsSubscription: Subscription;
   isiOS = false;
+  ctaasSetupDetails: any = {};
+  setupStatus = '';
+  isOnboardingComplete: boolean;
+  maintenance: boolean = false;
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,
@@ -37,7 +43,8 @@ export class NotesPage implements OnInit, OnDestroy {
               private foregroundService: DataRefresherService,
               private pushNotificationsService: PushNotificationsService,
               private noteService: NoteService,
-              private router: Router) {
+              private router: Router,
+              private ctaasSetupService: CtaasSetupService) {
                 this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
                   const isNotesPageOpen = this.router.url==='/tabs/notes';
                   if(isNotesPageOpen)
@@ -58,6 +65,14 @@ export class NotesPage implements OnInit, OnDestroy {
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.resetBadgeCount();
     this.fetchNotes();
+    this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
+      this.ctaasSetupDetails = response['ctaasSetups'][0];
+      const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
+      this.isOnboardingComplete = onBoardingComplete;
+      this.setupStatus = status;
+      this.maintenance = maintenance;
+      console.log(maintenance);
+    });
   }
   ionViewWillEnter(){
     this.resetBadgeCount();

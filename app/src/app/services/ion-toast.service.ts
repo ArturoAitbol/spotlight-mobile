@@ -21,4 +21,17 @@ export class IonToastService {
     });
     await toast.present();
   }
+  async presentPersistentToast(message: string, dismissButtonText?: string, position?: 'top' | 'middle' | 'bottom', duration?: number) {
+    const toast = await this.toastController.create({
+      message: message,
+      cssClass: 'custom-toast',
+      // duration: duration ? duration : 2500,
+      position: position ? position : 'top',
+      buttons: dismissButtonText ? [{
+        text: dismissButtonText,
+        role: 'cancel'
+      }] : null
+    });
+    await toast.present();
+  }
 }

@@ -18,7 +18,8 @@ import { NoteService } from '../services/note.service';
 import { PushNotificationsService } from '../services/push-notifications.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { SharedModule } from '../shared/shared.module';
-
+import { CtaasSetupService } from '../services/ctaasSetup.service';
+import { CTAASSETUP_SERVICE_MOCK } from 'src/test/services/ctaasSetup.service.mock';
 import { NotesPage } from './notes.page';
 
 const dashboardService = new DashboardService();
@@ -67,6 +68,10 @@ describe('NotesPage', () => {
         {
           provide: DashboardService,
           useValue: dashboardService
+        },
+        {
+          provide: CtaasSetupService,
+          useValue: CTAASSETUP_SERVICE_MOCK
         }
       ]
     }).compileComponents();

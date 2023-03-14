@@ -6,12 +6,24 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div id="container" class="ion-text-center">
-    <div>
+  <div *ngIf = "maintenance">
+    <div id="service-description" style="padding:0px auto 0px auto;">
+      <div class="banner-container" style="margin-bottom: 22px;"> 
+        <strong>
+          WARNING
+        </strong> 
+        <p>
+          Spotlight service is under maintenance, the most recent data is shown until the service resumes. 
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <div class="ion-text-center">
       <div id="service-description" [ngClass]="{'title': !isChartsDataLoading && hasDashboardDetails}" aria-label="service-title">
         <strong class="ion-text-center" id="service-name">{{serviceName}}</strong>
         <div *ngIf="!isChartsDataLoading && hasDashboardDetails">
-          <ion-button class="left" (click)="onClickToggleButton(DAILY)" [ngClass]="{'active':selectedPeriod===DAILY}">{{DAILY | titlecase}}</ion-button>
+          <ion-button class="left" (click)="onClickToggleButton(DAILY)" [ngClass]="{'active':selectedPeriod===DAILY}" [disabled]="maintenance">{{DAILY | titlecase}}</ion-button>
           <ion-button class="right" (click)="onClickToggleButton(WEEKLY)" [ngClass]="{'active':selectedPeriod===WEEKLY}">{{WEEKLY | titlecase}}</ion-button>
         </div>
       </div>

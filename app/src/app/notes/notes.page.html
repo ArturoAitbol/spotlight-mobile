@@ -9,6 +9,18 @@
       </ion-refresher>
     <ion-spinner class="container" *ngIf="isNoteDataLoading else notesContent" name="dots"></ion-spinner>
 <ng-template #notesContent>
+    <div class = "container" *ngIf = "true">
+        <div id="service-description">
+            <div class="banner-container"> 
+              <strong>
+                WARNING
+              </strong> 
+              <p>
+                Spotlight service is under maintenance, the add note functionality is disabled until the service resumes. 
+              </p>
+            </div>
+          </div>
+    </div>
    <div *ngIf="notes.length>0" class="container">
         <ion-list lines="none">
             <ion-list-header>
@@ -44,11 +56,11 @@
        <div>
             <ion-icon name="document-text-outline"></ion-icon>
             <div class="ion-margin-top">No Notes yet.</div>
-            <ion-button *lcAccessControl="'addNote'" class="ion-margin-top" (click)="openAddNoteModal()">Add a note</ion-button>
+            <ion-button *lcAccessControl="'addNote'" class="ion-margin-top" [class.button-disabled]="maintenance" (click)="openAddNoteModal()">Add a note</ion-button>
        </div>
     </div>
    <ion-fab *lcAccessControl="'addNote'" slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button *ngIf="notes.length>0" (click)="openAddNoteModal()">
+        <ion-fab-button *ngIf="notes.length>0" (click)="openAddNoteModal()" [disabled]="maintenance">
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>
     </ion-fab>
