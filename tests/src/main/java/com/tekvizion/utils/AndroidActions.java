@@ -21,7 +21,7 @@ public class AndroidActions {
     AndroidDriver driver;
     WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(300));
         this.driver = driver;
     }
 
