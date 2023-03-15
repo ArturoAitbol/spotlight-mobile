@@ -54,7 +54,7 @@ public class AndroidActions {
     }
 
     public void checkElement(WebElement element){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(300));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         wait.until(ExpectedConditions.visibilityOf(element));
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
