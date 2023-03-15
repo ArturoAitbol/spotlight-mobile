@@ -100,3 +100,7 @@ jobs:
         with:
           name: ios-functional-test-report
           path: ${{ github.workspace }}/tests/reports
+
+      - name: Debug on failure
+        if: success() || failure()
+        uses: mxschmitt/action-tmate@v3

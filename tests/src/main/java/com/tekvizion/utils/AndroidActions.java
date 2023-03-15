@@ -21,7 +21,7 @@ public class AndroidActions {
     AndroidDriver driver;
     WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(300));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         this.driver = driver;
     }
 
@@ -54,7 +54,9 @@ public class AndroidActions {
     }
 
     public void checkElement(WebElement element){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(300));
         wait.until(ExpectedConditions.visibilityOf(element));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
     public WebElement getElement(By selector){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
