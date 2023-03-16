@@ -3,7 +3,6 @@ name: Continuous testing in Integration
 on:
   schedule:
     - cron: '0 */2 * * *'
-  workflow_dispatch:
 permissions: write-all
 env:
   WORKING_DIR: "./app"
@@ -101,6 +100,6 @@ jobs:
           name: ios-functional-test-report
           path: ${{ github.workspace }}/tests/reports
 
-      - name: Debug on failure
-        if: success() || failure()
-        uses: mxschmitt/action-tmate@v3
+      # - name: Debug on failure
+      #   if: success() || failure()
+      #   uses: mxschmitt/action-tmate@v3
