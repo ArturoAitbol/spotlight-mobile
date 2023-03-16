@@ -1,37 +1,45 @@
-#container {
-  display: flex; 
-  align-items: center;
-  justify-content: center;
-  padding: 5px;
+.reportArea
+{
+    margin: auto;
+}
+
+::ng-deep powerbi-report > div {
+    height: 72vh !important;
+    width: 87% !important;
+    margin: auto;
+}
+
+#container { 
+  width: auto !important;
+  margin: auto;
+  justify-content: space-between;
 }
 
 #container strong {
-  font-size: 20px;
-  line-height: 26px;
+    font-size: 20px;
+    line-height: 26px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
+.center {
+  margin: auto; 
+  margin-left: 0% !important; 
+  text-align: left;
 }
-
-#container a {
-  text-decoration: none;
-}
-
+  
 #service-description{
+  width: auto !important;
+  margin: auto;
+  justify-content: space-between;
   padding: 20px;
   font-style: bold;
   font-size: 1em;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
+
 #service-description strong{
   font-size: 1.2em;
 }
+
 .title{
   justify-content: space-between !important;
   width: 100vw;
@@ -88,10 +96,10 @@ ion-icon{
 }
 
 .banner{
-  padding: 20px;
+  margin: auto;
+  justify-content: space-between;
+  width: 87% !important;
   font-style: bold;
   font-size: 1em;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }

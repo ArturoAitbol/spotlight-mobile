@@ -9,6 +9,8 @@ import { DashboardService } from '../services/dashboard.service';
 import { SharedModule } from '../shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TabnavPage } from './tabnav.page';
+import { FeatureToggleService } from '../services/feature-toggle.service';
+import { SubaccountService } from '../services/subaccount.service';
 
 const dashboardService = new DashboardService();
 
@@ -32,6 +34,18 @@ describe('TabnavPage', () => {
         {
           provide:DashboardService,
           useValue:dashboardService
+        },
+        {
+          provide: FeatureToggleService,
+          useValue: {isFeatureEnabled: () => {return true;}} 
+        },
+        {
+          provide: SubaccountService,
+          useValue: SubaccountService
+        },
+        {
+          provide: SubaccountService,
+          useValue: {getSubAccount: () => {return true;}} 
         }
       ]
     }).compileComponents();

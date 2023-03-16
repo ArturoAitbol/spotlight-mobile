@@ -1,12 +1,30 @@
   <ion-tabs>
+    <div *ngIf = "isFeatureEnabled; else FeatureDisabled">
     <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="dashboard">
-        <ion-icon name="grid"></ion-icon>
-        <ion-label>Dashboard</ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="notes" (click)="resetBadgeCount()">
-        <ion-icon name="document"></ion-icon>
-        <ion-label>Notes</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
+        <ion-tab-button tab="ctaas-dashboard">
+          <ion-icon name="grid"></ion-icon>
+          <ion-label>Dashboard PowerBi</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="dashboard">
+          <ion-icon name="grid"></ion-icon>
+          <ion-label>Dashboard</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="notes" (click)="resetBadgeCount()">
+          <ion-icon name="document"></ion-icon>
+          <ion-label>Notes</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </div>
+    <ng-template #FeatureDisabled>
+      <ion-tab-bar slot="bottom">
+          <ion-tab-button tab="dashboard">
+            <ion-icon name="grid"></ion-icon>
+            <ion-label>Dashboard</ion-label>
+          </ion-tab-button>
+          <ion-tab-button tab="notes" (click)="resetBadgeCount()">
+            <ion-icon name="document"></ion-icon>
+            <ion-label>Notes</ion-label>
+          </ion-tab-button>
+      </ion-tab-bar>
+    </ng-template>
   </ion-tabs>
