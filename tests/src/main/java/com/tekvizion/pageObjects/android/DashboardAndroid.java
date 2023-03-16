@@ -13,6 +13,8 @@ public class DashboardAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.view.View[@resource-id='service-name']")
     WebElement spotlightTitle;
+    @AndroidFindBy(xpath = "//android.view.View[@resource-id='username']")
+    WebElement username;
     @AndroidFindBy(xpath = "//android.view.View[@resource-id='tab-button-notes']")
     WebElement notesButton;
     public DashboardAndroid(AndroidDriver driver) {
@@ -23,6 +25,10 @@ public class DashboardAndroid extends AndroidActions {
 
     public String getTitle(){
         return getText(spotlightTitle);
+    }
+
+    public void checkUserName(){
+        checkElement(username);
     }
 
     public NotesAndroid goToNotes(){

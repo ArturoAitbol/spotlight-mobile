@@ -21,7 +21,7 @@ public class AndroidActions {
     AndroidDriver driver;
     WebDriverWait wait;
     public AndroidActions(AndroidDriver driver){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         this.driver = driver;
     }
 
@@ -78,12 +78,33 @@ public class AndroidActions {
     public void sendKeys(WebElement element, String text){
         wait.until(ExpectedConditions.visibilityOf(element));
         element.sendKeys(text);
+//        wait.until(ExpectedConditions.domAttributeToBe(element,"password", "true"));
     }
 
     public void sendKeys(By selector, String text){
         wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.sendKeys(text);
+    }
+
+    public void sendKeysSpecial(By selector, String text){
+/*        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.refreshed(
+                ExpectedConditions.elementToBeClickable(selector)));
+        driver.findElement(selector).sendKeys(text);*/
+//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(selector));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(selector,"password", "true"));
+//        driver.findElement(selector).sendKeys(text);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+        element.sendKeys(text);
+    }
+
+    public void waitElements(int seconds){
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void longPress(WebElement element){
