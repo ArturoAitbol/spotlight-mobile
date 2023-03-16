@@ -101,6 +101,14 @@ public class AndroidActions {
         element.sendKeys(text);
     }
 
+    public void waitElements(int seconds){
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void longPress(WebElement element){
         ((JavascriptExecutor)driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
                 "elementId", ((RemoteWebElement)element).getId(),
