@@ -30,11 +30,14 @@ public class DashboardAndroid extends AndroidActions {
     }
 
     public void checkUserName(){
+        waitElement(username, 300);
         checkElement(username);
     }
 
     public NotesAndroid goToNotes(){
-        clickWait(notesButton, 300);
+        waitElement(notesButton, 300);
+        click(notesButton);
+//        clickWait(notesButton, 300);
 //        specialClick(notesButtonSelector);
         return new NotesAndroid(this.driver);
     }

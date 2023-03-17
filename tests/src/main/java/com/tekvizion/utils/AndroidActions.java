@@ -26,17 +26,15 @@ public class AndroidActions {
         wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
         this.driver = driver;
     }
+    public void waitElement(WebElement element, int seconds){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+        wait.until(ExpectedConditions.visibilityOf(element));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
+    }
 
     public void click(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));
         element.click();
-    }
-
-    public void clickWait(WebElement element, int seconds){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
-        wait.until(ExpectedConditions.visibilityOf(element));
-        element.click();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
     }
     public void clickAndroid(WebElement element, int x, int y){
         try {
