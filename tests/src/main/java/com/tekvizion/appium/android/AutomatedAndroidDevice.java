@@ -102,7 +102,6 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.UNICODE_KEYBOARD, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.RESET_KEYBOARD, true));
-//        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.CHROME_DRIVER, "/Users/arturoamorosogarcia/Documents/spotlight-mobile/tests/src/test/resources/chromedriver"));
         return desiredCapabilities;
     }
 

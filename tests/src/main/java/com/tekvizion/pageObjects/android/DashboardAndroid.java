@@ -37,7 +37,6 @@ public class DashboardAndroid extends AndroidActions {
     public NotesAndroid goToNotes(){
         waitElement(notesButton, 300);
         click(notesButton);
-//        clickWait(notesButton, 300);
 //        specialClick(notesButtonSelector);
         return new NotesAndroid(this.driver);
     }

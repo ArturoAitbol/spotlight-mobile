@@ -35,7 +35,6 @@ public enum DesiredCapabilityOption {
     WDA_RETRIES("setWdaStartupRetries"),
     WDA_RETRY_INTERVAL("setWdaStartupRetryInterval"),
     FULL_RESET("fullReset"),
-
     CHROME_DRIVER("chromedriverExecutable");
 
     private final String name;
