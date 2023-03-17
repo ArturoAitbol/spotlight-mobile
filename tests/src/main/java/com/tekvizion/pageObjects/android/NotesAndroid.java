@@ -27,7 +27,7 @@ public class NotesAndroid extends AndroidActions {
     WebElement noteMessage;
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'OK')]")
     WebElement okButton;
-    @AndroidFindBy(xpath = "//android.widget.Button[@text='Close']")
+    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'Close')]")
     WebElement closeNoteButton;
     String noteText;
     public NotesAndroid(AndroidDriver driver) {
