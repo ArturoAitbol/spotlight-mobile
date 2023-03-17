@@ -20,8 +20,10 @@ import java.util.Base64;
 public class AndroidActions {
     AndroidDriver driver;
     WebDriverWait wait;
+    private final int DEFAULT_TIMEOUT = 60;
+    private final int MINIMUM_TIMEOUT = 30;
     public AndroidActions(AndroidDriver driver){
-        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
         this.driver = driver;
     }
 
@@ -33,11 +35,12 @@ public class AndroidActions {
     public void clickWait(WebElement element, int seconds){
         wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         wait.until(ExpectedConditions.visibilityOf(element));
-        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+        element.click();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
     }
     public void clickAndroid(WebElement element, int x, int y){
         try {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(MINIMUM_TIMEOUT));
             wait.until(ExpectedConditions.visibilityOf(element));
             element.click();
         } catch (Exception e) {
@@ -45,7 +48,7 @@ public class AndroidActions {
             System.out.println(e.toString());
             clickGesture(x, y);
         } finally {
-            wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
         }
     }
     public void click(By selector){
