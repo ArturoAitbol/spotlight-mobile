@@ -3,6 +3,7 @@ package com.tekvizion.pageObjects.android;
 import com.tekvizion.pageObjects.ios.Notes;
 import com.tekvizion.utils.AndroidActions;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -15,6 +16,7 @@ public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
     WebElement addButton;
+//    @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'ADD')]")
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'ADD')]")
     WebElement addNote;
     @AndroidFindBy(className = "android.widget.EditText")
@@ -25,7 +27,7 @@ public class NotesAndroid extends AndroidActions {
     WebElement noteMessage;
     @AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'OK')]")
     WebElement okButton;
-    @AndroidFindBy(xpath = "//android.widget.Button[@text='Close ']")
+    @AndroidFindBy(xpath = "//android.widget.Button[@text='Close']")
     WebElement closeNoteButton;
     String noteText;
     public NotesAndroid(AndroidDriver driver) {
@@ -36,6 +38,7 @@ public class NotesAndroid extends AndroidActions {
     public String addNote(String text) {
         try {
             click(addNote);
+            driver.findElement(By.xpath("")).click();
             System.out.println("First note");
         } catch (Exception e) {
             click(addButton);
@@ -45,11 +48,17 @@ public class NotesAndroid extends AndroidActions {
             noteText = addTimeStamp(text);
             sendKeys(noteMessageInput, noteText);
             addNoteButton.click();
+            waitInvisibilityElement(noteMessageInput);
         }
         return noteText;
     }
 
     public String verifyNote() {
+        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+        driver.startActivity(activity);
+        By notesButtonSelector = By.xpath("//android.view.View[@resource-id='tab-button-notes']");
+        click(notesButtonSelector);
+
         By noteTextSelector = By.xpath(String.format("//android.view.View[@text='%s']", noteText));
         try {
             return getText(noteTextSelector);
@@ -59,17 +68,17 @@ public class NotesAndroid extends AndroidActions {
             return "Error";
         }
     }
-
-    public void closeNote(String text) {
-    }
-    
-    public String closeNote() {
+    public String closeNote(String text) {
         try{
-            By noteSelector = By.xpath("//android.view.View[@resource-id='items-0']");
-            WebElement element = getElement(noteSelector);
+//            By noteTextSelector = By.xpath("//android.view.View[@resource-id='items-0']");
+            noteText = addTimeStamp(text);
+            By noteTextSelector = By.xpath(String.format("//android.view.View[@text='%s']", noteText));
+            WebElement element = getElement(noteTextSelector);
             Rectangle rectangle = element.getRect();
-            int x = rectangle.getWidth() - 200;
-            int y = rectangle.getY() + 120;
+//            int x = rectangle.getWidth() - 200;
+            int x = rectangle.getWidth() - 25;
+//            int y = rectangle.getY() + 120;
+            int y = rectangle.getY() - 85;
             System.out.println(rectangle.getDimension());
             System.out.println(rectangle.getX() + " " + rectangle.getY());
             clickGesture(x, y);

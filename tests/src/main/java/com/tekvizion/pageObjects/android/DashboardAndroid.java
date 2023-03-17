@@ -9,6 +9,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.Set;
+
 public class DashboardAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.view.View[@resource-id='service-name']")
@@ -32,9 +34,7 @@ public class DashboardAndroid extends AndroidActions {
     }
 
     public NotesAndroid goToNotes(){
-//        click(notesButton);
-        By notesButtonSelector = By.xpath("//android.view.View[@resource-id='tab-button-notes']");
-        click(notesButtonSelector);
+        click(notesButton);
 //        specialClick(notesButtonSelector);
         return new NotesAndroid(this.driver);
     }

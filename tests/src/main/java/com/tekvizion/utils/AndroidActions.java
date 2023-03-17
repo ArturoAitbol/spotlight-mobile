@@ -75,6 +75,10 @@ public class AndroidActions {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getText();
     }
 
+    public void waitInvisibilityElement(WebElement element){
+        wait.until(ExpectedConditions.invisibilityOf(element));
+    }
+
     public void sendKeys(WebElement element, String text){
         wait.until(ExpectedConditions.visibilityOf(element));
         element.sendKeys(text);

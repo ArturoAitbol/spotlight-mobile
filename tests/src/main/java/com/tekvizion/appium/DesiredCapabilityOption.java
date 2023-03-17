@@ -29,14 +29,14 @@ public enum DesiredCapabilityOption {
     SERVER_TIMEOUT("uiautomator2ServerInstallTimeout"),
     ADB_EXEC("adbExecTimeout"),
     APP_NAME("app"),
-    FORCE_SOFTWARE_KEYBOARD("setForceSimulatorSoftwareKeyboardPresence"),
-    HARDWARE_KEYBOARDS("setConnectHardwareKeyboard"),
     UNICODE_KEYBOARD("unicodeKeyboard"),
     RESET_KEYBOARD("resetKeyboard"),
     WDA_LAUNCH_TIME("setWdaLaunchTimeout"),
     WDA_RETRIES("setWdaStartupRetries"),
     WDA_RETRY_INTERVAL("setWdaStartupRetryInterval"),
-    FULL_RESET("fullReset");
+    FULL_RESET("fullReset"),
+
+    CHROME_DRIVER("chromedriverExecutable");
 
     private final String name;
 
