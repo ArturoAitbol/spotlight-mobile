@@ -29,14 +29,23 @@ public class AndroidActions {
         wait.until(ExpectedConditions.visibilityOf(element));
         element.click();
     }
+
+    public void clickWait(WebElement element, int seconds){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+        wait.until(ExpectedConditions.visibilityOf(element));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+    }
     public void clickAndroid(WebElement element, int x, int y){
         try {
+            wait = new WebDriverWait(driver, Duration.ofSeconds(30));
             wait.until(ExpectedConditions.visibilityOf(element));
             element.click();
         } catch (Exception e) {
             System.out.println("Button wasn't displayed!");
             System.out.println(e.toString());
             clickGesture(x, y);
+        } finally {
+            wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         }
     }
     public void click(By selector){
