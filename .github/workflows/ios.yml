@@ -12,30 +12,25 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
       
       - name: Install ionic
-        run: |
-          npm install -g @ionic/cli
+        run: npm install -g @ionic/cli
       
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install xcuitest
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
 
       - name: emulators list
-        run: |
-          ionic cap run ios --list
+        run: ionic cap run ios --list
 
       - name: Set device_id
         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
-  # Debug (ssh into running host)
-      - name: Debug on failure
-        uses: mxschmitt/action-tmate@v3
-          
       - name: run emulator
+        working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
       - name: Run functional tests
@@ -45,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: functional-test-report
+          name: ios-functional-test-report
           path: ${{ github.workspace }}/tests/reports

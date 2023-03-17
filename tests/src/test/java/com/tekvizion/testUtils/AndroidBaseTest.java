@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import com.tekvizion.utils.AppiumUtils;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
@@ -37,7 +38,8 @@ public class AndroidBaseTest extends AppiumUtils {
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(System.getProperty("deviceUDID"));
         androidDevice.initializeIfNeeded();
         this.driver = androidDevice.getDriver();
-//        this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+        driver.startActivity(activity);
     }
 
     @AfterClass
