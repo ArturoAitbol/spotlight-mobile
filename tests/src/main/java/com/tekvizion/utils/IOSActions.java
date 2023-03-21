@@ -19,7 +19,7 @@ public class IOSActions extends MobileActions {
     WebDriverWait wait;
     public IOSActions(IOSDriver driver){
 //        super(driver);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         this.driver = driver;
     }
     public void longPress(WebElement element){
