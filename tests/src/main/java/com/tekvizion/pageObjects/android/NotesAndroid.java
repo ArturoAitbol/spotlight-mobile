@@ -88,6 +88,8 @@ public class NotesAndroid extends AndroidActions {
             clickGesture(1238, 615);
             click(closeNoteButton);
             return "error";
+        } finally {
+            waitElements(10);
         }
     }
 }
