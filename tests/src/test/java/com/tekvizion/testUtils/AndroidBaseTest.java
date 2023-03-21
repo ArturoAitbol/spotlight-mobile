@@ -22,6 +22,8 @@ public class AndroidBaseTest extends AppiumUtils {
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(System.getProperty("deviceUDID"));
         androidDevice.initializeIfNeeded();
         this.driver = androidDevice.getDriver();
+        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+        this.driver.startActivity(activity);
     }
 
     @BeforeSuite
@@ -42,13 +44,5 @@ public class AndroidBaseTest extends AppiumUtils {
         this.driver.quit();
         if (this.service != null)
             this.service.stop();
-    }
-
-    @BeforeMethod
-    public void setActivity(){
-        if (this.driver != null){
-            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
-            this.driver.startActivity(activity);
-        }
     }
 }
