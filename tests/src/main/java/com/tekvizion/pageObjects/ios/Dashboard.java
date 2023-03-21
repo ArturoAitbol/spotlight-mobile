@@ -1,9 +1,11 @@
 package com.tekvizion.pageObjects.ios;
 
 import com.tekvizion.utils.IOSActions;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
@@ -22,7 +24,18 @@ public class Dashboard extends IOSActions {
     }
 
     public String getHeader(){
-        return getAttributeValue(tekVizionHeader, "name", "tekVizion");
+        String name;
+        try {
+            name = getAttributeValue(tekVizionHeader, "name", "tekVizion");
+            return name;
+        } catch (Exception e) {
+            System.out.println("Allow Notifications wasn't closed previously");
+            System.out.println(e.toString());
+            By allowSelector = AppiumBy.iOSClassChain("**/XCUIElementTypeButton[`label == \"Allow\"`]");
+            click(allowSelector);
+            name = getAttributeValue(tekVizionHeader, "name", "tekVizion");
+        }
+        return name;
     }
 
     public void verifyTitle(){

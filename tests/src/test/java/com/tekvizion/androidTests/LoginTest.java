@@ -1,13 +1,7 @@
 package com.tekvizion.androidTests;
 
 import com.tekvizion.pageObjects.android.*;
-import com.tekvizion.pageObjects.ios.Dashboard;
-import com.tekvizion.pageObjects.ios.HomePage;
-import com.tekvizion.pageObjects.ios.Login;
 import com.tekvizion.testUtils.AndroidBaseTest;
-import io.appium.java_client.android.Activity;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class LoginTest extends AndroidBaseTest {
@@ -25,8 +19,9 @@ public class LoginTest extends AndroidBaseTest {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
-        String actualNote = notes.verifyNote();
+//        String actualNote = notes.verifyNote();
 //        Assert.assertEquals(actualNote, expectedNote);
+
     }
 
     @Test

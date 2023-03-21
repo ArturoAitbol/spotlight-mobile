@@ -37,7 +37,6 @@ public class NotesAndroid extends AndroidActions {
     public String addNote(String text) {
         try {
             click(addNote);
-//            driver.findElement(By.xpath("")).click();
             System.out.println("First note");
         } catch (Exception e) {
             click(addButton);
@@ -53,10 +52,10 @@ public class NotesAndroid extends AndroidActions {
     }
 
     public String verifyNote() {
-//        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
-//        driver.startActivity(activity);
-//        By notesButtonSelector = By.xpath("//android.view.View[@resource-id='tab-button-notes']");
-//        click(notesButtonSelector);
+        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+        driver.startActivity(activity);
+        By notesButtonSelector = By.xpath("//android.view.View[@resource-id='tab-button-notes']");
+        click(notesButtonSelector);
         By noteTextSelector = By.xpath(String.format("//android.view.View[@text='%s']", noteText));
         try {
             String noteText = getText(noteTextSelector);
