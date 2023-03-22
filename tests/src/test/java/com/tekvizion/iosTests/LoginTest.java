@@ -36,7 +36,7 @@ public class LoginTest extends IOSBaseTest {
         Notes notes = new Notes(driver);
         String expectedMessage = "Note closed successfully!";
         String actualMessage = notes.closeNote("note");
-        Assert.assertEquals(expectedMessage, actualMessage);
+        Assert.assertEquals(actualMessage, expectedMessage);
     }
 
 }

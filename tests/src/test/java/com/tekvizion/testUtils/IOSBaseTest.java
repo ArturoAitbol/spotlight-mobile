@@ -11,7 +11,9 @@ import org.checkerframework.checker.units.qual.C;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,8 +39,6 @@ public class IOSBaseTest extends AppiumUtils {
         Properties properties = new Properties();
         FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
         properties.load(file);
-        String ipAddress = properties.getProperty("ipAddress");
-        String port = properties.getProperty("port");
 
         XCUITestOptions options = new XCUITestOptions();
         options.setUdid(System.getProperty("deviceUDID"));
@@ -46,18 +46,27 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaLaunchTimeout(Duration.ofSeconds(180));
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
-        service = startAppiumServer(ipAddress, Integer.parseInt(port));
-        this.driver = new IOSDriver(service.getUrl(), options);
-//        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
-
-//        AutomatedIOSDevice iosDevice = new AutomatedIOSDevice("9CC554AD-528D-4AB2-A519-00A86F89367D");
-//        iosDevice.initializeIfNeeded();
-//        this.driver = iosDevice.getDriver();
+        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
     }
-
+    @BeforeSuite
+    public void startAppium() throws IOException {
+        Properties properties = new Properties();
+        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
+        properties.load(file);
+        String ipAddress = properties.getProperty("ipAddress");
+        String port = properties.getProperty("port");
+        if (service == null){
+            service = startAppiumServer(ipAddress, Integer.parseInt(port));
+            System.out.println("Starting Appium Server!!!");
+        }
+    }
     @AfterClass
-    public void tearDown(){
+    public void closeDriver(){
         this.driver.quit();
+    }
+    @AfterSuite
+    public void tearDown(){
+//        this.driver.quit();
         if (this.service != null)
             this.service.stop();
     }

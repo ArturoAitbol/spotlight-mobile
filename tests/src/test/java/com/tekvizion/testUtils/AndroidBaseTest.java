@@ -38,10 +38,13 @@ public class AndroidBaseTest extends AppiumUtils {
             System.out.println("Starting Appium Server!!!");
         }
     }
-
+    @AfterClass
+    public void closeDriver(){
+        this.driver.quit();
+    }
     @AfterSuite
     public void tearDown(){
-        this.driver.quit();
+//        this.driver.quit();
         if (this.service != null)
             this.service.stop();
     }
