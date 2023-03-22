@@ -14,7 +14,7 @@
             </class>
         </classes>
     </test>
-<!--    <test thread-count="5" name="CreateNoteTest">
+    <test thread-count="5" name="CreateNoteTest">
         <parameter name="deviceUDID" value="iPhone 13 Pro"/>
         <classes>
             <class name="com.tekvizion.iosTests.LoginTest">
@@ -33,5 +33,6 @@
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
+
 </suite>

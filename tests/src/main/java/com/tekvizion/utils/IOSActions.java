@@ -19,7 +19,7 @@ public class IOSActions extends MobileActions {
     WebDriverWait wait;
     public IOSActions(IOSDriver driver){
 //        super(driver);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         this.driver = driver;
     }
     public void longPress(WebElement element){
@@ -85,5 +85,13 @@ public class IOSActions extends MobileActions {
     public String getAttributeValue(WebElement element, String attribute, String value){
         wait.until(ExpectedConditions.attributeContains(element, attribute, value));
         return element.getDomAttribute(attribute);
+    }
+
+    public void waitElements(int seconds){
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

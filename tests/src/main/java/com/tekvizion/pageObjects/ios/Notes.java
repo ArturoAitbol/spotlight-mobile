@@ -35,6 +35,7 @@ public class Notes extends IOSActions {
     public String addNote(String text) {
         try {
             click(addNoteButton);
+            System.out.println("First note");
         } catch (Exception e) {
             click(addButton);
             System.out.println("There aren't notes for this user!");

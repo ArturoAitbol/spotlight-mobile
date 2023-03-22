@@ -45,6 +45,7 @@ public class Login extends IOSActions {
         click(noStaySignedIn);
         try {
             click(allowNotifications);
+            System.out.println("Allow Notifications");
         } catch (Exception e) {
             System.out.println("Allow notification message wasn't displayed");
             System.out.println(e.toString());
