@@ -19,6 +19,8 @@ public class DashboardAndroid extends AndroidActions {
     WebElement username;
     @AndroidFindBy(xpath = "//android.view.View[@resource-id='tab-button-notes']")
     WebElement notesButton;
+    By notesButtonSelector = By.xpath("//android.view.View[@resource-id='tab-button-notes']");
+
     public DashboardAndroid(AndroidDriver driver) {
         super(driver);
         this.driver = driver;
@@ -35,9 +37,15 @@ public class DashboardAndroid extends AndroidActions {
     }
 
     public NotesAndroid goToNotes(){
+//        boolean response = accessibilityNodeInfo(notesButton, "selected", "true");
+
         waitElement(notesButton, 300);
         click(notesButton);
-//        specialClick(notesButtonSelector);
+//        boolean response = attributeToBe(notesButtonSelector, "selected", "true");
+        boolean response = attributeToBe(notesButton, "selected", "true");
+
+        if (!response)
+            clickGesture(1000,2295);
         return new NotesAndroid(this.driver);
     }
 

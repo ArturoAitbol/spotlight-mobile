@@ -24,6 +24,11 @@ public class AndroidBaseTest extends AppiumUtils {
         this.driver = androidDevice.getDriver();
         Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
         this.driver.startActivity(activity);
+        try {
+            Thread.sleep(60 * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @BeforeSuite
@@ -38,10 +43,13 @@ public class AndroidBaseTest extends AppiumUtils {
             System.out.println("Starting Appium Server!!!");
         }
     }
-
+    @AfterClass
+    public void closeDriver(){
+        this.driver.quit();
+    }
     @AfterSuite
     public void tearDown(){
-        this.driver.quit();
+//        this.driver.quit();
         if (this.service != null)
             this.service.stop();
     }
