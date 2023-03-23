@@ -50,8 +50,15 @@ public class AppiumUtils {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac")){
             service = new AppiumServiceBuilder().withAppiumJS(new File("/usr/local/lib/node_modules/appium/build/lib/main.js"))
-                        .withIPAddress(ipAddress).usingPort(port).build();
-            service.start();
+                        .withIPAddress(ipAddress).usingPort(port).withTimeout(Duration.ofSeconds(300)).build();
+            try {
+                service.start();
+            } catch (Exception e) {
+                System.out.println(e);
+                System.out.println("*** Starting AppiumDriverLocalService buildDefaultService ***");
+                service = AppiumDriverLocalService.buildDefaultService();
+                service.start();
+            }
         }
         return service;
     }

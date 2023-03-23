@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Base64;
 
 public class AndroidActions {
@@ -26,6 +27,7 @@ public class AndroidActions {
         wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
         this.driver = driver;
     }
+
     public void waitElement(WebElement element, int seconds){
         wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         wait.until(ExpectedConditions.visibilityOf(element));
@@ -83,6 +85,39 @@ public class AndroidActions {
 
     public String getText(By selector){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getText();
+    }
+    public boolean accessibilityNodeInfo(WebElement element, String attribute, String expectedValue){
+        boolean response = attributeToBe(element, attribute, expectedValue);
+        if (!response){
+            System.out.println("Testing UiAutomator2Exception: AccessibilityNodeInfo");
+            checkElement(element);
+        }
+        return response;
+    }
+    public boolean attributeToBe(WebElement element, String attribute, String expectedValue){
+        String currentValue = "";
+        wait = new WebDriverWait(driver, Duration.ofSeconds(MINIMUM_TIMEOUT));
+        Instant startTime = Instant.now();
+        long timeElapsed;
+        long timeOut = Long.valueOf("10");
+//        long timeOut = Long.valueOf("180");
+        while(!currentValue.equals(expectedValue)){
+            try {
+                WebElement elementClickable = wait.until(ExpectedConditions.visibilityOf(element));
+                elementClickable.click();
+                currentValue = elementClickable.getAttribute(attribute);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            Instant endTime = Instant.now();
+            timeElapsed = Duration.between(startTime, endTime).getSeconds();
+            if(timeElapsed > timeOut) {
+                System.out.println("Element couldn't be selected:" + element);
+                break;
+            }
+        }
+        wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
+        return (currentValue.equals(expectedValue)) ? true :  false;
     }
 
     public void waitInvisibilityElement(WebElement element){

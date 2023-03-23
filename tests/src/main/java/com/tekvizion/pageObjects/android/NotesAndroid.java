@@ -47,6 +47,7 @@ public class NotesAndroid extends AndroidActions {
             sendKeys(noteMessageInput, noteText);
             addNoteButton.click();
             waitInvisibilityElement(noteMessageInput);
+            waitElements(60);
         }
         return noteText;
     }
@@ -88,7 +89,7 @@ public class NotesAndroid extends AndroidActions {
             click(closeNoteButton);
             return "error";
         } finally {
-            waitElements(10);
+            waitElements(60);
         }
     }
 }
