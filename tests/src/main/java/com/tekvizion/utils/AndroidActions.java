@@ -2,6 +2,7 @@ package com.tekvizion.utils;
 
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -160,6 +161,27 @@ public class AndroidActions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String takeScreenshot(String testCaseName, AppiumDriver driver) throws IOException {
+        String screenshotBase64 = driver.getScreenshotAs(OutputType.BASE64);
+        String replaceBase64 = screenshotBase64.replaceAll("\n","");
+        byte[] decodedImg = Base64.getDecoder()
+                .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
+        String imageName = testCaseName + ".jpg";
+        Path destinationFile = Paths.get(getReportPath(), imageName);
+        Files.write(destinationFile, decodedImg);
+        return imageName;
+    }
+
+    public String getReportPath(){
+        String path = System.getProperty("user.dir");
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            path =  path + "\\reports\\";
+        else if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac"))
+            path =  path + "//reports//";
+        return path;
     }
 
     public void longPress(WebElement element){

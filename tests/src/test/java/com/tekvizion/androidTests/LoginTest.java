@@ -4,6 +4,8 @@ import com.tekvizion.pageObjects.android.*;
 import com.tekvizion.testUtils.AndroidBaseTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
     @Test
@@ -15,7 +17,7 @@ public class LoginTest extends AndroidBaseTest {
     }
 
     @Test
-    public void addNote(){
+    public void addNote() throws IOException {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
