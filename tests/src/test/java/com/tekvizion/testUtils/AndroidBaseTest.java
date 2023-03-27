@@ -26,7 +26,8 @@ public class AndroidBaseTest extends AppiumUtils {
         this.driver.startActivity(activity);
         try {
             Thread.sleep(60 * 1000);
-        } catch (InterruptedException e) {
+            System.out.println("Start activity");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

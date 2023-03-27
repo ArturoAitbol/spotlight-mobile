@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.List;
 
 public class AndroidActions {
     AndroidDriver driver;
@@ -70,6 +71,10 @@ public class AndroidActions {
     }
     public WebElement getElement(By selector){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+    }
+
+    public List<WebElement> getElements(By selector){
+        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(selector));
     }
 
     public void clickGesture(int x, int y){
