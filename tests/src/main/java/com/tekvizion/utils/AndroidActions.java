@@ -44,9 +44,10 @@ public class AndroidActions {
             wait = new WebDriverWait(driver, Duration.ofSeconds(MINIMUM_TIMEOUT));
             wait.until(ExpectedConditions.visibilityOf(element));
             element.click();
+            wait.until(ExpectedConditions.invisibilityOf(element));
         } catch (Exception e) {
-            System.out.println("Button wasn't displayed!");
-            System.out.println(e.toString());
+            System.out.println("Error displaying button");
+            System.out.println(e);
             clickGesture(x, y);
         } finally {
             wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
