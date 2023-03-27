@@ -12,6 +12,8 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.List;
+
 public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
@@ -47,6 +49,16 @@ public class NotesAndroid extends AndroidActions {
             sendKeys(noteMessageInput, noteText);
             addNoteButton.click();
             waitInvisibilityElement(noteMessageInput);
+            try {
+                By dialogSelector = By.xpath("//*[contains(@resource-id,'ion-overlay-')]/descendant::*[@text!='']");
+                List<WebElement> elements = getElements(dialogSelector);
+                System.out.println("Getting dialog elements...");
+                for (WebElement element: elements) {
+                    System.out.println(element.getText());
+                }
+            } catch (Exception e) {
+                System.out.println("No dialogs were displayed!");
+            }
             waitElements(60);
         }
         return noteText;
