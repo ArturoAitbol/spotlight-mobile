@@ -37,14 +37,6 @@ public class LoginAndroid extends AndroidActions {
         sendKeys(inputSelector, "Zuwo8872a");
 //        sendKeysSpecial(inputSelector, "Zuwo8872a");
         clickAndroid(signInButton, 1170, 930);
-        try {
-            waitInvisibilityElement(signInButton);
-            System.out.println("Sign-In button disappeared");
-        } catch (Exception e) {
-            System.out.println("Sign-In button did NOT disappear");
-            System.out.println(e);
-            clickGesture(1170, 930);
-        }
         clickAndroid(noButton, 1170, 970);
         return new DashboardAndroid(this.driver);
     }
