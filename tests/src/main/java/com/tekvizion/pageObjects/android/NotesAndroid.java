@@ -12,6 +12,7 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 public class NotesAndroid extends AndroidActions {
@@ -36,7 +37,7 @@ public class NotesAndroid extends AndroidActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public String addNote(String text) {
+    public String addNote(String text) throws IOException {
         try {
             click(addNote);
             System.out.println("First note");
@@ -48,8 +49,10 @@ public class NotesAndroid extends AndroidActions {
             noteText = addTimeStamp(text);
             sendKeys(noteMessageInput, noteText);
             addNoteButton.click();
+            takeScreenshot("creatingNote", driver);
             waitInvisibilityElement(noteMessageInput);
             try {
+                takeScreenshot("checkNoteCreated", driver);
                 By dialogSelector = By.xpath("//*[contains(@resource-id,'ion-overlay-')]/descendant::*[@text!='']");
                 List<WebElement> elements = getElements(dialogSelector);
                 System.out.println("Getting dialog elements...");
@@ -58,8 +61,9 @@ public class NotesAndroid extends AndroidActions {
                 }
             } catch (Exception e) {
                 System.out.println("No dialogs were displayed!");
+                System.out.println(e);
             }
-            waitElements(60);
+//            waitElements(60);
         }
         return noteText;
     }
