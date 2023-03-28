@@ -106,7 +106,7 @@ jobs:
         with:
           name: ios-functional-test-report
           path: ${{ github.workspace }}/tests/reports
-  
+
   generate-release:
     name: Generate release with code
     needs: [android-test, ios-test]
