@@ -102,11 +102,12 @@ public class NotesAndroid extends AndroidActions {
             System.out.println("Force close note!");
             System.out.println(e);
             clickGesture(1238, 615);
-            try {
+            click(closeNoteButton);
+            /*try {
                 click(closeNoteButton);
             } catch (Exception exception) {
                 System.out.println(exception);
-            }
+            }*/
             return "error";
         } finally {
             waitElements(60);
