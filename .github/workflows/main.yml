@@ -29,27 +29,27 @@ jobs:
         run: |
           npm install
       ###### Should reduce times
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      
-      - name: AVD cache
-        uses: actions/cache@v3
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-26
-      
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 26
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
+      # - name: Gradle cache
+      #   uses: gradle/gradle-build-action@v2
+
+      # - name: AVD cache
+      #   uses: actions/cache@v3
+      #   id: avd-cache
+      #   with:
+      #     path: |
+      #       ~/.android/avd/*
+      #       ~/.android/adb*
+      #     key: avd-26
+
+      # - name: create AVD and generate snapshot for caching
+      #   if: steps.avd-cache.outputs.cache-hit != 'true'
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 26
+      #     force-avd-creation: false
+      #     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
+      #     disable-animations: false
+      # script: echo "Generated AVD snapshot for caching."
       ###### Should reduce times
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -62,8 +62,8 @@ jobs:
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
-          # emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on  ORIGINAL
+          # emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
+          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on #ORIGINAL
           disable-animations: true
           script: mvn test -PandroidTests -f ./tests/pom.xml -q
 
