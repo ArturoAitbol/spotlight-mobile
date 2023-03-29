@@ -47,9 +47,8 @@ jobs:
         with:
           api-level: 26
           force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
-          disable-animations: true
-          avd-name: Pixel
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
+          disable-animations: false
           script: echo "Generated AVD snapshot for caching."
       ###### Should reduce times
       - name: Run tests
@@ -63,7 +62,7 @@ jobs:
           sdcard-path-or-size: 2000M
           avd-name: Pixel
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
           # emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on  ORIGINAL
           disable-animations: true
           script: mvn test -PandroidTests -f ./tests/pom.xml -q
