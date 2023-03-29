@@ -2,6 +2,7 @@ package com.tekvizion.utils;
 
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.List;
 
 public class AndroidActions {
     AndroidDriver driver;
@@ -43,9 +45,10 @@ public class AndroidActions {
             wait = new WebDriverWait(driver, Duration.ofSeconds(MINIMUM_TIMEOUT));
             wait.until(ExpectedConditions.visibilityOf(element));
             element.click();
+            wait.until(ExpectedConditions.invisibilityOf(element));
         } catch (Exception e) {
-            System.out.println("Button wasn't displayed!");
-            System.out.println(e.toString());
+            System.out.println("Error displaying button");
+            System.out.println(e);
             clickGesture(x, y);
         } finally {
             wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
@@ -70,6 +73,10 @@ public class AndroidActions {
     }
     public WebElement getElement(By selector){
         return wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+    }
+
+    public List<WebElement> getElements(By selector){
+        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(selector));
     }
 
     public void clickGesture(int x, int y){
@@ -154,6 +161,27 @@ public class AndroidActions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String takeScreenshot(String testCaseName, AppiumDriver driver) throws IOException {
+        String screenshotBase64 = driver.getScreenshotAs(OutputType.BASE64);
+        String replaceBase64 = screenshotBase64.replaceAll("\n","");
+        byte[] decodedImg = Base64.getDecoder()
+                .decode(replaceBase64.getBytes(StandardCharsets.UTF_8));
+        String imageName = testCaseName + ".jpg";
+        Path destinationFile = Paths.get(getReportPath(), imageName);
+        Files.write(destinationFile, decodedImg);
+        return imageName;
+    }
+
+    public String getReportPath(){
+        String path = System.getProperty("user.dir");
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win"))
+            path =  path + "\\reports\\";
+        else if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac"))
+            path =  path + "//reports//";
+        return path;
     }
 
     public void longPress(WebElement element){
