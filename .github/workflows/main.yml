@@ -15,19 +15,30 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
     steps:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: npm install
+      - name: Install ionic
+        run: npm install -g @ionic/cli
       - name: Install Appium
         run: |
           npm install -g appium@next
           appium driver install uiautomator2
-
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: |
-          npm install
+          chmod +x ./android/gradlew
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
+          appium &
       ###### Should reduce times
       # - name: Gradle cache
       #   uses: gradle/gradle-build-action@v2
@@ -39,13 +50,13 @@ jobs:
       #     path: |
       #       ~/.android/avd/*
       #       ~/.android/adb*
-      #     key: avd-26
+      #     key: avd-29
 
       # - name: create AVD and generate snapshot for caching
       #   if: steps.avd-cache.outputs.cache-hit != 'true'
       #   uses: reactivecircus/android-emulator-runner@v2
       #   with:
-      #     api-level: 26
+      #     api-level: 29
       #     force-avd-creation: false
       #     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
       #     disable-animations: false
@@ -54,10 +65,11 @@ jobs:
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 26
+          api-level: 29
           target: google_apis
           arch: x86_64
           profile: pixel_xl
+          cores: 2
           ram-size: 5120M
           sdcard-path-or-size: 2000M
           avd-name: Pixel
@@ -65,7 +77,10 @@ jobs:
           # emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -accel on
           emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on #ORIGINAL
           disable-animations: true
-          script: mvn test -PandroidTests -f ./tests/pom.xml -q
+          working-directory: ./app
+          script: |
+            ionic capacitor run android --no-sync --target Pixel
+            mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
@@ -73,6 +88,7 @@ jobs:
         with:
           name: android-functional-test-report
           path: tests/reports
+
   # ios-test:
   #   runs-on: macos-latest
   #   defaults:
@@ -92,7 +108,8 @@ jobs:
   #       run: |
   #         npm install -g appium@next
   #         appium driver install xcuitest
-
+  #         sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
+  #         appium &
   #     - name: emulators list
   #       run: ionic cap run ios --list
 
@@ -173,7 +190,6 @@ jobs:
   #         script: |
   #           const commit = "${{fromJSON(steps.release_details.outputs.assets)[0].name}}".split('-').pop().split('.').shift();
   #           core.setOutput('commit', commit);
-
   #     - name: Create Release Notes from commit history
   #       id: list_messages
   #       run: git log --pretty=format:%s --ancestry-path ${{steps.get_commit.outputs.commit}}^..${{steps.hash.outputs.hash}} > ReleaseNotes.txt
@@ -238,7 +254,6 @@ jobs:
   #       with:
   #         script: |
   #           return parseInt("${{ env.android_version_code }}") + 1
-
   #     - name: Update gradle version for Android
   #       uses: damienaicheh/update-android-version-gradle-action@v1.0.0
   #       with:
@@ -271,7 +286,6 @@ jobs:
   #       run: |
   #         echo "${{ secrets.RELEASE_KEYSTORE }}" > ./android/release.jks.base64
   #         base64 -d ./android/release.jks.base64 > ./android/release.decrypted.jks
-
   #     - name: Align APK
   #       run: $ANDROID_HOME/build-tools/30.0.3/zipalign -f -v 4 ./app/android/app/build/outputs/apk/release/app-release-unsigned.apk ./app/android/app/build/outputs/apk/release/app-release-aligned.apk
 
@@ -292,7 +306,6 @@ jobs:
   #     - name: Print deployed Release Version
   #       run: |
   #         echo "Build-${{steps.updated_version.outputs.result}}" > ./app/AndroidVersionCode.txt
-
   #     - name: Archive Android Code Version
   #       uses: actions/upload-artifact@v3
   #       with:
@@ -349,27 +362,21 @@ jobs:
   #         echo $KEYCHAIN_PATH
   #         AUTH_KEY_PATH=$RUNNER_TEMP/auth_key.p8
   #         echo $AUTH_KEY_PATH
-
   #         # import certificates and provisioning profile from secrets
   #         echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
   #         echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode --output $PP_PATH
   #         echo -n "$AUTH_KEY_BASE64" | base64 --decode --output $AUTH_KEY_PATH
-
   #         # create temporary keychain
   #         security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
   #         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
   #         security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
   #         # import certificate to keychain
   #         security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
   #         security list-keychain -d user -s $KEYCHAIN_PATH
-
   #         # apply provisioning profile
   #         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
   #         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-
   #         echo "KEY_PATH=$AUTH_KEY_PATH" >> $GITHUB_ENV
-
   #     - name: Setup Node
   #       uses: actions/setup-node@v3
   #       with:
@@ -381,7 +388,6 @@ jobs:
   #       with:
   #         script: |
   #           return parseInt("${{ env.ios_version_code }}") + 1
-
   #     - name: Update Plist version for iOS
   #       uses: damienaicheh/update-ios-version-info-plist-action@v1.0.0
   #       with:
@@ -411,7 +417,6 @@ jobs:
   #         mkdir Payload
   #         cp -R App.app Payload
   #         zip -qyr App.ipa ./Payload
-
   #     - name: Upload IPA to TestApp.io
   #       uses: testappio/github-action@v5
   #       with:
@@ -426,7 +431,6 @@ jobs:
   #     - name: Print deployed Release Version
   #       run: |
   #         echo "Build-${{steps.updated_ios_version.outputs.result}}" > ./iOSVersionCode.txt
-
   #     - name: Archive iOS
   #       uses: actions/upload-artifact@v3
   #       with:
