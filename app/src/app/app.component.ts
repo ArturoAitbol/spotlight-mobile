@@ -3,7 +3,7 @@ import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { CustomNavigationClient } from './helpers/customNavigationClient';
-import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
+import { AuthenticationResult, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
 import { StatusBar } from '@capacitor/status-bar';
@@ -85,11 +85,11 @@ export class AppComponent implements OnInit,OnDestroy {
       .subscribe((result: EventMessage)=>{
         if (Capacitor.isNativePlatform())
           this.pushNotificationService.initPush();
-        const account = result.payload as AccountInfo;
-        console.debug('login res: ',account);
-        this.msalService.instance.setActiveAccount(account);
+        const authResult = result.payload as AuthenticationResult;
+        console.debug('login res: ',authResult);
+        this.msalService.instance.setActiveAccount(authResult.account);
         if (this.isLoggedIn())
-          this.router.navigate(['/login/redirect']);
+          this.router.navigate(['/']);
       });
 
     this.msalBroadcastService.msalSubject$

@@ -7,9 +7,8 @@ import { TabnavPage } from './tabnav.page';
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: TabnavPage,
-    canActivate:[RoleGuard],
     children: [
       {
         path: 'dashboard',
@@ -31,11 +30,6 @@ const routes: Routes = [
         pathMatch: 'full'
       },
     ]
-  },
-  {
-    path: '',
-    redirectTo: '/tabs/dashboard',
-    pathMatch: 'full'
   }
 ];
 
