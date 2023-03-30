@@ -145,8 +145,14 @@ export class DashboardPage implements OnInit, OnDestroy {
         return 'Feature Functionality';
       case ReportType.DAILY_CALLING_RELIABILITY:
         return 'Calling Reliability';
+      case ReportType.DAILY_VQ:
+        return 'Voice Quality User Experience';
       case ReportType.WEEKLY_FEATURE_FUNCTIONALITY:
-        return 'Feature Functionality & Calling Reliability';
+        return 'Feature Functionality';
+      case ReportType.WEEKLY_CALLING_RELIABILITY:
+        return 'Calling Reliability';
+      case ReportType.WEEKLY_VQ:
+        return 'Voice Quality User Experience';
       // case ReportType.DAILY_PESQ:
       // case ReportType.WEEKLY_PESQ:
       //   return 'PESQ'; disabling for now until mediastats are ready
