@@ -31,7 +31,7 @@ public class LoginTest extends AndroidBaseTest {
     public void closeNote(){
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
-        String noteText = notes.closeNote("note");
-//        Assert.assertEquals("", noteText);
+        String noteStatus = notes.closeNote("note");
+//        Assert.assertEquals(noteStatus, "Note closed!");
     }
 }
