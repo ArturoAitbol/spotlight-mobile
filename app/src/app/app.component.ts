@@ -13,6 +13,7 @@ import { Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { Network } from '@capacitor/network';
 import { DataRefresherService } from './services/data-refresher.service';
 import { IonToastService } from './services/ion-toast.service';
+import { AutoLogoutService } from './services/auto-logout.service';
 
 @Component({
   selector: 'app-root',
@@ -38,8 +39,9 @@ export class AppComponent implements OnInit,OnDestroy {
     private ionToastService: IonToastService,
     private foregroundService: DataRefresherService,
     private platform: Platform,
-    private pushNotificationService: PushNotificationsService) {
-      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.pushNotificationService));
+    private pushNotificationService: PushNotificationsService,
+    private autoLogoutService: AutoLogoutService) {
+      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.router,this.autoLogoutService));
       this.platform.ready().then(() => {
         this.platform.resume.subscribe((e) => {
           this.foregroundService.announceBackFromBackground();
