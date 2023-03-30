@@ -162,11 +162,7 @@ public class AndroidActions {
     }
 
     public void sendKeysSpecial(By selector, String text){
-/*        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.refreshed(
-                ExpectedConditions.elementToBeClickable(selector)));
-        driver.findElement(selector).sendKeys(text);*/
-//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(selector));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(selector)));
         new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(selector,"password", "true"));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.sendKeys(text);
