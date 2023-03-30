@@ -2,8 +2,8 @@ name: Continuous testing in Integration
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 */2 * * *'
+  schedule:
+    - cron: '0 */2 * * *'
 permissions: write-all
 env:
   WORKING_DIR: "./app"
@@ -62,47 +62,47 @@ jobs:
           name: android-functional-test-report
           path: tests/reports
 
-  # ios-test:
-  #   runs-on: macos-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./app
-  #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v3
+  ios-test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: npm install
+      - name: Install dependencies
+        run: npm install
 
-  #     - name: Install ionic
-  #       run: npm install -g @ionic/cli
+      - name: Install ionic
+        run: npm install -g @ionic/cli
 
-  #     - name: Install Appium
-  #       run: |
-  #         npm install -g appium@next
-  #         appium driver install xcuitest
-  #         sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
-  #         appium &
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
+          appium &
 
-  #     - name: emulators list
-  #       run: ionic cap run ios --list
+      - name: emulators list
+        run: ionic cap run ios --list
 
-  #     - name: Set device_id
-  #       run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
-  #     - name: run emulator
-  #       working-directory: ${{ env.WORKING_DIR }}
-  #       run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+      - name: run emulator
+        working-directory: ${{ env.WORKING_DIR }}
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
-  #     - name: Run functional tests
-  #       run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
 
-  #     - name: Archive test results
-  #       uses: actions/upload-artifact@v3
-  #       if: success() || failure()
-  #       with:
-  #         name: ios-functional-test-report
-  #         path: ${{ github.workspace }}/tests/reports
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: ios-functional-test-report
+          path: ${{ github.workspace }}/tests/reports
 
       # - name: Debug on failure
       #   if: success() || failure()

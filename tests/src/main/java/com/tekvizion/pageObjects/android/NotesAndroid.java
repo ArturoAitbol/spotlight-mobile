@@ -39,20 +39,22 @@ public class NotesAndroid extends AndroidActions {
     }
     public String addNote(String text) throws IOException {
         try {
-            click(addNote);
-            System.out.println("First note");
+            clickAndroid(addNote, 720,1450);
+            System.out.println("First note!");
         } catch (Exception e) {
-            click(addButton);
-            System.out.println("There aren't notes for this user!");
-            System.out.println(e.toString());
+            clickAndroid(addButton, 1250, 2060);
+            System.out.println("This user had notes already!");
+            System.out.println(e);
         } finally {
+            takeScreenshot("0_openModal", driver);
             noteText = addTimeStamp(text);
             sendKeys(noteMessageInput, noteText);
-            addNoteButton.click();
-            takeScreenshot("creatingNote", driver);
+            takeScreenshot("1_sendKeys", driver);
+            clickAndroid(addNoteButton, 1160,960);
+            takeScreenshot("2_clickAddNote", driver);
             waitInvisibilityElement(noteMessageInput);
             try {
-                takeScreenshot("checkNoteCreated", driver);
+                takeScreenshot("3_checkNoteCreated", driver);
                 By dialogSelector = By.xpath("//*[contains(@resource-id,'ion-overlay-')]/descendant::*[@text!='']");
                 List<WebElement> elements = getElements(dialogSelector);
                 System.out.println("Getting dialog elements...");
@@ -63,7 +65,7 @@ public class NotesAndroid extends AndroidActions {
                 System.out.println("No dialogs were displayed!");
                 System.out.println(e);
             }
-//            waitElements(60);
+            waitElements(60);
         }
         return noteText;
     }
@@ -100,12 +102,17 @@ public class NotesAndroid extends AndroidActions {
             return "";
         } catch (Exception e) {
             System.out.println("Force close note!");
-            System.out.println(e.toString());
+            System.out.println(e);
             clickGesture(1238, 615);
             click(closeNoteButton);
+            /*try {
+                click(closeNoteButton);
+            } catch (Exception exception) {
+                System.out.println(exception);
+            }*/
             return "error";
         } finally {
-            waitElements(60);
+//            waitElements(60);
         }
     }
 }
