@@ -31,11 +31,10 @@ public class LoginAndroid extends AndroidActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
     public DashboardAndroid signIn() {
-        sendKeys(inputSelector, "test-functional-subaccount-admin@tekvizion360.com");
+        sendKeys(inputSelector, "aamoroso@tekvizionlabs.com");
         clickAndroid(nextButton, 1170, 930);
         waitElements(10);
-        sendKeys(inputSelector, "Zuwo8872a");
-//        sendKeysSpecial(inputSelector, "Zuwo8872a");
+        sendKeys(inputSelector, "Arthag19");
         clickAndroid(signInButton, 1170, 930);
         clickAndroid(noButton, 1170, 970);
         return new DashboardAndroid(this.driver);
