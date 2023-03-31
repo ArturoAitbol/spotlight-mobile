@@ -3,7 +3,7 @@ import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { CustomNavigationClient } from './helpers/customNavigationClient';
-import { AccountInfo, EventMessage, EventType } from '@azure/msal-browser';
+import { AuthenticationResult, EventMessage, EventType } from '@azure/msal-browser';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, timer } from 'rxjs';
 import { StatusBar } from '@capacitor/status-bar';
@@ -13,6 +13,7 @@ import { Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { Network } from '@capacitor/network';
 import { DataRefresherService } from './services/data-refresher.service';
 import { IonToastService } from './services/ion-toast.service';
+import { AutoLogoutService } from './services/auto-logout.service';
 
 @Component({
   selector: 'app-root',
@@ -38,8 +39,9 @@ export class AppComponent implements OnInit,OnDestroy {
     private ionToastService: IonToastService,
     private foregroundService: DataRefresherService,
     private platform: Platform,
-    private pushNotificationService: PushNotificationsService) {
-      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.pushNotificationService));
+    private pushNotificationService: PushNotificationsService,
+    private autoLogoutService: AutoLogoutService) {
+      this.msalService.instance.setNavigationClient(new CustomNavigationClient(this.iab, this.router,this.autoLogoutService));
       this.platform.ready().then(() => {
         this.platform.resume.subscribe((e) => {
           this.foregroundService.announceBackFromBackground();
@@ -83,11 +85,11 @@ export class AppComponent implements OnInit,OnDestroy {
       .subscribe((result: EventMessage)=>{
         if (Capacitor.isNativePlatform())
           this.pushNotificationService.initPush();
-        const account = result.payload as AccountInfo;
-        console.debug('login res: ',account);
-        this.msalService.instance.setActiveAccount(account);
+        const authResult = result.payload as AuthenticationResult;
+        console.debug('login res: ',authResult);
+        this.msalService.instance.setActiveAccount(authResult.account);
         if (this.isLoggedIn())
-          this.router.navigate(['/login/redirect']);
+          this.router.navigate(['/']);
       });
 
     this.msalBroadcastService.msalSubject$

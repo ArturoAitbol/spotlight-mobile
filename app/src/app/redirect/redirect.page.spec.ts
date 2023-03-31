@@ -3,13 +3,15 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { RedirectPage } from './redirect.page';
-import { ROUTER_MOCK } from '../../../test/components/utils/router.mock';
+import { ROUTER_MOCK } from '../../test/components/utils/router.mock';
 import { SubaccountService } from 'src/app/services/subaccount.service';
 import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mock';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { ION_TOAST_SERVICE_MOCK } from 'src/test/services/ion-toast.service.mock';
+import { FeatureToggleService } from '../services/feature-toggle.service';
+import { FEATURE_TOGGLE_SERVICE_MOCK } from 'src/test/services/feature-toggle.service.mock';
 
-describe('RedirectComponent', () => {
+describe('RedirectPage', () => {
   let component: RedirectPage;
   let fixture: ComponentFixture<RedirectPage>;
 
@@ -29,6 +31,10 @@ describe('RedirectComponent', () => {
         {
           provide:IonToastService,
           useValue:ION_TOAST_SERVICE_MOCK
+        },
+        {
+          provide:FeatureToggleService,
+          useValue: FEATURE_TOGGLE_SERVICE_MOCK
         }
       ]
     }).compileComponents();
