@@ -49,8 +49,8 @@ public class NotesAndroid extends AndroidActions {
         takeScreenshot("0_openModal", driver);
         noteText = addTimeStamp(text);
         sendKeys(noteMessageInput, noteText);
-        takeScreenshot("1_sendKeys", driver);
         waitElements(5);
+        takeScreenshot("1_sendKeys", driver);
         clickAndroid(addNoteButton, 1160,960);
         takeScreenshot("2_clickAddNote", driver);
         waitInvisibilityElement(noteMessageInput);
