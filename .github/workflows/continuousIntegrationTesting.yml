@@ -2,65 +2,65 @@ name: Continuous testing in Integration
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 */2 * * *'
+  schedule:
+    - cron: '0 */2 * * *'
 permissions: write-all
 env:
   WORKING_DIR: "./app"
   JAVA_VERSION: '11'
 
 jobs:
-  android-test:
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./app
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
+  # android-test:
+  #   runs-on: macos-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./app
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v3
 
-      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: ${{ env.JAVA_VERSION }}
-      - name: Install dependencies
-        working-directory: ${{ env.WORKING_DIR }}
-        run: npm install
-      - name: Install ionic
-        run: npm install -g @ionic/cli
-      - name: Install Appium
-        run: |
-          npm install -g appium@next
-          appium driver install uiautomator2
-          chmod +x ./android/gradlew
-          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
-          appium &
+  #     - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+  #       uses: actions/setup-java@v3
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: ${{ env.JAVA_VERSION }}
+  #     - name: Install dependencies
+  #       working-directory: ${{ env.WORKING_DIR }}
+  #       run: npm install
+  #     - name: Install ionic
+  #       run: npm install -g @ionic/cli
+  #     - name: Install Appium
+  #       run: |
+  #         npm install -g appium@next
+  #         appium driver install uiautomator2
+  #         chmod +x ./android/gradlew
+  #         sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
+  #         appium &
           
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: google_apis
-          arch: x86_64
-          profile: pixel_xl
-          cores: 2
-          ram-size: 5120M 
-          sdcard-path-or-size: 2000M
-          avd-name: Pixel
-          force-avd-creation: false
-          emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
-          disable-animations: true
-          working-directory: ./app
-          script: |
-            ionic capacitor run android --no-sync --target Pixel
-            mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        if: success() || failure()
-        with:
-          name: android-functional-test-report
-          path: tests/reports
+  #     - name: Run tests
+  #       uses: reactivecircus/android-emulator-runner@v2
+  #       with:
+  #         api-level: 29
+  #         target: google_apis
+  #         arch: x86_64
+  #         profile: pixel_xl
+  #         cores: 2
+  #         ram-size: 5120M 
+  #         sdcard-path-or-size: 2000M
+  #         avd-name: Pixel
+  #         force-avd-creation: false
+  #         emulator-options: -no-window -gpu guest -noaudio -no-boot-anim -camera-back none -accel on
+  #         disable-animations: true
+  #         working-directory: ./app
+  #         script: |
+  #           ionic capacitor run android --no-sync --target Pixel
+  #           mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
+  #     - name: Archive test results
+  #       uses: actions/upload-artifact@v3
+  #       if: success() || failure()
+  #       with:
+  #         name: android-functional-test-report
+  #         path: tests/reports
 
   ios-test:
     runs-on: macos-latest
