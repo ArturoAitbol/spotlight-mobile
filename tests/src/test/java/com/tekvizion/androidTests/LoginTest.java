@@ -9,7 +9,7 @@ import java.io.IOException;
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
     @Test
-    public void loginSuccessfully() throws InterruptedException {
+    public void loginSuccessfully(){
         homePage = new HomePageAndroid(driver);
         LoginAndroid login = homePage.goToLoginForm();
         DashboardAndroid dashboard = login.signIn();

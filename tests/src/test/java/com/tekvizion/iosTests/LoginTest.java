@@ -8,6 +8,7 @@ import com.tekvizion.testUtils.IOSBaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class LoginTest extends IOSBaseTest {
@@ -23,7 +24,7 @@ public class LoginTest extends IOSBaseTest {
     }
 
     @Test
-    public void addNote(){
+    public void addNote() throws IOException {
         Dashboard dashboard = new Dashboard(driver);
         Notes notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
