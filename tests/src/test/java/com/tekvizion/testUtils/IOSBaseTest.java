@@ -52,7 +52,7 @@ public class IOSBaseTest extends AppiumUtils {
         } catch (Exception e) {
             System.out.println("IOS Driver couldn't be initialized!");
             System.out.println(e);
-            if (this.driver==null)
+            if (this.driver == null)
                 System.out.println("IOS Driver is null");
             //while(this.driver==null && timeOut<30m)-> this.driver=new IOSdriver()
             this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);

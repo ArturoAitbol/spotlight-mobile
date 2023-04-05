@@ -46,17 +46,16 @@ public class NotesAndroid extends AndroidActions {
             clickAndroid(addButton, 1250, 2060); //1155,1960
             System.out.println("This user had notes already!");
         }
-        takeScreenshot("0_openModal", driver);
+//        takeScreenshot("0_openModal", driver);
         noteText = addTimeStamp(text);
         sendKeys(noteMessageInput, noteText);
         waitElements(5);
-        takeScreenshot("1_sendKeys", driver);
+//        takeScreenshot("1_sendKeys", driver);
         clickAndroid(addNoteButton, 1160,960);
-        takeScreenshot("2_clickAddNote", driver);
+//        takeScreenshot("2_clickAddNote", driver);
         waitInvisibilityElement(noteMessageInput);
-        takeScreenshot("3_checkNoteCreated", driver);
+//        takeScreenshot("3_checkNoteCreated", driver);
         getMessages();
-//        waitElements(60);
         return noteText;
     }
 
@@ -104,7 +103,6 @@ public class NotesAndroid extends AndroidActions {
                 System.out.println(exception);
             }
         } finally {
-//            waitElements(10);
             return resp;
         }
     }
