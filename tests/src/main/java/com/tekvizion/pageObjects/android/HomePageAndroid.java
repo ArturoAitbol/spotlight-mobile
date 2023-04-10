@@ -30,16 +30,27 @@ public class HomePageAndroid extends AndroidActions {
     public LoginAndroid goToLoginForm(){
         try {
             waitElement(loginButton, 180);
-            clickAndroid(loginButton, 720, 1290);
+            clickOnLoginButton();
         } catch (Exception e) {
             System.out.println("Login button wasn't displayed initially!");
             System.out.println(e);
-
+            //while (clickAndroid()=='false' && timeOut<15min) -> startActivity
             Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
             driver.startActivity(activity);
             waitElement(loginButton, 180);
-            clickAndroid(loginButton, 720, 1290);
+            clickOnLoginButton();
         }
         return new LoginAndroid(driver);
+    }
+
+    public void clickOnLoginButton(){
+        boolean resp = clickAndroid(loginButton, 195, 434);
+        if (!resp)
+        {
+            System.out.println("Couldn't click on login-button at the first try!");
+            waitElements(10);
+//            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+//            driver.startActivity(activity);
+        }
     }
 }
