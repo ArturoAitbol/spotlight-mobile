@@ -5,11 +5,15 @@ import com.tekvizion.utils.AppiumUtils;
 import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Properties;
 
 public class AndroidBaseTest extends AppiumUtils {
@@ -17,10 +21,27 @@ public class AndroidBaseTest extends AppiumUtils {
     public AppiumDriverLocalService service = null;
 
     @BeforeClass
-    public void configuration() {
+    public void configuration() throws InterruptedException {
+        boolean initialized = false;
         AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(System.getProperty("deviceUDID"));
-        androidDevice.initializeIfNeeded();
+        initialized = androidDevice.initializeIfNeeded();
+        Instant startTime = Instant.now();
+        long timeElapsed;
+        long timeOut = Long.valueOf("300");
+        while(!initialized){
+            initialized = androidDevice.initializeIfNeeded();
+            Instant endTime = Instant.now();
+            timeElapsed = Duration.between(startTime, endTime).getSeconds();
+            if(timeElapsed > timeOut) {
+                System.out.println("Driver couldn't be initialized!!!:");
+                break;
+            }
+            Thread.sleep(30000);
+//            if (!initialized)         //Restart Appium Server service
+//                startAppium();
+        }
+
         this.driver = androidDevice.getDriver();
         Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
         this.driver.startActivity(activity);

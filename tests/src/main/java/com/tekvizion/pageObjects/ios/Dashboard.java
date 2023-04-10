@@ -49,6 +49,7 @@ public class Dashboard extends IOSActions {
 
     public Notes goToNotes(){
         click(notesButton);
+//        waitElements(10);
         return new Notes(this.driver);
     }
 }

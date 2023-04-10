@@ -1,8 +1,6 @@
 package com.tekvizion.appium;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
 
 public abstract class AutomatedMobileDevice {
@@ -63,7 +61,7 @@ public abstract class AutomatedMobileDevice {
     public abstract void sendKeysToElementByXpath(String keys, String xpath);
 
     public abstract void tearDown();
-    public abstract void initializeIfNeeded();
+    public abstract boolean initializeIfNeeded();
     public String getResourcePath(String directory, String resource){
         String path = System.getProperty("user.dir");
         String os = System.getProperty("os.name").toLowerCase();
