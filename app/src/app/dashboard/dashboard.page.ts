@@ -30,6 +30,11 @@ export class DashboardPage implements OnInit, OnDestroy {
   selectedPeriod: string = this.DAILY;
 
   foregroundSubscription: Subscription;
+  getSubaccountSubscription: Subscription;
+  forkJoinSubscription: Subscription;
+  getSubaccountIsSubscribed = false;
+  forkJoinIsSubscribed = false;
+  
   ctaasSetupDetails: any = {};
   setupStatus = '';
   isOnboardingComplete: boolean;
@@ -42,6 +47,14 @@ export class DashboardPage implements OnInit, OnDestroy {
     private ctaasSetupService: CtaasSetupService
     ) {
       this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+        if(this.getSubaccountSubscription){
+          this.getSubaccountSubscription.unsubscribe();
+          this.getSubaccountIsSubscribed = false;
+        }
+        if(this.forkJoinSubscription){
+          this.forkJoinSubscription.unsubscribe();
+          this.forkJoinIsSubscribed = false;
+        }
         this.fetchData();
       });
   }
@@ -49,7 +62,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.serviceName = 'Spotlight';
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
-    this.fetchData();
   }
 
   ionViewWillEnter(){
@@ -57,9 +69,24 @@ export class DashboardPage implements OnInit, OnDestroy {
     this.fetchData();
   }
 
+  ionViewWillLeave(){
+    if(this.getSubaccountSubscription){
+      this.getSubaccountSubscription.unsubscribe();
+      this.getSubaccountIsSubscribed = false;
+    }
+    if(this.forkJoinSubscription){
+      this.forkJoinSubscription.unsubscribe();
+      this.forkJoinIsSubscribed = false;
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.foregroundSubscription)
       this.foregroundSubscription.unsubscribe();
+    if(this.getSubaccountSubscription)
+      this.getSubaccountSubscription.unsubscribe();
+    if(this.forkJoinSubscription)
+      this.forkJoinSubscription.unsubscribe();
   }
 
   fetchData(event?: any) {
@@ -84,47 +111,53 @@ export class DashboardPage implements OnInit, OnDestroy {
       const reportType: string = ReportType[key];
       requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId, reportType));
     }
-    this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
-      this.ctaasSetupDetails = response['ctaasSetups'][0];
-      const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
-      this.isOnboardingComplete = onBoardingComplete;
-      this.setupStatus = status;
-      this.maintenance = maintenance;
-      forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
-        if (res) {
-          const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
-          if (result.length > 0) {
-            this.hasDashboardDetails = true;
-            const reportsIdentifiers: any[] = [];
-            result.forEach((e) => {
-                let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
-                reportsIdentifiers.push(reportIdentifier);
-                if (e.reportType.toLowerCase().includes(this.DAILY))
-                  this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-                else if (e.reportType.toLowerCase().includes(this.WEEKLY))
-                  this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-            });
-            this.charts = this.reports[this.DAILY];
-            this.dashboardService.setReports(reportsIdentifiers);
-            if (maintenance) {
-              this.selectedPeriod = this.WEEKLY;
-              this.charts = this.reports[this.WEEKLY];
+    if(!this.getSubaccountIsSubscribed){
+      this.getSubaccountSubscription = this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
+        this.getSubaccountIsSubscribed = true;
+        this.ctaasSetupDetails = response['ctaasSetups'][0];
+        const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
+        this.isOnboardingComplete = onBoardingComplete;
+        this.setupStatus = status;
+        this.maintenance = maintenance;
+        if(!this.forkJoinIsSubscribed)
+          this.forkJoinSubscription = forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
+            this.forkJoinIsSubscribed = true;
+            if (res) {
+              const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
+              if (result.length > 0) {
+                this.hasDashboardDetails = true;
+                const reportsIdentifiers: any[] = [];
+                result.forEach((e) => {
+                  let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
+                  reportsIdentifiers.push(reportIdentifier);
+                  if (e.reportType.toLowerCase().includes(this.DAILY))
+                    this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+                  else if (e.reportType.toLowerCase().includes(this.WEEKLY))
+                    this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+                });
+                if (maintenance) {
+                  this.selectedPeriod = this.WEEKLY;
+                  this.charts = this.reports[this.WEEKLY];
+                }else{
+                  this.charts = this.reports[this.DAILY];
+                }
+                this.dashboardService.setReports(reportsIdentifiers);
+              }
+              this.dashboardService.announceDashboardRefresh();
             }
-          }
-          this.dashboardService.announceDashboardRefresh();
-        }
-        if (event)
-          event.target.complete();
-        this.isChartsDataLoading = false;
-      }, (e) => {
-        console.error('Error loading dashboard reports ', e.error);
-        this.isChartsDataLoading = false;
-        this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
-        this.dashboardService.announceDashboardRefresh();
-        if (event)
-          event.target.complete();
-      })
-    });
+            if (event)
+              event.target.complete();
+            this.isChartsDataLoading = false;
+          }, (e) => {
+            console.error('Error loading dashboard reports ', e.error);
+            this.isChartsDataLoading = false;
+            this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
+            this.dashboardService.announceDashboardRefresh();
+            if (event)
+            event.target.complete();
+          })
+      });
+    }
   } 
 
   /**
