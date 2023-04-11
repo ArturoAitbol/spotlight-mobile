@@ -1,7 +1,6 @@
 export const permissions = {
     'customer.SubaccountAdmin': {
         paths: [
-            'tabs',
             'dashboard',
             'notes'
         ],
@@ -10,7 +9,6 @@ export const permissions = {
     },
     'customer.SubaccountStakeholder': {
         paths: [
-            'tabs',
             'dashboard',
             'notes'
         ],

@@ -12,6 +12,9 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.IOException;
+import java.util.List;
+
 public class NotesAndroid extends AndroidActions {
     AndroidDriver driver;
     @AndroidFindBy(xpath = "//android.widget.Button[@*[contains(., 'add')]]")
@@ -34,21 +37,25 @@ public class NotesAndroid extends AndroidActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public String addNote(String text) {
-        try {
-            click(addNote);
-            System.out.println("First note");
-        } catch (Exception e) {
-            click(addButton);
-            System.out.println("There aren't notes for this user!");
-            System.out.println(e.toString());
-        } finally {
-            noteText = addTimeStamp(text);
-            sendKeys(noteMessageInput, noteText);
-            addNoteButton.click();
-            waitInvisibilityElement(noteMessageInput);
-            waitElements(60);
+    public String addNote(String text) throws IOException {
+        boolean firstNote;
+        firstNote = clickAndroid(addNote, 720,1450);
+        if (firstNote)
+            System.out.println("First note!");
+        else {
+            clickAndroid(addButton, 1250, 2060); //1155,1960
+            System.out.println("This user had notes already!");
         }
+//        takeScreenshot("0_openModal", driver);
+        noteText = addTimeStamp(text);
+        sendKeys(noteMessageInput, noteText);
+        waitElements(5);
+//        takeScreenshot("1_sendKeys", driver);
+        clickAndroid(addNoteButton, 1160,960);
+//        takeScreenshot("2_clickAddNote", driver);
+        waitInvisibilityElement(noteMessageInput);
+//        takeScreenshot("3_checkNoteCreated", driver);
+        getMessages();
         return noteText;
     }
 
@@ -69,6 +76,7 @@ public class NotesAndroid extends AndroidActions {
         }
     }
     public String closeNote(String text) {
+        String resp = "";
         try{
 //            By noteTextSelector = By.xpath("//android.view.View[@resource-id='items-0']");
             noteText = addTimeStamp(text);
@@ -81,15 +89,21 @@ public class NotesAndroid extends AndroidActions {
             System.out.println(rectangle.getX() + " " + rectangle.getY());
             clickGesture(x, y);
             click(closeNoteButton);
-            return "";
+            resp = "Note closed!";
         } catch (Exception e) {
             System.out.println("Force close note!");
-            System.out.println(e.toString());
+            System.out.println(e);
             clickGesture(1238, 615);
             click(closeNoteButton);
-            return "error";
+            resp = "Note closed!";
+            try {
+                waitInvisibilityElement(closeNoteButton);
+                getMessages();
+            } catch (Exception exception) {
+                System.out.println(exception);
+            }
         } finally {
-            waitElements(60);
+            return resp;
         }
     }
 }

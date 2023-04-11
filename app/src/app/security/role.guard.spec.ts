@@ -42,12 +42,6 @@ describe('When roles are loaded for username@test.com the app', () => {
         msalServiceMock.getActiveAccount.and.returnValue(MSAL_SERVICE_MOCK.mockIdTokenClaims)
     });
 
-    it('should grant access to existing parent route', () => {
-
-        const protectedPartenRoute = 'tabs';
-        expect(guard.canActivate({url: [{path: protectedPartenRoute, parameters: {}}]} as ActivatedRouteSnapshot)).toBeTrue();
-    });
-
     it('should grant access to dashboard and notes routes', () => {
 
         const protectedRoutes = ['dashboard', 'notes'];

@@ -107,7 +107,7 @@ describe('NotesPage', () => {
 
     dashboardService.announceDashboardRefresh();
 
-    expect(component.tagNotes).toHaveBeenCalledTimes(2);
+    expect(component.tagNotes).toHaveBeenCalledTimes(3);
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{

@@ -21,7 +21,7 @@ public class HomePage extends IOSActions {
     }
 
     public Login goToLoginForm(){
-        loginButton.click();
+        click(loginButton);
         return new Login(driver);
     }
 }

@@ -4,10 +4,12 @@ import com.tekvizion.pageObjects.android.*;
 import com.tekvizion.testUtils.AndroidBaseTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
     @Test
-    public void loginSuccessfully() throws InterruptedException {
+    public void loginSuccessfully(){
         homePage = new HomePageAndroid(driver);
         LoginAndroid login = homePage.goToLoginForm();
         DashboardAndroid dashboard = login.signIn();
@@ -15,7 +17,7 @@ public class LoginTest extends AndroidBaseTest {
     }
 
     @Test
-    public void addNote(){
+    public void addNote() throws IOException {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
@@ -29,7 +31,7 @@ public class LoginTest extends AndroidBaseTest {
     public void closeNote(){
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
-        String noteText = notes.closeNote("note");
-//        Assert.assertEquals("", noteText);
+        String noteStatus = notes.closeNote("note");
+//        Assert.assertEquals(noteStatus, "Note closed!");
     }
 }

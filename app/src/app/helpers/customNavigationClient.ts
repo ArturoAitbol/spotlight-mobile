@@ -3,10 +3,14 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { Capacitor } from "@capacitor/core";
 import { environment } from "src/environments/environment";
 import { Constants } from "./constants";
-import { PushNotificationsService } from "../services/push-notifications.service";
+import { Router } from "@angular/router";
+import { AutoLogoutService } from "../services/auto-logout.service";
 
 export class CustomNavigationClient extends NavigationClient {
-  constructor(private iab: InAppBrowser, private pushNotificationService: PushNotificationsService) {
+
+  msalFlowCompleted: boolean = false;
+
+  constructor(private iab: InAppBrowser, private router: Router, private autoLogoutService: AutoLogoutService) {
     super();
   }
 
@@ -26,13 +30,25 @@ export class CustomNavigationClient extends NavigationClient {
         if (event.url.includes('#code')) {
           //Go back to the app view with the parameters returned by microsoft
           browser.close();
+          this.msalFlowCompleted = true;
           const urlDomain = event.url.split('#')[0];
           const url = event.url.replace(urlDomain, environment.REDIRECT_URL_APP);
           window.location.href = url;
         }
         if (event.url.includes('logoutsession')) {
           browser.close();
+          this.msalFlowCompleted = true;
           window.location.href = environment.REDIRECT_URL_APP;
+        }
+      });
+
+      browser.on('exit').subscribe(() => {
+        if(!this.msalFlowCompleted){
+          sessionStorage.clear();
+          localStorage.removeItem(Constants.MSAL_OPERATION);
+          if(this.router.url!=='/login'){
+            this.autoLogoutService.logout();
+          }
         }
       });
     } else {

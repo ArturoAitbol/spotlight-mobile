@@ -1,5 +1,5 @@
 import { EventMessage, EventType } from '@azure/msal-browser';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export class MsalBroadcastServiceMock {
 
@@ -11,7 +11,7 @@ export class MsalBroadcastServiceMock {
     msalSubject$ = new Observable<EventMessage>((observer) => {
             observer.next({ eventType: this.expectedEventType,
                 interactionType: null,
-                payload: null,
+                payload: {account: null},
                 error: null,
                 timestamp: 0,
             });

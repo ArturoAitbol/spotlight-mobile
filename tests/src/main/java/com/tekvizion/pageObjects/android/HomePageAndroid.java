@@ -33,11 +33,12 @@ public class HomePageAndroid extends AndroidActions {
             click(loginButton);
         } catch (Exception e) {
             System.out.println("Login button wasn't displayed initially!");
-            System.out.println(e.toString());
+            System.out.println(e);
+            //while (clickAndroid()=='false' && timeOut<15min) -> startActivity
             Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
             driver.startActivity(activity);
             waitElement(loginButton, 180);
-            click(loginButton);
+            clickAndroid(loginButton, 720, 1290);
         }
         return new LoginAndroid(driver);
     }
