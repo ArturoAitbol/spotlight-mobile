@@ -34,7 +34,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   forkJoinSubscription: Subscription;
   getSubaccountIsSubscribed = false;
   forkJoinIsSubscribed = false;
-  
+  firstLoad = false;
   ctaasSetupDetails: any = {};
   setupStatus = '';
   isOnboardingComplete: boolean;
@@ -60,16 +60,20 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.firstLoad = true;
     this.serviceName = 'Spotlight';
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
+    this.fetchData();
   }
 
   ionViewWillEnter(){
     window.screen.orientation.lock('portrait');
-    this.fetchData();
+    if(!this.firstLoad)
+      this.fetchData();
   }
 
   ionViewWillLeave(){
+    this.firstLoad = false;
     if(this.getSubaccountSubscription){
       this.getSubaccountSubscription.unsubscribe();
       this.getSubaccountIsSubscribed = false;
