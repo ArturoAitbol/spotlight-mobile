@@ -19,17 +19,20 @@ import java.util.Properties;
 public class AndroidBaseTest extends AppiumUtils {
     public AndroidDriver driver = null;
     public AppiumDriverLocalService service = null;
+    protected String username;
+    protected String password;
 
     @BeforeClass
-    public void configuration() throws InterruptedException {
+    public void configuration() throws InterruptedException, IOException {
         boolean initialized = false;
         AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("emulator-5554");
 //        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice(System.getProperty("deviceUDID"));
         initialized = androidDevice.initializeIfNeeded();
-        Instant startTime = Instant.now();
+/*        Instant startTime = Instant.now();
         long timeElapsed;
         long timeOut = Long.valueOf("300");
         while(!initialized){
+            System.out.println("Retrying initialization!!!");
             initialized = androidDevice.initializeIfNeeded();
             Instant endTime = Instant.now();
             timeElapsed = Duration.between(startTime, endTime).getSeconds();
@@ -38,8 +41,15 @@ public class AndroidBaseTest extends AppiumUtils {
                 break;
             }
             Thread.sleep(30000);
-//            if (!initialized)         //Restart Appium Server service
-//                startAppium();
+        }*/
+
+        if (!initialized) {
+            System.out.println("Retrying initialization!!!");
+            if (this.service != null)
+                this.service.stop();
+            startAppium();
+            initialized = androidDevice.initializeIfNeeded();
+            System.out.println("Initialized: " + initialized);
         }
 
         this.driver = androidDevice.getDriver();
@@ -55,15 +65,16 @@ public class AndroidBaseTest extends AppiumUtils {
 
     @BeforeSuite
     public void startAppium() throws IOException {
-        Properties properties = new Properties();
-        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
-        properties.load(file);
+        Properties properties = readPropertyFile("main", "data.properties");
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
         if (service == null){
             System.out.println("Starting Appium Server!!!");
-//            service = startAppiumServer(ipAddress, Integer.parseInt(port));
+            service = startAppiumServer(ipAddress, Integer.parseInt(port));
         }
+        properties = readPropertyFile("test", "integration.properties");
+        username = properties.getProperty("subAccountAndroidUser");
+        password = properties.getProperty("subAccountAndroidPassword");
     }
     @AfterClass
     public void closeDriver(){

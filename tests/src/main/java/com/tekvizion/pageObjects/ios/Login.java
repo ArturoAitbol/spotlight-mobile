@@ -32,15 +32,13 @@ public class Login extends IOSActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public Dashboard signIn() {
+    public Dashboard signIn(String username, String password) {
         checkElement(loginHeader);
         click(emailInput);
-        emailInput.sendKeys("test-functional-subaccount-admin@tekvizion360.com");
-//        emailInput.sendKeys("test-customer-subaccount-admin@tekvizionlabs.com");
+        emailInput.sendKeys(username);
         nextButton.click();
         click(passwordInput);
-        passwordInput.sendKeys("Zuwo8872a");
-//        passwordInput.sendKeys("Faga9645a");
+        passwordInput.sendKeys(password);
         signInButton.click();
         click(noStaySignedIn);
         try {

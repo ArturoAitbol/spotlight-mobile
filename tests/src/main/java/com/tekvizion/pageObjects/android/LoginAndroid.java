@@ -30,7 +30,7 @@ public class LoginAndroid extends AndroidActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public DashboardAndroid signIn() {
+    public DashboardAndroid signIn(String username, String password) {
         sendKeys(inputSelector, "aamoroso@tekvizionlabs.com");
         clickAndroid(nextButton, 1170, 930);
         waitElements(10);
