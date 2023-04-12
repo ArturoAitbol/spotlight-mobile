@@ -1,8 +1,9 @@
 name: Continuous testing in Integration
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 */2 * * *'
+    - cron: '0 1-23/2 * * *'
 permissions: write-all
 env:
   WORKING_DIR: "./app"
@@ -11,6 +12,7 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
+#     timeout-minutes: 15
     defaults:
       run:
         working-directory: ./app
@@ -38,6 +40,7 @@ jobs:
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
+#         timeout-minutes: 1
         with:
           api-level: 29
           target: google_apis
@@ -63,6 +66,7 @@ jobs:
 
   ios-test:
     runs-on: macos-latest
+#     timeout-minutes: 10
     defaults:
       run:
         working-directory: ./app
@@ -90,6 +94,7 @@ jobs:
         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
       - name: run emulator
+#         timeout-minutes: 1
         working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
