@@ -27,6 +27,8 @@ import java.util.Properties;
 public class IOSBaseTest extends AppiumUtils {
     public IOSDriver driver = null;
     public AppiumDriverLocalService service;
+    protected String username;
+    protected String password;
 
     public void longPress(WebElement element){
         Map<String, Object> params = new HashMap<>();
@@ -60,15 +62,16 @@ public class IOSBaseTest extends AppiumUtils {
     }
     @BeforeSuite
     public void startAppium() throws IOException {
-        Properties properties = new Properties();
-        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
-        properties.load(file);
+        Properties properties = readPropertyFile("main", "data.properties");
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
         if (service == null){
-//            service = startAppiumServer(ipAddress, Integer.parseInt(port));
             System.out.println("Starting Appium Server!!!");
+            service = startAppiumServer(ipAddress, Integer.parseInt(port));
         }
+        properties = readPropertyFile("test", "integration.properties");
+        username = properties.getProperty("subAccountIosUser");
+        password = properties.getProperty("subAccountIosPassword");
     }
     @AfterClass
     public void closeDriver(){

@@ -12,7 +12,7 @@ public class LoginTest extends AndroidBaseTest {
     public void loginSuccessfully(){
         homePage = new HomePageAndroid(driver);
         LoginAndroid login = homePage.goToLoginForm();
-        DashboardAndroid dashboard = login.signIn();
+        DashboardAndroid dashboard = login.signIn(username, password);
         dashboard.checkUserName();
     }
 
