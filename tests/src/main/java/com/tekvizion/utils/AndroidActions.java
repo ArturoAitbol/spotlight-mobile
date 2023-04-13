@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 
-public class AndroidActions {
+public class AndroidActions extends MobileActions {
     AndroidDriver driver;
     WebDriverWait wait;
     private final int DEFAULT_TIMEOUT = 60;

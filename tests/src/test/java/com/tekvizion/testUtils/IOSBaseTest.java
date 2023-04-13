@@ -69,11 +69,6 @@ public class IOSBaseTest extends AppiumUtils {
             System.out.println("Starting Appium Server!!!");
             service = startAppiumServer(ipAddress, Integer.parseInt(port));
         }
-        properties = readPropertyFile("test", "integration.properties");
-        username = properties.getProperty("subAccountIosUser");
-        System.out.println("Username: " + username);
-        password = properties.getProperty("subAccountIosPassword");
-        System.out.println("Password: " + password);
     }
     @AfterClass
     public void closeDriver(){
