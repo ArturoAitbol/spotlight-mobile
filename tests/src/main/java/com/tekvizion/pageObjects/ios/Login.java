@@ -33,6 +33,8 @@ public class Login extends IOSActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
     public Dashboard signIn(String username, String password) {
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
         checkElement(loginHeader);
         click(emailInput);
         emailInput.sendKeys(username);
