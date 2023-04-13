@@ -72,9 +72,6 @@ public class AndroidBaseTest extends AppiumUtils {
             System.out.println("Starting Appium Server!!!");
             service = startAppiumServer(ipAddress, Integer.parseInt(port));
         }
-        properties = readPropertyFile("test", "integration.properties");
-        username = properties.getProperty("subAccountAndroidUser");
-        password = properties.getProperty("subAccountAndroidPassword");
     }
     @AfterClass
     public void closeDriver(){

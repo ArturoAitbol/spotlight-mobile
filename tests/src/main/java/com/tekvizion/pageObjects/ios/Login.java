@@ -7,6 +7,8 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Set;
 
 public class Login extends IOSActions {
@@ -32,9 +34,10 @@ public class Login extends IOSActions {
         this.driver = driver;
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
-    public Dashboard signIn(String username, String password) {
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
+    public Dashboard signIn() {
+        Properties properties = readPropertyFile("test", "integration.properties");
+        String username = properties.getProperty("subAccountIosUser");
+        String password = properties.getProperty("subAccountIosPassword");
         checkElement(loginHeader);
         click(emailInput);
         emailInput.sendKeys(username);
