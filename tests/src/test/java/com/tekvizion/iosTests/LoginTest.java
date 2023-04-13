@@ -17,6 +17,8 @@ public class LoginTest extends IOSBaseTest {
     public void loginSuccessfully(){
         homePage = new HomePage(driver);
         Login login = homePage.goToLoginForm();
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
         Dashboard dashboard = login.signIn(username, password);
         dashboard.verifyTitle();
         String title = dashboard.getHeader();
