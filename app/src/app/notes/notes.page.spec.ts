@@ -172,19 +172,7 @@ describe('NotesPage', () => {
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
 
-  it('should navigate to dashboard page if the selected note is referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
-    spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
-    spyOn(ROUTER_MOCK,'navigate').and.callThrough();
-    const note = {current:true};
-
-    component.seeHistoricalReports(note);
-    flush();
-
-    expect(ROUTER_MOCK.navigate).toHaveBeenCalled();
-    expect(MODAL_CONTROLLER_MOCK.create).not.toHaveBeenCalled();
-  }))
-
-  it('should open a modal with the HistoricalDashboard page if the selected note is NOT referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
+  it('should open a modal with the HistoricalDashboard page when calling seeHistoricalReports()',fakeAsync(()=>{
     spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
     const note = {current:false};
 

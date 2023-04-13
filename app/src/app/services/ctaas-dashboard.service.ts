@@ -10,14 +10,15 @@ export class CtaasDashboardService {
   private readonly API_URL: string = environment.apiEndpoint + '/ctaasDashboard';
   private readonly FETCH_DASHBOARD_URL: string = this.API_URL + '/{subaccountId}/{reportType}';
   private readonly FETCH_POWERBI_DASHBOARD_REPORT_URL: string = `${environment.apiEndpoint}/spotlightDashboard/{subaccountId}`;
+  private readonly FETCH_HISTORICAL_DASHBOARD_URL: string = `${environment.apiEndpoint}/ctassHistoricalDashboard/{subaccountId}/{noteId}`;
 
   constructor(private httpClient: HttpClient) { }
   /**
    * fetch Spotlight Power BI reports
-   * @param subaccountId: string 
-   * @param reportType: string 
+   * @param subaccountId: string
+   * @param reportType: string
    * @param timestampId: string
-   * @returns: Observable<any> 
+   * @returns: Observable<any>
    */
   public getCtaasDashboardDetails(subaccountId: string, reportType: string,timestampId?: string): Observable<any> {
     let params;
@@ -29,6 +30,11 @@ export class CtaasDashboardService {
 
   public getCtaasPowerBiDashboardDetails(subaccountId: string): Observable<any> {
     const url = this.FETCH_POWERBI_DASHBOARD_REPORT_URL.replace(/{subaccountId}/g, subaccountId);
+    return this.httpClient.get(url);
+  }
+
+  public getCtaasHistoricalDashboardDetails(subaccountId: string, noteId: string): Observable<any> {
+    const url = this.FETCH_HISTORICAL_DASHBOARD_URL.replace(/{subaccountId}/g, subaccountId).replace(/{noteId}/g, noteId);
     return this.httpClient.get(url);
   }
 }

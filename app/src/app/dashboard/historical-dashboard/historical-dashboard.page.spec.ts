@@ -59,9 +59,18 @@ describe('HistoricalDashboardComponent', () => {
     expect(component.charts.length).toBe(0);
   })
 
-  it('should show an error message instead of the charts when the data return by getCtaasDashboardDetails() have error messages',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasDashboardWithError));
-    component.charts = [];
+  it('should show a message instead of the charts when getCtaasHistoricalDashboardDetails() returns an empty array',()=>{
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboardEmpty));
+
+    fixture.detectChanges();
+
+    expect(component.charts.length).toBe(0);
+    const errorMessage: HTMLElement = fixture.nativeElement.querySelector('.error-message');
+    expect(errorMessage).not.toBeNull();
+  })
+
+  it('should show a message instead of the charts when getCtaasHistoricalDashboardDetails() return an error',()=>{
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(throwError({error: "error message"}));
 
     fixture.detectChanges();
 
@@ -79,7 +88,7 @@ describe('HistoricalDashboardComponent', () => {
     expect(component.fetchCtaasDashboard).toHaveBeenCalled();
   })
 
-  it('should set the loading flags to false when calling fetchData() and no subaccounts found',()=>{
+  it('should set the loading flag to false when calling fetchData() and no subaccounts found',()=>{
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.returnValue(null);
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast');
     spyOn(component,'fetchCtaasDashboard');
@@ -89,6 +98,17 @@ describe('HistoricalDashboardComponent', () => {
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchCtaasDashboard).not.toHaveBeenCalled();
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("No subaccount found","Error");
+  })
+
+  it('should set the loading flag to false and show an error message when note is null',()=>{
+    component.note = null;
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast');
+    spyOn(component,'fetchData');
+
+    fixture.detectChanges();
+
+    expect(component.fetchData).not.toHaveBeenCalled();
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Note not found","Error");
   })
 
   it('should refresh the chart images when calling fetchCtaasDashboard()',()=>{
@@ -109,7 +129,7 @@ describe('HistoricalDashboardComponent', () => {
   })
 
   it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(throwError("Some error"));
     const customEvent = {target:{complete:()=>{}}};
     component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
                         {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},

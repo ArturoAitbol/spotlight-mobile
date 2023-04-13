@@ -167,25 +167,16 @@ export class NotesPage implements OnInit, OnDestroy {
   }
 
   async seeHistoricalReports(note) {
-    if(note.reports!==null){
-      if (!note.current) {
-        const modal = await this.modalCtrl.create({
-          component: HistoricalDashboardPage,
-          componentProps: { note: note },
-          initialBreakpoint: 1,
-          breakpoints: [0, 1],
-          handleBehavior: "cycle"
-        });
-        modal.present();
+    const modal = await this.modalCtrl.create({
+      component: HistoricalDashboardPage,
+      componentProps: { note: note },
+      initialBreakpoint: 1,
+      breakpoints: [0, 1],
+      handleBehavior: "cycle"
+    });
+    modal.present();
 
-        const {data,role} = await modal.onWillDismiss();
-      }else{
-        this.router.navigate(['/tabs/dashboard']);
-      }
-    }else{
-      this.ionToastService.presentToast("There are not reports associated with this note", "OK");
-    }
-
+    const {data,role} = await modal.onWillDismiss();
   }
 
   public async resetBadgeCount(): Promise<void> {
