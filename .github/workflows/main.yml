@@ -42,8 +42,8 @@ jobs:
 
       - name: Set Integration Android test credentials
         run: |
-          echo -e "subAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
-          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
+          echo -e "subAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ../tests/src/test/resources/integration.properties
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -94,8 +94,8 @@ jobs:
 
       - name: Set Integration IOS test credentials
         run: |
-          echo -e "subAccountIosUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_IOS }}" >> ./tests/ui/src/main/resources/integration.properties
-          echo -e "subAccountIosPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_IOS }}" >> ./tests/ui/src/main/resources/integration.properties
+          echo -e "subAccountIosUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_IOS }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountIosPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_IOS }}" >> ../tests/src/test/resources/integration.properties
 
       - name: emulators list
         run: ionic cap run ios --list
