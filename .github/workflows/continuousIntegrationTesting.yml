@@ -35,6 +35,11 @@ jobs:
           chmod +x ./android/gradlew
           sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
           appium &
+
+      - name: Set Integration Android test credentials
+        run: |
+          echo -e "subAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
+          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -82,6 +87,11 @@ jobs:
           appium driver install xcuitest
           sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
           appium &
+
+      - name: Set Integration IOS test credentials
+        run: |
+          echo -e "subAccountIosUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_IOS }}" >> ./tests/ui/src/main/resources/integration.properties
+          echo -e "subAccountIosPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_IOS }}" >> ./tests/ui/src/main/resources/integration.properties
 
       - name: emulators list
         run: ionic cap run ios --list
