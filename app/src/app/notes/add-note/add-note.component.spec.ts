@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MsalService } from '@azure/msal-angular';
 import { IonicModule, ModalController } from '@ionic/angular';
@@ -14,6 +14,7 @@ import { SUBACCOUNT_SERVICE_MOCK } from 'src/test/services/subaccount.service.mo
 
 import { AddNoteComponent } from './add-note.component';
 import { Constants } from 'src/app/helpers/constants';
+import { CTAAS_DASHBOARD_SERVICE_MOCK } from 'src/test/services/ctaas-dashboard.service.mock';
 
 describe('AddNoteComponent', () => {
   let component: AddNoteComponent;
@@ -70,8 +71,7 @@ describe('AddNoteComponent', () => {
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.callThrough();
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
     spyOn(MODAL_CONTROLLER_MOCK,'dismiss').and.callThrough();
-    const currentReports = '[{"timestampId":"1","reportType":"a-type"},{"timestampId":"2","reportType":"b-type"}]';
-    localStorage.setItem(Constants.CURRENT_REPORTS,currentReports);
+    localStorage.setItem(Constants.CURRENT_REPORTS,CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboard);
     fixture.detectChanges();
 
     await component.addNote();
@@ -86,8 +86,7 @@ describe('AddNoteComponent', () => {
     const err = {error: "some error"};
     spyOn(NOTE_SERVICE_MOCK,'createNote').and.returnValue(throwError(err));
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast').and.callThrough();
-    const currentReports = '[{"timestampId":"1","reportType":"a-type"},{"timestampId":"2","reportType":"b-type"}]';
-    localStorage.setItem(Constants.CURRENT_REPORTS,currentReports);
+    localStorage.setItem(Constants.CURRENT_REPORTS,CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboard);
     fixture.detectChanges();
 
     await component.addNote();

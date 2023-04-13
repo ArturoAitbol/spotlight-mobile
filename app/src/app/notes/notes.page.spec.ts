@@ -21,6 +21,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { CTAASSETUP_SERVICE_MOCK } from 'src/test/services/ctaasSetup.service.mock';
 import { NotesPage } from './notes.page';
+import { CTAAS_DASHBOARD_SERVICE_MOCK } from 'src/test/services/ctaas-dashboard.service.mock';
 
 const dashboardService = new DashboardService();
 
@@ -86,28 +87,14 @@ describe('NotesPage', () => {
   });
 
   it('should get the notes and current reports when initializing',()=>{
-    dashboardService.setReports([{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-                                {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY}]);
+    dashboardService.setReports(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboard);
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
     spyOn(component,'fetchNotes').and.callThrough();
-    spyOn(component,'tagNotes').and.callThrough();
 
     fixture.detectChanges();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
-    expect(component.tagNotes).toHaveBeenCalled();
-  })
-
-  it('should tag the notes if dashboard was refreshed',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes').and.callThrough();
-    spyOn(component,'tagNotes');
-    fixture.detectChanges();
-
-    dashboardService.announceDashboardRefresh();
-
-    expect(component.tagNotes).toHaveBeenCalledTimes(3);
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{

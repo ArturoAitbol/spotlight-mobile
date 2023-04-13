@@ -4,41 +4,37 @@ import { ReportType } from "src/app/helpers/report-type";
 const TEST_CTAAS_DASHBOARD_DAILY_DAILY_FEATURE_FUNCTIONALITY = {
     response: {
         imageBase64: 'data:image/jpg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD',
-        lastUpdatedTS: 'Wed, 14 Dec 2022 15:16:50 BOT',
         reportType: 'Daily-FeatureFunctionality',
-        timestampId:'221214080042'
+        startDateStr: "230411154558",
+        endDateStr: "230411154558"
     }
 }
 const TEST_CTAAS_DASHBOARD_DAILY_CALLING_RELIABILITY = {
     response: {
         imageBase64: 'data:image/jpg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD',
-        lastUpdatedTS: 'Wed, 14 Dec 2022 15:16:50 BOT',
         reportType: 'Daily-CallingReliability',
-        timestampId:'221214080042'
+        startDateStr: "230411154558",
+        endDateStr: "230411154558"
     }
 }
 // const TEST_CTAAS_DASHBOARD_DAILY_PESQ = {
 //     response: {
 //         imageBase64: 'data:image/jpg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD',
-//         lastUpdatedTS: 'Wed, 14 Dec 2022 15:16:50 BOT',
 //         reportType: 'Daily-PESQ',
-//         timestampId:'221214080042'
 //     }
 // }
 const TEST_CTAAS_DASHBOARD_WEEKLY_FEATURE_FUNCTIONALITY = {
     response: {
         imageBase64: 'data:image/jpg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD',
-        lastUpdatedTS: 'Wed, 14 Dec 2022 15:16:53 BOT',
         reportType: 'Weekly-FeatureFunctionality',
-        timestampId:'221214090107'
+        startDateStr: "230411154558",
+        endDateStr: "230411154558"
     }
 }
 // const TEST_CTAAS_DASHBOARD_WEEKLY_PESQ = {
 //     response: {
 //         imageBase64: 'data:image/jpg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD',
-//         lastUpdatedTS: 'Wed, 14 Dec 2022 15:16:53 BOT',
 //         reportType: 'Weekly-PESQ',
-//         timestampId:'221214090107'
 //     }
 // }
 
@@ -94,6 +90,7 @@ const TEST_CTAAS_HISTORICAL_DASHBOARD_EMPTY = {
 export const CTAAS_DASHBOARD_SERVICE_MOCK = {
     ctaasDashboardWithError: TEST_CTAAS_DASHBOARD_ERROR,
     ctaasHistoricalDashboardEmpty: TEST_CTAAS_HISTORICAL_DASHBOARD_EMPTY,
+    ctaasHistoricalDashboard: JSON.stringify(TEST_CTAAS_HISTORICAL_DASHBOARD),
     getCtaasDashboardDetails: (subaccountId: string, reportType: string) => {
         let ctaasDashboard;
         switch (reportType) {

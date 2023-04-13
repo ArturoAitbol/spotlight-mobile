@@ -52,8 +52,6 @@ export class NotesPage implements OnInit, OnDestroy {
                   this.fetchNotes();
                 });
                 this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
-                  if(this.notes.length>0)
-                    this.tagNotes(this.notes);
                   this.fetchNotes();
                 })
                 this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
@@ -137,7 +135,6 @@ export class NotesPage implements OnInit, OnDestroy {
     this.noteService.getNoteList(this.subaccountId, 'Open').subscribe((res: any) => {
       if (res != null && res.notes.length > 0) {
         this.notes = res.notes;
-        this.tagNotes(this.notes);
       }
       this.isNoteDataLoading = false;
       if (event)
@@ -155,15 +152,6 @@ export class NotesPage implements OnInit, OnDestroy {
       this.setupStatus = status;
       this.maintenance = maintenance;
     });
-  }
-
-  tagNotes(notes){
-    this.currentReport = this.dashboardService.getReports();
-    if(this.currentReport!==null){
-      notes.forEach(note => {
-        note.current = isEqual(note.reports,this.currentReport);
-      });
-    }
   }
 
   async seeHistoricalReports(note) {

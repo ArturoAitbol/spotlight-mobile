@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -17,13 +17,10 @@ export class CtaasDashboardService {
    * fetch Spotlight Power BI reports
    * @param subaccountId: string
    * @param reportType: string
-   * @param timestampId: string
    * @returns: Observable<any>
    */
-  public getCtaasDashboardDetails(subaccountId: string, reportType: string,timestampId?: string): Observable<any> {
+  public getCtaasDashboardDetails(subaccountId: string, reportType: string): Observable<any> {
     let params;
-    if(timestampId)
-      params = new HttpParams().append('timestampId', timestampId);
     const url = this.FETCH_DASHBOARD_URL.replace(/{subaccountId}/g, subaccountId).replace(/{reportType}/g, reportType);
     return this.httpClient.get(url,{params});
   }
