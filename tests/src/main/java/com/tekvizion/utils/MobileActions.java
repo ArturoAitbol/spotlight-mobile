@@ -53,6 +53,7 @@ public class MobileActions {
             path =  path + "\\src\\" + directory + "\\resources\\" + resource;
         else if (os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("mac"))
             path =  path + "/src/" + directory + "/resources/" + resource;
+        System.out.println(path);
         return path;
     }
 }

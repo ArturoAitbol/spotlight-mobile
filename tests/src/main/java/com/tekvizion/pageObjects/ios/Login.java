@@ -38,6 +38,8 @@ public class Login extends IOSActions {
         Properties properties = readPropertyFile("test", "integration.properties");
         String username = properties.getProperty("subAccountIosUser");
         String password = properties.getProperty("subAccountIosPassword");
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
         checkElement(loginHeader);
         click(emailInput);
         emailInput.sendKeys(username);
