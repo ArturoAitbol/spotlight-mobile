@@ -44,8 +44,8 @@ jobs:
 
       - name: Set Integration Android test credentials
         run: |
-          echo -e "subAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
-          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ./tests/ui/src/main/resources/integration.properties
+          echo -e "subAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ../tests/src/test/resources/integration.properties
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -66,6 +66,53 @@ jobs:
           script: |
             ionic capacitor run android --no-sync --target Pixel
             mvn test -PandroidTests -f ../tests/pom.xml -DdeviceUDID="emulator-5554" -q
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: android-functional-test-report
+          path: tests/reports
+
+  ios-test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install ionic
+        run: npm install -g @ionic/cli
+
+      - name: Install Appium
+        run: |
+          npm install -g appium@next
+          appium driver install xcuitest
+          sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
+          appium &
+
+      - name: Set Integration IOS test credentials
+        run: |
+          echo -e "subAccountIosUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_IOS }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountIosPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_IOS }}" >> ../tests/src/test/resources/integration.properties
+
+      - name: emulators list
+        run: ionic cap run ios --list
+
+      - name: Set device_id
+        run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
+
+      - name: run emulator
+        working-directory: ${{ env.WORKING_DIR }}
+        run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
+
+      - name: Run functional tests
+        run: mvn test -PiosTests -f ../tests/pom.xml -DdeviceUDID=${{ env.DEVICE_ID }} -q
 
       - name: Archive test results
         uses: actions/upload-artifact@v3
