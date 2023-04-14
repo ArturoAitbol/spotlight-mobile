@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 
-public class AndroidActions {
+public class AndroidActions extends MobileActions {
     AndroidDriver driver;
     WebDriverWait wait;
     private final int DEFAULT_TIMEOUT = 60;
@@ -49,6 +49,7 @@ public class AndroidActions {
             wait.until(ExpectedConditions.invisibilityOf(element));
             resp = true;
         } catch (Exception e) {
+            //If fails in visibility of the login button and enters to this catch->remove clickGesture() and restart activity
             System.out.println("Error displaying button: " + element.toString());
             System.out.println(e);
             clickGesture(x, y);

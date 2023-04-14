@@ -7,6 +7,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -30,16 +31,40 @@ public class HomePageAndroid extends AndroidActions {
     public LoginAndroid goToLoginForm(){
         try {
             waitElement(loginButton, 180);
-            click(loginButton);
+            takeScreenshot("0_loginPage", driver);
+            clickOnLoginButton();
         } catch (Exception e) {
             System.out.println("Login button wasn't displayed initially!");
             System.out.println(e);
-            //while (clickAndroid()=='false' && timeOut<15min) -> startActivity
+            this.driver.terminateApp("com.tekvizion.spotlight");
             Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
             driver.startActivity(activity);
             waitElement(loginButton, 180);
-            clickAndroid(loginButton, 720, 1290);
+            clickOnLoginButton();
+        }
+        try {
+            By inputSelector = By.className("android.widget.EditText");
+            getElement(inputSelector);
+        } catch (Exception e) {
+            System.out.println("Blank view after clicking on login button!");
+            System.out.println(e);
+            this.driver.terminateApp("com.tekvizion.spotlight");
+            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+            driver.startActivity(activity);
+            waitElement(loginButton, 180);
+            clickOnLoginButton();
         }
         return new LoginAndroid(driver);
+    }
+
+    public void clickOnLoginButton(){
+        boolean resp = clickAndroid(loginButton, 195, 434);
+        if (!resp)
+        {
+            System.out.println("Couldn't click on login-button at the first try!");
+            waitElements(10);
+//            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+//            driver.startActivity(activity);
+        }
     }
 }

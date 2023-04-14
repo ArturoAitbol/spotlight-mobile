@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { PushNotificationsService } from '../services/push-notifications.service';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { ISetup } from '../model/setup.model';
+import { Constants } from '../helpers/constants';
 
 @Component({
   selector: 'app-notes',
@@ -34,6 +35,10 @@ export class NotesPage implements OnInit, OnDestroy {
   setupStatus = '';
   isOnboardingComplete: boolean;
   maintenance: boolean = false;
+  maintenanceAlert = {
+    title: Constants.MAINTENANCE_MODE_ALERT_TITLE,
+    message: Constants.MAINTENANCE_MODE_ALERT_MESSAGE
+  };
 
   constructor(private modalCtrl: ModalController,
               private actionSheetCtrl: ActionSheetController,

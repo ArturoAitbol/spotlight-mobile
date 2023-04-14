@@ -49,7 +49,9 @@ public class IOSActions extends MobileActions {
 //        params.put("element", ((RemoteWebElement)element).getId());
         params.put("x", x);
         params.put("y", y);
-        driver.executeScript("mobile: tap",params);
+        System.out.println("Tap on: " + x + ", " + y);
+        driver.executeScript("mobile: tap", params);
+        System.out.println("Tap successfully!");
     }
     public void click(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(element));

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
-import { ReportType } from 'src/app/helpers/report-type';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
@@ -136,7 +135,6 @@ describe('HistoricalDashboardComponent', () => {
 
   it('should refresh the chart images when calling handleRefresh()',()=>{
     spyOn(component,'fetchCtaasDashboard').and.callThrough();
-
     component.isChartsDataLoading = true;
 
     component.handleRefresh({target:{complete:()=>{}}});
