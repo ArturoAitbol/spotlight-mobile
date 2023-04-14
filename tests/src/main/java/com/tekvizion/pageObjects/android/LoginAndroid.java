@@ -35,8 +35,6 @@ public class LoginAndroid extends AndroidActions {
         Properties properties = readPropertyFile("test", "integration.properties");
         String username = properties.getProperty("subAccountAndroidUser");
         String password = properties.getProperty("subAccountAndroidPassword");
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
         sendKeys(inputSelector, username);
         clickAndroid(nextButton, 1170, 930);
         waitElements(10);
