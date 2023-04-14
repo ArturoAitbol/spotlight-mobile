@@ -8,6 +8,7 @@ import { IonToastService } from '../services/ion-toast.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { ISetup } from '../model/setup.model';
+import { Constants } from '../helpers/constants';
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'dashboard.page.html',
@@ -39,6 +40,11 @@ export class DashboardPage implements OnInit, OnDestroy {
   setupStatus = '';
   isOnboardingComplete: boolean;
   maintenance = false;
+  maintenanceAlert = {
+    title: Constants.MAINTENANCE_MODE_ALERT_TITLE,
+    message: Constants.MAINTENANCE_MODE_ALERT_MESSAGE
+  };
+  
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,

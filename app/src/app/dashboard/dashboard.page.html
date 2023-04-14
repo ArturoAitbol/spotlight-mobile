@@ -9,14 +9,8 @@
   <div *ngIf = "maintenance">
     <div class="banner" style="padding:0px auto 0px auto;">
       <div class="banner-container" style="margin-bottom: 22px;"> 
-        <strong>
-          WARNING
-        </strong> 
-        <p>
-          The Spotlight service is currently experiencing limited functionality due to ongoing maintenance. 
-          However, users can still view historical reports on the dashboard. 
-          Please note that during this maintenance period, the daily report and adding new notes is not available. 
-        </p>
+        <strong> {{maintenanceAlert.title}} </strong> 
+        <p> {{maintenanceAlert.message}} </p>
       </div>
     </div>
   </div>
