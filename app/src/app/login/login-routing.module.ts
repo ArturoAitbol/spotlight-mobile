@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginPage } from './login.page';
 import { NoPermissionPage } from './no-permission/no-permission.page';
-import { RedirectPage } from './redirect/redirect.page';
 
 const routes: Routes = [
   {
@@ -13,11 +12,6 @@ const routes: Routes = [
   {
     path: 'no-permission',
     component: NoPermissionPage
-  }
-  ,
-  {
-    path: 'redirect',
-    component: RedirectPage
   }
 ];
 

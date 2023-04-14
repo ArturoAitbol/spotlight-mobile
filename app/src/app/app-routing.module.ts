@@ -12,7 +12,12 @@ const config: ExtraOptions = {
 
 const routes: Routes = [
   {
-  path: '',
+    path: '',
+    loadChildren: () => import('./redirect/redirect.module').then(m => m.RedirectPageModule),
+    canActivate:[MsalGuard]
+  },
+  {
+  path: 'tabs',
   loadChildren: () => import('./tabnav/tabnav.module').then(m => m.TabnavPageModule),
   canActivate:[MsalGuard]
   },
@@ -21,10 +26,6 @@ const routes: Routes = [
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
   { path: '**', redirectTo: '' },
-  {
-    path: 'home/:id',
-    loadChildren: () => import('./tabnav/tabnav.module').then(m=> m.TabnavPageModule)
-  },
   {
     path: 'ctaas-dashboard',
     loadChildren: () => import('./ctaas-dashboard/ctaas-dashboard.module').then( m => m.CtaasDashboardPageModule)

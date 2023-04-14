@@ -54,6 +54,7 @@ export class NotesPage implements OnInit, OnDestroy {
                 this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
                   if(this.notes.length>0)
                     this.tagNotes(this.notes);
+                  this.fetchNotes();
                 })
                 this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
                   this.fetchNotes();

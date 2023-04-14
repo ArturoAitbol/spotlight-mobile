@@ -5,4 +5,5 @@ export class Constants {
     public static readonly ANDROID_PLATFORM: string = 'android';
     public static readonly NO_PERMISSION_TITLE: string = 'no-permission-title';
     public static readonly NO_PERMISSION_MESSAGE: string = 'no-permission-content';
+    public static readonly FEATURE_TOGGLE: string = 'feature-toggle';
 }
