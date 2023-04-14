@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 
-public class AndroidActions {
+public class AndroidActions extends MobileActions {
     AndroidDriver driver;
     WebDriverWait wait;
     private final int DEFAULT_TIMEOUT = 60;
@@ -40,18 +40,23 @@ public class AndroidActions {
         wait.until(ExpectedConditions.visibilityOf(element));
         element.click();
     }
-    public void clickAndroid(WebElement element, int x, int y){
+    public boolean clickAndroid(WebElement element, int x, int y){
+        boolean resp = false;
         try {
             wait = new WebDriverWait(driver, Duration.ofSeconds(MINIMUM_TIMEOUT));
             wait.until(ExpectedConditions.visibilityOf(element));
             element.click();
             wait.until(ExpectedConditions.invisibilityOf(element));
+            resp = true;
         } catch (Exception e) {
-            System.out.println("Error displaying button");
+            //If fails in visibility of the login button and enters to this catch->remove clickGesture() and restart activity
+            System.out.println("Error displaying button: " + element.toString());
             System.out.println(e);
             clickGesture(x, y);
+            resp = false;
         } finally {
             wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
+            return resp;
         }
     }
     public void click(By selector){
@@ -143,14 +148,23 @@ public class AndroidActions {
         element.sendKeys(text);
     }
 
+    public void getMessages(){
+        try {
+            By dialogSelector = By.xpath("//*[contains(@resource-id,'ion-overlay-')]/descendant::*[@text!='']");
+            List<WebElement> elements = getElements(dialogSelector);
+            System.out.println("Getting dialog elements...");
+            for (WebElement element: elements) {
+                System.out.println(element.getText());
+            }
+        } catch (Exception e) {
+            System.out.println("No dialogs were displayed!");
+            System.out.println(e);
+        }
+    }
+
     public void sendKeysSpecial(By selector, String text){
-/*        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.refreshed(
-                ExpectedConditions.elementToBeClickable(selector)));
-        driver.findElement(selector).sendKeys(text);*/
-//        new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.elementToBeClickable(selector));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(selector)));
         new WebDriverWait(driver, Duration.ofSeconds(10)).ignoring(StaleElementReferenceException.class).until(ExpectedConditions.attributeToBe(selector,"password", "true"));
-//        driver.findElement(selector).sendKeys(text);
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
         element.sendKeys(text);
     }

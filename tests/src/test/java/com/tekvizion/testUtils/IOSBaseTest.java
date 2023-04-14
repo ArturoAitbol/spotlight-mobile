@@ -3,6 +3,7 @@ package com.tekvizion.testUtils;
 import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import com.tekvizion.appium.ios.AutomatedIOSDevice;
 import com.tekvizion.utils.AppiumUtils;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
@@ -24,8 +25,10 @@ import java.util.Map;
 import java.util.Properties;
 
 public class IOSBaseTest extends AppiumUtils {
-    public IOSDriver driver;
+    public IOSDriver driver = null;
     public AppiumDriverLocalService service;
+    protected String username;
+    protected String password;
 
     public void longPress(WebElement element){
         Map<String, Object> params = new HashMap<>();
@@ -46,18 +49,25 @@ public class IOSBaseTest extends AppiumUtils {
         options.setWdaLaunchTimeout(Duration.ofSeconds(180));
         options.setWdaStartupRetries(4);
         options.setWdaStartupRetryInterval(Duration.ofSeconds(20));
-        this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
+        try {
+            this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
+        } catch (Exception e) {
+            System.out.println("IOS Driver couldn't be initialized!");
+            System.out.println(e);
+            if (this.driver == null)
+                System.out.println("IOS Driver is null");
+            //while(this.driver==null && timeOut<30m)-> this.driver=new IOSdriver()
+            this.driver = new IOSDriver(new URL("http://127.0.0.1:4723"), options);
+        }
     }
     @BeforeSuite
     public void startAppium() throws IOException {
-        Properties properties = new Properties();
-        FileInputStream file = new FileInputStream(getResourcePath("main", "data.properties"));
-        properties.load(file);
+        Properties properties = readPropertyFile("main", "data.properties");
         String ipAddress = properties.getProperty("ipAddress");
         String port = properties.getProperty("port");
         if (service == null){
-//            service = startAppiumServer(ipAddress, Integer.parseInt(port));
             System.out.println("Starting Appium Server!!!");
+            service = startAppiumServer(ipAddress, Integer.parseInt(port));
         }
     }
     @AfterClass

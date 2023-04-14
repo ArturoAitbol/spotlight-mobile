@@ -94,4 +94,11 @@ public class AppiumUtils {
         return path;
     }
 
+    public Properties readPropertyFile(String directory, String resource) throws IOException {
+        Properties properties = new Properties();
+        FileInputStream file = new FileInputStream(getResourcePath(directory, resource));
+        properties.load(file);
+        return properties;
+    }
+
 }

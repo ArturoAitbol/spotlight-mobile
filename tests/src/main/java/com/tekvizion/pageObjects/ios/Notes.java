@@ -11,6 +11,8 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.IOException;
+
 public class Notes extends IOSActions {
     @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label == 'add'`]" )
     WebElement addButton;
@@ -32,25 +34,26 @@ public class Notes extends IOSActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public String addNote(String text) {
-        try {
-            click(addNoteButton);
-            System.out.println("First note");
-        } catch (Exception e) {
-            click(addButton);
-            System.out.println("There aren't notes for this user!");
-            System.out.println(e.toString());
-        } finally {
-            clickSpecial(messageBox);
-            noteText = addTimeStamp(text);
-            messageBox.sendKeys(noteText);
-            Rectangle rectangle = messageBox.getRect();
-//        int x = rectangle.getX() + 35; //Tap "Cancel" button
-            int x = rectangle.getX() + rectangle.getWidth() - 50;
-            int y = rectangle.getY() + rectangle.getHeight() + 60;
-            tapWebElement(x, y);
-            return noteText;
+    public String addNote(String text) throws IOException {
+        boolean firstNote;
+        firstNote = clickIOS(addNoteButton, 195,505);
+        if (firstNote)
+            System.out.println("First note!");
+        else {
+            clickIOS(addButton, 337, 720);
+            System.out.println("This user had notes already!");
         }
+        takeScreenshot("0_openModal", driver);
+        clickSpecial(messageBox);
+        noteText = addTimeStamp(text);
+        messageBox.sendKeys(noteText);
+        Rectangle rectangle = messageBox.getRect();
+        int x = rectangle.getX() + rectangle.getWidth() - 50;
+        int y = rectangle.getY() + rectangle.getHeight() + 60;
+        takeScreenshot("1_sendKeys", driver);
+        tapWebElement(x, y);
+        takeScreenshot("2_clickAddNote", driver);
+        return noteText;
     }
 
     public String verifyNote() {
@@ -60,7 +63,7 @@ public class Notes extends IOSActions {
             return getText(noteTextSelector);
         } catch (Exception e) {
             System.out.println("Note wasn't found");
-            System.out.println(e.toString());
+            System.out.println(e);
             return "Error";
         }
     }
@@ -74,11 +77,10 @@ public class Notes extends IOSActions {
             click(closeNoteButton);
             By messageSelector = AppiumBy.iOSClassChain("**/XCUIElementTypeStaticText[`label == 'Note closed successfully!'`]");
 //            checkElement(messageSelector);
-//            return "Note closed successfully";
             return getText(messageSelector);
         } catch (Exception e) {
             System.out.println("Verify if Close Note button or Note Closed message were displayed for:" + noteText);
-            System.out.println(e.toString());
+            System.out.println(e);
             return "Error";
         }
     }

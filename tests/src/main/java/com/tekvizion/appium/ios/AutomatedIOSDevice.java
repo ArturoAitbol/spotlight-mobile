@@ -5,20 +5,15 @@ import com.tekvizion.appium.Constants;
 import com.tekvizion.appium.DesiredCapability;
 import com.tekvizion.appium.DesiredCapabilityOption;
 import com.tekvizion.appium.exceptions.UnusableSessionException;
-import com.tekvizion.utils.AppiumUtils;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class AutomatedIOSDevice extends AutomatedMobileDevice implements AutoCloseable {
     private IOSDriver iosDriver;
@@ -58,9 +53,9 @@ public class AutomatedIOSDevice extends AutomatedMobileDevice implements AutoClo
         return this.iosDriver;
     }
 
-    public void initializeIfNeeded() {
+    public boolean initializeIfNeeded() {
         if(this.getDriver() != null)
-            return;
+            return false;
         DesiredCapabilities androidDeviceDesiredCapabilities = new DesiredCapabilities();
         List<DesiredCapability> desiredCapabilitiesList = getDesiredCapabilities();
         for (DesiredCapability desiredCapability : desiredCapabilitiesList) {
@@ -75,6 +70,7 @@ public class AutomatedIOSDevice extends AutomatedMobileDevice implements AutoClo
             System.out.println("Problem initializing device driver: " + wde.getMessage());
             System.out.println("Problem initializing device driver: " + wde.getAdditionalInformation());
         }
+        return false;
     }
 
     private List<DesiredCapability> getDesiredCapabilities() {

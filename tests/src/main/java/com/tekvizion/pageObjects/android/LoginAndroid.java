@@ -13,6 +13,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Properties;
 
 public class LoginAndroid extends AndroidActions {
     AndroidDriver driver;
@@ -31,11 +32,13 @@ public class LoginAndroid extends AndroidActions {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
     public DashboardAndroid signIn() {
-        sendKeys(inputSelector, "test-functional-subaccount-admin@tekvizion360.com");
+        Properties properties = readPropertyFile("test", "integration.properties");
+        String username = properties.getProperty("subAccountAndroidUser");
+        String password = properties.getProperty("subAccountAndroidPassword");
+        sendKeys(inputSelector, username);
         clickAndroid(nextButton, 1170, 930);
         waitElements(10);
-        sendKeys(inputSelector, "Zuwo8872a");
-//        sendKeysSpecial(inputSelector, "Zuwo8872a");
+        sendKeys(inputSelector, password);
         clickAndroid(signInButton, 1170, 930);
         clickAndroid(noButton, 1170, 970);
         return new DashboardAndroid(this.driver);

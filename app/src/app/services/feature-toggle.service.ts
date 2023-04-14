@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams, HttpBackend, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpBackend, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Constants } from '../helpers/constants';
 import { FeatureToggle } from "../model/feature-toggle.model";
 
 
@@ -10,14 +11,14 @@ import { FeatureToggle } from "../model/feature-toggle.model";
 })
 export class FeatureToggleService {
 
-  private readonly API_URL: string = environment.apiEndpoint + '/featureToggles'; 
+  private readonly API_URL: string = environment.apiEndpoint + '/featureToggles';
   private featureToggleMap: Map<string, FeatureToggle>;
   private refreshInterval = 5 * 60 * 1000;
   private intervalId = null;
   private httpClient: HttpClient;
   public featureToggle: any;
 
-  constructor(handler: HttpBackend) { 
+  constructor(handler: HttpBackend) {
     this.httpClient = new HttpClient(handler);
   }
   public refreshToggles(): Observable<void> {
@@ -28,15 +29,18 @@ export class FeatureToggleService {
             res.featureToggles.forEach(featureToggle => {
                 this.featureToggleMap.set(featureToggle.name, featureToggle);
             });
+            localStorage.setItem(Constants.FEATURE_TOGGLE,JSON.stringify(Array.from(this.featureToggleMap)));
             if (this.intervalId == null) this.setUpPeriodicRefresh();
             subscriber.next(void 0);
             subscriber.complete();
         });
-        console.log(this.featureToggleMap);
     });
   }
 
   public isFeatureEnabled(toggleName: string, subaccountId?: string): boolean {
+    if(this.featureToggleMap===undefined){
+      this.featureToggleMap = new Map(JSON.parse(localStorage.getItem(Constants.FEATURE_TOGGLE)));
+    }
     this.featureToggle = this.featureToggleMap.get(toggleName);
     if (this.featureToggle) {
         if (subaccountId) {
