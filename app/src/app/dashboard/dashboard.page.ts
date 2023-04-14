@@ -153,9 +153,6 @@ export class DashboardPage implements OnInit, OnDestroy {
         return 'Calling Reliability';
       case ReportType.WEEKLY_VQ:
         return 'Voice Quality User Experience';
-      // case ReportType.DAILY_PESQ:
-      // case ReportType.WEEKLY_PESQ:
-      //   return 'PESQ'; disabling for now until mediastats are ready
     }
   }
 }

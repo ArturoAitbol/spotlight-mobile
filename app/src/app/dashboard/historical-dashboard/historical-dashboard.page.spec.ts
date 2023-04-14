@@ -94,12 +94,14 @@ describe('HistoricalDashboardComponent', () => {
   it('should refresh the chart images when calling fetchCtaasDashboard()',()=>{
     const customEvent = {target:{complete:()=>{}}};
     component.charts = [];
-    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'02',reportType:ReportType.DAILY_PESQ},
-                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}
-                      ]
+    component.reports = [
+      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+      {timestampId:'02',reportType:ReportType.DAILY_VQ},
+      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
+      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
+    ];
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -111,12 +113,14 @@ describe('HistoricalDashboardComponent', () => {
   it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error',()=>{
     spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
     const customEvent = {target:{complete:()=>{}}};
-    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'02',reportType:ReportType.DAILY_PESQ},
-                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}
-                      ]
+    component.reports = [
+      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+      {timestampId:'02',reportType:ReportType.DAILY_VQ},
+      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
+      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
+    ];
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -128,12 +132,14 @@ describe('HistoricalDashboardComponent', () => {
 
   it('should refresh the chart images when calling handleRefresh()',()=>{
     spyOn(component,'fetchCtaasDashboard').and.callThrough();
-    component.reports = [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-                        {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'02',reportType:ReportType.DAILY_PESQ},
-                        {timestampId:'03',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-                        // {timestampId:'04',reportType:ReportType	.WEEKLY_PESQ}
-                      ]
+    component.reports = [
+      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
+      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
+      {timestampId:'02',reportType:ReportType.DAILY_VQ},
+      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
+      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
+      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
+    ];
     component.isChartsDataLoading = true;
 
     component.handleRefresh({target:{complete:()=>{}}});
