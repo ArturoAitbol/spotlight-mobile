@@ -136,10 +136,7 @@ export class DashboardPage implements OnInit, OnDestroy {
               const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
               if (result.length > 0) {
                 this.hasDashboardDetails = true;
-                const reportsIdentifiers: any[] = [];
                 result.forEach((e) => {
-                  let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
-                  reportsIdentifiers.push(reportIdentifier);
                   if (e.reportType.toLowerCase().includes(this.DAILY))
                     this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
                   else if (e.reportType.toLowerCase().includes(this.WEEKLY))
@@ -151,7 +148,7 @@ export class DashboardPage implements OnInit, OnDestroy {
                 }else{
                   this.charts = this.reports[this.DAILY];
                 }
-                this.dashboardService.setReports(reportsIdentifiers);
+                this.dashboardService.setReports(result);
               }
               this.dashboardService.announceDashboardRefresh();
             }
@@ -168,7 +165,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           })
       });
     }
-  } 
+  }
 
   /**
   * on click toggle button

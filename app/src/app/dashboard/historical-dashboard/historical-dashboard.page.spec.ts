@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
-import { ReportType } from 'src/app/helpers/report-type';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
 import { IonToastService } from 'src/app/services/ion-toast.service';
 import { SubaccountService } from 'src/app/services/subaccount.service';
@@ -42,7 +41,7 @@ describe('HistoricalDashboardComponent', () => {
 
     fixture = TestBed.createComponent(HistoricalDashboardPage);
     component = fixture.componentInstance;
-    component.note = { subaccountId:"11", content:"content", openDate:"2022-01-01 12:00:00", openedBy: "user@example.com", reports: [{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},{timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY}] };
+    component.note = { subaccountId:"11", content:"content", openDate:"2022-01-01 12:00:00", openedBy: "user@example.com", reports: null };
   }));
 
   it('should create', () => {
@@ -59,9 +58,18 @@ describe('HistoricalDashboardComponent', () => {
     expect(component.charts.length).toBe(0);
   })
 
-  it('should show an error message instead of the charts when the data return by getCtaasDashboardDetails() have error messages',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasDashboardWithError));
-    component.charts = [];
+  it('should show a message instead of the charts when getCtaasHistoricalDashboardDetails() returns an empty array',()=>{
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(of(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboardEmpty));
+
+    fixture.detectChanges();
+
+    expect(component.charts.length).toBe(0);
+    const errorMessage: HTMLElement = fixture.nativeElement.querySelector('.error-message');
+    expect(errorMessage).not.toBeNull();
+  })
+
+  it('should show a message instead of the charts when getCtaasHistoricalDashboardDetails() return an error',()=>{
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(throwError({error: "error message"}));
 
     fixture.detectChanges();
 
@@ -79,7 +87,7 @@ describe('HistoricalDashboardComponent', () => {
     expect(component.fetchCtaasDashboard).toHaveBeenCalled();
   })
 
-  it('should set the loading flags to false when calling fetchData() and no subaccounts found',()=>{
+  it('should set the loading flag to false when calling fetchData() and no subaccounts found',()=>{
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.returnValue(null);
     spyOn(ION_TOAST_SERVICE_MOCK,'presentToast');
     spyOn(component,'fetchCtaasDashboard');
@@ -91,17 +99,20 @@ describe('HistoricalDashboardComponent', () => {
     expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("No subaccount found","Error");
   })
 
+  it('should set the loading flag to false and show an error message when note is null',()=>{
+    component.note = null;
+    spyOn(ION_TOAST_SERVICE_MOCK,'presentToast');
+    spyOn(component,'fetchData');
+
+    fixture.detectChanges();
+
+    expect(component.fetchData).not.toHaveBeenCalled();
+    expect(ION_TOAST_SERVICE_MOCK.presentToast).toHaveBeenCalledWith("Note not found","Error");
+  })
+
   it('should refresh the chart images when calling fetchCtaasDashboard()',()=>{
     const customEvent = {target:{complete:()=>{}}};
     component.charts = [];
-    component.reports = [
-      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-      {timestampId:'02',reportType:ReportType.DAILY_VQ},
-      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
-      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
-    ];
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -111,16 +122,8 @@ describe('HistoricalDashboardComponent', () => {
   })
 
   it('should set the chartsData-loading flag to false when the call to fetchCtaasDashboard() throws an error',()=>{
-    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasDashboardDetails').and.returnValue(throwError("Some error"));
+    spyOn(CTAAS_DASHBOARD_SERVICE_MOCK,'getCtaasHistoricalDashboardDetails').and.returnValue(throwError("Some error"));
     const customEvent = {target:{complete:()=>{}}};
-    component.reports = [
-      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-      {timestampId:'02',reportType:ReportType.DAILY_VQ},
-      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
-      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
-    ];
     component.subaccount = JSON.parse(SUBACCOUNT_SERVICE_MOCK.testSubaccountString);
     component.isChartsDataLoading = true;
 
@@ -132,14 +135,6 @@ describe('HistoricalDashboardComponent', () => {
 
   it('should refresh the chart images when calling handleRefresh()',()=>{
     spyOn(component,'fetchCtaasDashboard').and.callThrough();
-    component.reports = [
-      {timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-      {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY},
-      {timestampId:'02',reportType:ReportType.DAILY_VQ},
-      {timestampId:'03',reportType:ReportType.WEEKLY_CALLING_RELIABILITY},
-      {timestampId:'04',reportType:ReportType.WEEKLY_FEATURE_FUNCTIONALITY},
-      {timestampId:'05',reportType:ReportType.WEEKLY_VQ}
-    ];
     component.isChartsDataLoading = true;
 
     component.handleRefresh({target:{complete:()=>{}}});

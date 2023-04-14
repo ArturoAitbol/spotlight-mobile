@@ -57,8 +57,6 @@ export class NotesPage implements OnInit, OnDestroy {
                   this.fetchNotes();
                 });
                 this.dashboardSubscription = this.dashboardService.dashboardRefreshed$.subscribe(()=>{
-                  if(this.notes.length>0)
-                    this.tagNotes(this.notes);
                   this.fetchNotes();
                 })
                 this.pushNotificationsSubscription = this.pushNotificationsService.newPushNotification$.subscribe(()=>{
@@ -142,7 +140,6 @@ export class NotesPage implements OnInit, OnDestroy {
     this.noteService.getNoteList(this.subaccountId, 'Open').subscribe((res: any) => {
       if (res != null && res.notes.length > 0) {
         this.notes = res.notes;
-        this.tagNotes(this.notes);
       }
       this.isNoteDataLoading = false;
       if (event)
@@ -162,35 +159,17 @@ export class NotesPage implements OnInit, OnDestroy {
     });
   }
 
-  tagNotes(notes){
-    this.currentReport = this.dashboardService.getReports();
-    if(this.currentReport!==null){
-      notes.forEach(note => {
-        note.current = isEqual(note.reports,this.currentReport);
-      });
-    }
-  }
-
   async seeHistoricalReports(note) {
-    if(note.reports!==null){
-      if (!note.current) {
-        const modal = await this.modalCtrl.create({
-          component: HistoricalDashboardPage,
-          componentProps: { note: note },
-          initialBreakpoint: 1,
-          breakpoints: [0, 1],
-          handleBehavior: "cycle"
-        });
-        modal.present();
+    const modal = await this.modalCtrl.create({
+      component: HistoricalDashboardPage,
+      componentProps: { note: note },
+      initialBreakpoint: 1,
+      breakpoints: [0, 1],
+      handleBehavior: "cycle"
+    });
+    modal.present();
 
-        const {data,role} = await modal.onWillDismiss();
-      }else{
-        this.router.navigate(['/tabs/dashboard']);
-      }
-    }else{
-      this.ionToastService.presentToast("There are not reports associated with this note", "OK");
-    }
-
+    const {data,role} = await modal.onWillDismiss();
   }
 
   public async resetBadgeCount(): Promise<void> {
