@@ -48,8 +48,6 @@ public class DashboardAndroid extends AndroidActions {
             System.out.println("No such driver!");
             System.out.println(e);
             this.driver.terminateApp("com.tekvizion.spotlight");
-            Runtime runtime = Runtime.getRuntime();
-            runtime.exec("/Users/runner/Library/Android/sdk/platform-tools/adb -P 5037 -s emulator-5554 shell pm clear com.tekvizion.spotlight");
             this.driver.quit();
             AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("UIAutomator2","emulator-5554");
             boolean initialized = androidDevice.initializeIfNeeded();
