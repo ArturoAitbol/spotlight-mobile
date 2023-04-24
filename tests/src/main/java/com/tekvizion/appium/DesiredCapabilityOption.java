@@ -34,7 +34,7 @@ public enum DesiredCapabilityOption {
     WDA_LAUNCH_TIME("setWdaLaunchTimeout"),
     WDA_RETRIES("setWdaStartupRetries"),
     WDA_RETRY_INTERVAL("setWdaStartupRetryInterval"),
-    FULL_RESET("fullReset"),
+    SERVER_LAUNCH_TIMEOUT("uiautomator2ServerLaunchTimeout"),
     CHROME_DRIVER("chromedriverExecutable");
 
     private final String name;

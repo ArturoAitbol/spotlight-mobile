@@ -22,7 +22,7 @@ public class AutomatedIOSDevice extends AutomatedMobileDevice implements AutoClo
         super(
                 Constants.XCUITEST,
                 Constants.IOS_PLATFORM_NAME,
-                "9",
+                "16.0",
                 udid,
                 Constants.DEFAULT_APPIUM_SERVER_URL
         );

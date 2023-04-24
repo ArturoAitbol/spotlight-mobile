@@ -18,16 +18,17 @@ import java.util.List;
 
 public class AutomatedAndroidDevice extends AutomatedMobileDevice implements AutoCloseable {
 
-    private AndroidDriver androidDriver;
+    private AndroidDriver androidDriver = null;
 
-    public AutomatedAndroidDevice(String udid) {
+    public AutomatedAndroidDevice(String automationName,String udid) {
         super(
-                Constants.UI_AUTOMATOR_2,
+                automationName,
                 Constants.ANDROID_PLATFORM_NAME,
-                "9",
+                "10.0",
                 udid,
                 Constants.DEFAULT_APPIUM_SERVER_URL
         );
+
     }
 
     public void tearDown() {
@@ -96,6 +97,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.UNICODE_KEYBOARD, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.RESET_KEYBOARD, true));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.SERVER_LAUNCH_TIMEOUT, 120000));
         return desiredCapabilities;
     }
 
