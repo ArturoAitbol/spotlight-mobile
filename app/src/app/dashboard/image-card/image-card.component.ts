@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import SwiperCore, { Zoom } from 'swiper';
 
+SwiperCore.use([Zoom]);
 @Component({
   selector: 'image-card',
   templateUrl: './image-card.component.html',
