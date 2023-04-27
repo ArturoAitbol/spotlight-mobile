@@ -9,7 +9,7 @@ import java.io.IOException;
 public class LoginTest extends AndroidBaseTest {
     HomePageAndroid homePage;
     @Test
-    public void loginSuccessfully(){
+    public void loginSuccessfully() throws IOException {
         homePage = new HomePageAndroid(driver);
         LoginAndroid login = homePage.goToLoginForm();
         DashboardAndroid dashboard = login.signIn();
@@ -28,7 +28,7 @@ public class LoginTest extends AndroidBaseTest {
     }
 
     @Test
-    public void closeNote(){
+    public void closeNote() throws IOException {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String noteStatus = notes.closeNote("note");
