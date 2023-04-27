@@ -8,6 +8,7 @@ import { IonToastService } from '../services/ion-toast.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { ISetup } from '../model/setup.model';
+import { Constants } from '../helpers/constants';
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'dashboard.page.html',
@@ -39,6 +40,11 @@ export class DashboardPage implements OnInit, OnDestroy {
   setupStatus = '';
   isOnboardingComplete: boolean;
   maintenance = false;
+  maintenanceAlert = {
+    title: Constants.MAINTENANCE_MODE_ALERT_TITLE,
+    message: Constants.MAINTENANCE_MODE_ALERT_MESSAGE
+  };
+  
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,
@@ -130,10 +136,7 @@ export class DashboardPage implements OnInit, OnDestroy {
               const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
               if (result.length > 0) {
                 this.hasDashboardDetails = true;
-                const reportsIdentifiers: any[] = [];
                 result.forEach((e) => {
-                  let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
-                  reportsIdentifiers.push(reportIdentifier);
                   if (e.reportType.toLowerCase().includes(this.DAILY))
                     this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
                   else if (e.reportType.toLowerCase().includes(this.WEEKLY))
@@ -145,7 +148,7 @@ export class DashboardPage implements OnInit, OnDestroy {
                 }else{
                   this.charts = this.reports[this.DAILY];
                 }
-                this.dashboardService.setReports(reportsIdentifiers);
+                this.dashboardService.setReports(result);
               }
               this.dashboardService.announceDashboardRefresh();
             }
@@ -162,7 +165,7 @@ export class DashboardPage implements OnInit, OnDestroy {
           })
       });
     }
-  } 
+  }
 
   /**
   * on click toggle button
@@ -191,9 +194,6 @@ export class DashboardPage implements OnInit, OnDestroy {
         return 'Calling Reliability';
       case ReportType.WEEKLY_VQ:
         return 'Voice Quality User Experience';
-      // case ReportType.DAILY_PESQ:
-      // case ReportType.WEEKLY_PESQ:
-      //   return 'PESQ'; disabling for now until mediastats are ready
     }
   }
 }

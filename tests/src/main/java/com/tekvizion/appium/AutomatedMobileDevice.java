@@ -1,8 +1,6 @@
 package com.tekvizion.appium;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
 
 public abstract class AutomatedMobileDevice {
@@ -17,17 +15,7 @@ public abstract class AutomatedMobileDevice {
     public AutomatedMobileDevice(String automationName, String platformName, String platformVersion, String serialNumber, String appiumServerUrl) {
         this.automationName = new DesiredCapability(DesiredCapabilityOption.AUTOMATION_NAME, automationName);
         this.platformName = new DesiredCapability(DesiredCapabilityOption.PLATFORM_NAME, platformName);
-        Properties properties = new Properties();
-        FileInputStream file = null;
-        try {
-            file = new FileInputStream(getResourcePath("main", "data.properties"));
-            properties.load(file);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        String ipAddress = properties.getProperty("ipAddress");
-        String port = properties.getProperty("port");
-        this.platformVersion = new DesiredCapability(DesiredCapabilityOption.PLATFORM_VERSION, properties.getProperty("iosPlatformVersion"));
+        this.platformVersion = new DesiredCapability(DesiredCapabilityOption.PLATFORM_VERSION, platformVersion);;
         this.udid = new DesiredCapability(DesiredCapabilityOption.UDID, serialNumber);
 //        this.udid = new DesiredCapability(DesiredCapabilityOption.UDID, System.getProperty("deviceUDID"));
         this.appiumServerURL = appiumServerUrl;
@@ -63,7 +51,7 @@ public abstract class AutomatedMobileDevice {
     public abstract void sendKeysToElementByXpath(String keys, String xpath);
 
     public abstract void tearDown();
-    public abstract void initializeIfNeeded();
+    public abstract boolean initializeIfNeeded();
     public String getResourcePath(String directory, String resource){
         String path = System.getProperty("user.dir");
         String os = System.getProperty("os.name").toLowerCase();

@@ -11,6 +11,7 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: ./app
@@ -34,10 +35,15 @@ jobs:
           appium driver install uiautomator2
           chmod +x ./android/gradlew
           sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
-          appium &
+
+      - name: Set Integration Android test credentials
+        run: |
+          echo -e "\nsubAccountAndroidUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_ANDROID }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountAndroidPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_ANDROID }}" >> ../tests/src/test/resources/integration.properties
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 40
         with:
           api-level: 29
           target: google_apis
@@ -63,6 +69,7 @@ jobs:
 
   ios-test:
     runs-on: macos-latest
+    timeout-minutes: 35
     defaults:
       run:
         working-directory: ./app
@@ -81,7 +88,11 @@ jobs:
           npm install -g appium@next
           appium driver install xcuitest
           sed 's,http://localhost:7071/v1.0,https://tekvlicenseserverpocfunction.azurewebsites.net/v1.0,g' src/environments/environment.ts > changed.ts && mv changed.ts src/environments/environment.ts
-          appium &
+
+      - name: Set Integration IOS test credentials
+        run: |
+          echo -e "\nsubAccountIosUser=${{ secrets.AZURE_SUBACCOUNT_USER_NAME_IOS }}" >> ../tests/src/test/resources/integration.properties
+          echo -e "subAccountIosPassword=${{ secrets.AZURE_SUBACCOUNT_PWD_IOS }}" >> ../tests/src/test/resources/integration.properties
 
       - name: emulators list
         run: ionic cap run ios --list
@@ -89,7 +100,8 @@ jobs:
       - name: Set device_id
         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
-      - name: run emulator
+      - name: Run emulator
+        timeout-minutes: 30
         working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 

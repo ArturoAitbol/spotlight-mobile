@@ -11,15 +11,9 @@
 <ng-template #notesContent>
     <div class = "container" *ngIf = "maintenance">
         <div id="service-description">
-            <div class="banner-container"> 
-              <strong>
-                WARNING
-              </strong> 
-              <p>
-                The Spotlight service is currently experiencing limited functionality due to ongoing maintenance. 
-                However, users can still view historical reports on the dashboard. 
-                Please note that during this maintenance period, adding new notes and test reports is not available.
-              </p>
+            <div class="banner-container">
+              <strong> {{maintenanceAlert.title}} </strong>
+              <p> {{maintenanceAlert.message}} </p>
             </div>
           </div>
     </div>
@@ -29,7 +23,7 @@
                 <ion-label>{{notes.length}} open notes</ion-label>
             </ion-list-header>
             <ion-item *ngFor="let note of notes" detail="false" expand="block" id="note-id" aria-label="note-label">
-                <ion-card class="ion-text-left" [ngClass]="!note.current && 'inactive-card'">
+                <ion-card class="ion-text-left">
                     <ion-card-header>
                     <ion-card-subtitle>
                         <span>{{note.openDate.replace(" ", "T") | date:"medium"}}</span>

@@ -1,7 +1,9 @@
 package com.tekvizion.pageObjects.android;
 
+import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import com.tekvizion.pageObjects.ios.Notes;
 import com.tekvizion.utils.AndroidActions;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -9,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class DashboardAndroid extends AndroidActions {
@@ -36,14 +39,38 @@ public class DashboardAndroid extends AndroidActions {
         checkElement(username);
     }
 
-    public NotesAndroid goToNotes(){
+    public NotesAndroid goToNotes() throws IOException {
 //        boolean response = accessibilityNodeInfo(notesButton, "selected", "true");
-
-        waitElement(notesButton, 300);
+        try {
+            waitElement(notesButton, 300);
+        } catch (Exception e) {
+            //NoSuchDriverException
+            System.out.println("No such driver!");
+            System.out.println(e);
+            this.driver.terminateApp("com.tekvizion.spotlight");
+            this.driver.quit();
+            AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("UIAutomator2","emulator-5554");
+            boolean initialized = androidDevice.initializeIfNeeded();
+            if (!initialized)
+                initialized = androidDevice.initializeIfNeeded();
+            if (initialized){
+                this.driver = androidDevice.getDriver();
+                this.driver.removeApp("io.appium.settings");
+                this.driver.removeApp("io.appium.uiautomator2.server");
+                this.driver.removeApp("io.appium.uiautomator2.server.test");
+                this.driver.quit();
+                androidDevice.setDriver(null);
+                initialized = androidDevice.initializeIfNeeded();
+                this.driver = androidDevice.getDriver();
+                System.out.println("Initialized: " + initialized);
+            }
+            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+            driver.startActivity(activity);
+            waitElement(notesButton, 300);
+        }
         click(notesButton);
 //        boolean response = attributeToBe(notesButtonSelector, "selected", "true");
         boolean response = attributeToBe(notesButton, "selected", "true");
-
         if (!response)
             clickGesture(1000,2295);
         return new NotesAndroid(this.driver);
