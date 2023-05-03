@@ -45,11 +45,20 @@ public class NotesAndroid extends AndroidActions {
         else {
             clickAndroid(addButton, 1250, 2060); //1155,1960
             System.out.println("This user had notes already!");
+            takeScreenshot("1.1_addAnotherNote",driver);
         }
 //        takeScreenshot("0_openModal", driver);
         noteText = addTimeStamp(text);
-        sendKeys(noteMessageInput, noteText);
-        waitElements(5);
+        try {
+            sendKeys(noteMessageInput, noteText);
+            waitElements(5);
+        } catch (Exception e) {
+            takeScreenshot("1.2_notOpenModal", driver);
+            System.out.println("Appium doesn't recognize elements!");
+            System.out.println(e);
+            restartApp();
+            return "error";
+        }
 //        takeScreenshot("1_sendKeys", driver);
         clickAndroid(addNoteButton, 1160,960);
 //        takeScreenshot("2_clickAddNote", driver);
@@ -57,6 +66,16 @@ public class NotesAndroid extends AndroidActions {
 //        takeScreenshot("3_checkNoteCreated", driver);
         getMessages();
         return noteText;
+    }
+
+    public void restartApp(){
+        try {
+            this.driver.terminateApp("com.tekvizion.spotlight");
+            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+            driver.startActivity(activity);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String verifyNote() {

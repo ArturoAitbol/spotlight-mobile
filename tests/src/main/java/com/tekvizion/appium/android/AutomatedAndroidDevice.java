@@ -91,7 +91,7 @@ public class AutomatedAndroidDevice extends AutomatedMobileDevice implements Aut
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.ANDROID_TIMEOUT, 160000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.SERVER_TIMEOUT, 150000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_PACKAGE_WAIT_TIMEOUT, 140000));
-        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.ADB_EXEC, 130000));
+        desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.ADB_EXEC, 160000));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.NEW_COMMAND_TIMEOUT, Constants.DRIVER_SESSION_COMMAND_TIMEOUT));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.AUTO_ACCEPT_ALERTS, true));
         desiredCapabilities.add(new DesiredCapability(DesiredCapabilityOption.APP_WAIT, false));

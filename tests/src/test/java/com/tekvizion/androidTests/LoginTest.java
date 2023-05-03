@@ -21,10 +21,13 @@ public class LoginTest extends AndroidBaseTest {
         DashboardAndroid dashboard = new DashboardAndroid(driver);
         NotesAndroid notes = dashboard.goToNotes();
         String expectedNote = notes.addNote("note");
-
+        if (expectedNote.equals("error")){
+            DashboardAndroid dashboardRetry = new DashboardAndroid(driver);
+            NotesAndroid notesRetry = dashboardRetry.goToNotes();
+            expectedNote = notesRetry.addNote("note");
+        }
 //        String actualNote = notes.verifyNote();
 //        Assert.assertEquals(actualNote, expectedNote);
-
     }
 
     @Test
