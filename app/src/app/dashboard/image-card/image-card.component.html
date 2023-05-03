@@ -8,13 +8,7 @@
           <ion-col>
             <ion-spinner *ngIf="isLoading else content" name="dots"></ion-spinner>
             <ng-template #content>
-              <swiper [zoom]="true">
-                <ng-template swiperSlide>
-                  <div class="swiper-zoom-container">
-                    <img *ngIf="imageBase64" [src]="imageBase64"/>
-                  </div>
-                </ng-template>
-              </swiper>
+              <img *ngIf="imageBase64" [src]="imageBase64" tappable (click) ="previewImg(imageBase64)"/>
               <div class="error-message" *ngIf="!imageBase64">
                 <ion-icon class="warnign-icon" name="warning-outline"></ion-icon>
                 <p>Something went wrong</p>
