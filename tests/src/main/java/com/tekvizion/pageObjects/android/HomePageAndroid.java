@@ -44,7 +44,9 @@ public class HomePageAndroid extends AndroidActions {
         try {
             By inputSelector = By.className("android.widget.EditText");
             getElement(inputSelector);
+            takeScreenshot("01_insertUsername", driver);
         } catch (Exception e) {
+            takeScreenshot("02_blankView", driver);
             System.out.println("Blank view after clicking on login button!");
             System.out.println(e);
             restartApp();
@@ -58,23 +60,23 @@ public class HomePageAndroid extends AndroidActions {
     public void restartApp(){
         try {
             this.driver.terminateApp("com.tekvizion.spotlight");
-            Runtime runtime = Runtime.getRuntime();
-            runtime.exec("/Users/runner/Library/Android/sdk/platform-tools/adb -P 5037 -s emulator-5554 shell pm clear com.tekvizion.spotlight");
+//            Runtime runtime = Runtime.getRuntime();
+//            runtime.exec("/Users/runner/Library/Android/sdk/platform-tools/adb -P 5037 -s emulator-5554 shell pm clear com.tekvizion.spotlight");
             Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
             driver.startActivity(activity);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void clickOnLoginButton(){
         boolean resp = clickAndroid(loginButton, 195, 434);
-        if (!resp)
-        {
+        if (!resp) {
             System.out.println("Couldn't click on login-button at the first try!");
             waitElements(10);
 //            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
 //            driver.startActivity(activity);
-        }
+        } else
+            System.out.println("Click on login button: " + resp);
     }
 }

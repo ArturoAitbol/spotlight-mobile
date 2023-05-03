@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { forkJoin, Observable } from 'rxjs';
 import { ReportType } from 'src/app/helpers/report-type';
 import { Note } from 'src/app/model/note.model';
 import { SubAccount } from 'src/app/model/subaccount.model';
@@ -19,7 +18,7 @@ export class HistoricalDashboardPage implements OnInit {
   reports: any = {};
   charts:any[] = [];
 
-  
+
   readonly DAILY: string = 'daily';
   readonly WEEKLY: string = 'weekly';
   selectedPeriod: string = this.DAILY;
@@ -33,14 +32,13 @@ export class HistoricalDashboardPage implements OnInit {
               private subaccountService: SubaccountService,
               private ionToastService: IonToastService,
               private modalCtrl: ModalController) {}
-  
+
   ngOnInit(): void {
-    if(this.note?.reports!=null){
-      this.reports = this.note.reports;
+    if(this.note!=null){
       this.fetchData();
     }else{
       this.isChartsDataLoading = false;
-      this.ionToastService.presentToast("No reports found","Error");
+      this.ionToastService.presentToast("Note not found","Error");
     }
   }
 
@@ -64,27 +62,19 @@ export class HistoricalDashboardPage implements OnInit {
     this.reports[this.DAILY] = [];
     this.reports[this.WEEKLY] = [];
 
-    const requests: Observable<any>[] = [];
-    for(const report of this.reports){
-      if (Object.values(ReportType).includes(report.reportType))
-        requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccount.id, report.reportType, report.timestampId));
-    }
-
-    forkJoin(requests).subscribe((res: [{ response?:string, error?:string }])=>{
+    this.ctaasDashboardService.getCtaasHistoricalDashboardDetails(this.subaccount.id,this.note.id).subscribe((res: { response:[]})=>{
       if(res){
-        const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
-        if (result.length > 0) {
-          this.hasDashboardDetails = true;
-          const reportsIdentifiers: any[] = []; 
-          result.forEach((e) => {
-              let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
-              reportsIdentifiers.push(reportIdentifier);
-              if (e.reportType.toLowerCase().includes(this.DAILY))
-                this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-              else if (e.reportType.toLowerCase().includes(this.WEEKLY))
-                this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-          });
-
+        const reports: any[] = res.response;
+        this.hasDashboardDetails = true;
+        if(reports.length>0){
+          for(const report of reports){
+            if (Object.values(ReportType).includes(report.reportType)){
+              if (report.reportType.toLowerCase().includes(this.DAILY))
+                this.reports[this.DAILY].push({ imageBase64: report.imageBase64, reportName: this.getReportNameByType(report.reportType) });
+              else if (report.reportType.toLowerCase().includes(this.WEEKLY))
+                this.reports[this.WEEKLY].push({ imageBase64: report.imageBase64, reportName: this.getReportNameByType(report.reportType) });
+            }
+          }
           this.charts = this.reports[this.DAILY];
         }
       }
@@ -112,8 +102,8 @@ export class HistoricalDashboardPage implements OnInit {
 
   /**
    * get report name by report type
-   * @param reportType: string 
-   * @returns: string 
+   * @param reportType: string
+   * @returns: string
    */
   getReportNameByType(reportType: string): string {
     switch (reportType) {
@@ -129,9 +119,6 @@ export class HistoricalDashboardPage implements OnInit {
         return 'Calling Reliability';
       case ReportType.WEEKLY_VQ:
         return 'Voice Quality User Experience';
-      // case ReportType.DAILY_PESQ:
-      // case ReportType.WEEKLY_PESQ:
-      //   return 'PESQ'; disabling for now until mediastats are ready
     }
   }
 }

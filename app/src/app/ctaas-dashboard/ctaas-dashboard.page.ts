@@ -1,16 +1,14 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { PowerBIEmbedModule } from 'powerbi-client-angular';
-import { IReportEmbedConfiguration, Dashboard, models, Embed, IDashboardEmbedConfiguration, service } from 'powerbi-client';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { IReportEmbedConfiguration, models, service } from 'powerbi-client';
 import { IonToastService } from '../services/ion-toast.service';
 import { IPowerBiReponse } from 'src/app/model/powerbi-response.model';
 import { SubaccountService } from '../services/subaccount.service';
-import { FeatureToggleService } from '../services/feature-toggle.service';
 import { MsalService } from '@azure/msal-angular';
 import { CtaasDashboardService } from 'src/app/services/ctaas-dashboard.service';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { ISetup } from '../model/setup.model';
+import { Constants } from '../helpers/constants';
 
 @Component({
   selector: 'app-ctaas-dashboard',
@@ -19,8 +17,6 @@ import { ISetup } from '../model/setup.model';
 })
 export class CtaasDashboardPage implements OnInit {
   isiOS = false;
-  private _embed?: Embed;
-  private readonly FETCH_POWERBI_DASHBOARD_REPORT_URL: string = environment.apiEndpoint+"/spotlightDashboard/";
   readonly LEGACY_MODE: string = 'legacy_view';
   readonly POWERBI_MODE: string = 'powerbi_view';
   readonly REPORT_TYPE: string = 'report';
@@ -63,6 +59,10 @@ export class CtaasDashboardPage implements OnInit {
   setupStatus = '';
   isOnboardingComplete: boolean;
   maintenance = false;
+  maintenanceAlert = {
+    title: Constants.MAINTENANCE_MODE_ALERT_TITLE,
+    message: Constants.MAINTENANCE_MODE_ALERT_MESSAGE
+  };
   
   constructor(private ionToastService: IonToastService, 
     private httpClient: HttpClient, 

@@ -1,8 +1,10 @@
 package com.tekvizion.utils;
 
 import com.google.common.collect.ImmutableMap;
+import com.tekvizion.appium.android.AutomatedAndroidDevice;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -50,7 +52,7 @@ public class AndroidActions extends MobileActions {
             resp = true;
         } catch (Exception e) {
             //If fails in visibility of the login button and enters to this catch->remove clickGesture() and restart activity
-            System.out.println("Error displaying button: " + element.toString());
+            System.out.println("Error in button: " + element.toString());
             System.out.println(e);
             clickGesture(x, y);
             resp = false;
@@ -247,5 +249,39 @@ public class AndroidActions extends MobileActions {
     public String addTimeStamp(String text){
         String timeStamp = DriverManager.getInstance().getTimeStamp();
         return text + "-" + timeStamp;
+    }
+
+    public void restartApplication(){
+        try {
+            this.driver.terminateApp("com.tekvizion.spotlight");
+//            Runtime runtime = Runtime.getRuntime();
+//            runtime.exec("/Users/runner/Library/Android/sdk/platform-tools/adb -P 5037 -s emulator-5554 shell pm clear com.tekvizion.spotlight");
+            Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+            driver.startActivity(activity);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void restartDriver(){
+        this.driver.terminateApp("com.tekvizion.spotlight");
+        this.driver.quit();
+        AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("UIAutomator2","emulator-5554");
+        boolean initialized = androidDevice.initializeIfNeeded();
+        if (!initialized)
+            initialized = androidDevice.initializeIfNeeded();
+        if (initialized){
+            this.driver = androidDevice.getDriver();
+            this.driver.removeApp("io.appium.settings");
+            this.driver.removeApp("io.appium.uiautomator2.server");
+            this.driver.removeApp("io.appium.uiautomator2.server.test");
+            this.driver.quit();
+            androidDevice.setDriver(null);
+            initialized = androidDevice.initializeIfNeeded();
+            this.driver = androidDevice.getDriver();
+            System.out.println("Initialized: " + initialized);
+        }
+        Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
+        driver.startActivity(activity);
     }
 }

@@ -38,23 +38,18 @@ export class PushNotificationsService {
     let adminDeviceService = this.adminDeviceService;
     FirebaseMessaging.requestPermissions().then(async function(permission){
       if(permission.receive === "granted"){
-        await FirebaseMessaging.getToken();
-        FirebaseMessaging.addListener('tokenReceived', (event) => {
-          let deviceToken = {
-            deviceToken: event.token
-          };
-          localStorage.setItem("deviceToken", event.token);
-          if(deviceTokenFromStorage != event.token){
-            adminDeviceService.createAdminDevice(deviceToken).subscribe((res)=>{
-              console.log(res);
-            },(err)=>{
-              console.error(err);
-            });
-          }
-        });
+         const token = (await FirebaseMessaging.getToken()).token;
+         localStorage.setItem("deviceToken", token);
+         if(deviceTokenFromStorage != token){
+           adminDeviceService.createAdminDevice({deviceToken: token}).subscribe(()=>{
+             console.log("Device Token registered successfully");
+           },(err)=>{
+             console.error(err);
+           });
+         }
       }
       else{
-        console.error("ERROR REGISTERING PUSH NOTIFICAITONS");
+        console.error("ERROR REGISTERING PUSH NOTIFICATIONS");
       }
     });
     this.AddActionAndReceivedListeners();

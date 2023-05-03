@@ -8,6 +8,7 @@ import { IonToastService } from '../services/ion-toast.service';
 import { SubaccountService } from '../services/subaccount.service';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { ISetup } from '../model/setup.model';
+import { Constants } from '../helpers/constants';
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'dashboard.page.html',
@@ -30,10 +31,20 @@ export class DashboardPage implements OnInit, OnDestroy {
   selectedPeriod: string = this.DAILY;
 
   foregroundSubscription: Subscription;
+  getSubaccountSubscription: Subscription;
+  forkJoinSubscription: Subscription;
+  getSubaccountIsSubscribed = false;
+  forkJoinIsSubscribed = false;
+  firstLoad = false;
   ctaasSetupDetails: any = {};
   setupStatus = '';
   isOnboardingComplete: boolean;
   maintenance = false;
+  maintenanceAlert = {
+    title: Constants.MAINTENANCE_MODE_ALERT_TITLE,
+    message: Constants.MAINTENANCE_MODE_ALERT_MESSAGE
+  };
+  
   constructor(private ctaasDashboardService: CtaasDashboardService,
     private subaccountService: SubaccountService,
     private ionToastService: IonToastService,
@@ -42,11 +53,20 @@ export class DashboardPage implements OnInit, OnDestroy {
     private ctaasSetupService: CtaasSetupService
     ) {
       this.foregroundSubscription = this.foregroundService.backToActiveApp$.subscribe(()=>{
+        if(this.getSubaccountSubscription){
+          this.getSubaccountSubscription.unsubscribe();
+          this.getSubaccountIsSubscribed = false;
+        }
+        if(this.forkJoinSubscription){
+          this.forkJoinSubscription.unsubscribe();
+          this.forkJoinIsSubscribed = false;
+        }
         this.fetchData();
       });
   }
 
   ngOnInit(): void {
+    this.firstLoad = true;
     this.serviceName = 'Spotlight';
     this.isiOS = /iPhone/i.test(window.navigator.userAgent);
     this.fetchData();
@@ -54,11 +74,29 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   ionViewWillEnter(){
     window.screen.orientation.lock('portrait');
+    if(!this.firstLoad)
+      this.fetchData();
+  }
+
+  ionViewWillLeave(){
+    this.firstLoad = false;
+    if(this.getSubaccountSubscription){
+      this.getSubaccountSubscription.unsubscribe();
+      this.getSubaccountIsSubscribed = false;
+    }
+    if(this.forkJoinSubscription){
+      this.forkJoinSubscription.unsubscribe();
+      this.forkJoinIsSubscribed = false;
+    }
   }
 
   ngOnDestroy(): void {
     if (this.foregroundSubscription)
       this.foregroundSubscription.unsubscribe();
+    if(this.getSubaccountSubscription)
+      this.getSubaccountSubscription.unsubscribe();
+    if(this.forkJoinSubscription)
+      this.forkJoinSubscription.unsubscribe();
   }
 
   fetchData(event?: any) {
@@ -83,48 +121,51 @@ export class DashboardPage implements OnInit, OnDestroy {
       const reportType: string = ReportType[key];
       requests.push(this.ctaasDashboardService.getCtaasDashboardDetails(this.subaccountId, reportType));
     }
-    this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
-      this.ctaasSetupDetails = response['ctaasSetups'][0];
-      const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
-      this.isOnboardingComplete = onBoardingComplete;
-      this.setupStatus = status;
-      this.maintenance = maintenance;
-      forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
-        if (res) {
-          const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
-          if (result.length > 0) {
-            this.hasDashboardDetails = true;
-            const reportsIdentifiers: any[] = [];
-            result.forEach((e) => {
-                let reportIdentifier = (({ timestampId, reportType }) => ({ timestampId, reportType }))(e);
-                reportsIdentifiers.push(reportIdentifier);
-                if (e.reportType.toLowerCase().includes(this.DAILY))
-                  this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-                else if (e.reportType.toLowerCase().includes(this.WEEKLY))
-                  this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
-            });
-            this.charts = this.reports[this.DAILY];
-            this.dashboardService.setReports(reportsIdentifiers);
-            if (maintenance) {
-              this.selectedPeriod = this.WEEKLY;
-              this.charts = this.reports[this.WEEKLY];
+    if(!this.getSubaccountIsSubscribed){
+      this.getSubaccountSubscription = this.ctaasSetupService.getSubaccountCtaasSetupDetails(this.subaccountId).subscribe((response: { ctaasSetups: ISetup[] }) => {
+        this.getSubaccountIsSubscribed = true;
+        this.ctaasSetupDetails = response['ctaasSetups'][0];
+        const { onBoardingComplete, status, maintenance } = this.ctaasSetupDetails;
+        this.isOnboardingComplete = onBoardingComplete;
+        this.setupStatus = status;
+        this.maintenance = maintenance;
+        if(!this.forkJoinIsSubscribed)
+          this.forkJoinSubscription = forkJoin(requests).subscribe((res: [{ response?: string, error?: string }]) => {
+            this.forkJoinIsSubscribed = true;
+            if (res) {
+              const result = [...res].filter((e: any) => !e.error).map((e: { response: any }) => e.response);
+              if (result.length > 0) {
+                this.hasDashboardDetails = true;
+                result.forEach((e) => {
+                  if (e.reportType.toLowerCase().includes(this.DAILY))
+                    this.reports[this.DAILY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+                  else if (e.reportType.toLowerCase().includes(this.WEEKLY))
+                    this.reports[this.WEEKLY].push({ imageBase64: e.imageBase64, reportName: this.getReportNameByType(e.reportType) });
+                });
+                if (maintenance) {
+                  this.selectedPeriod = this.WEEKLY;
+                  this.charts = this.reports[this.WEEKLY];
+                }else{
+                  this.charts = this.reports[this.DAILY];
+                }
+                this.dashboardService.setReports(result);
+              }
+              this.dashboardService.announceDashboardRefresh();
             }
-          }
-          this.dashboardService.announceDashboardRefresh();
-        }
-        if (event)
-          event.target.complete();
-        this.isChartsDataLoading = false;
-      }, (e) => {
-        console.error('Error loading dashboard reports ', e.error);
-        this.isChartsDataLoading = false;
-        this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
-        this.dashboardService.announceDashboardRefresh();
-        if (event)
-          event.target.complete();
-      })
-    });
-  } 
+            if (event)
+              event.target.complete();
+            this.isChartsDataLoading = false;
+          }, (e) => {
+            console.error('Error loading dashboard reports ', e.error);
+            this.isChartsDataLoading = false;
+            this.ionToastService.presentToast('Error loading dashboard, please contact tekVizion admin', 'Ok');
+            this.dashboardService.announceDashboardRefresh();
+            if (event)
+            event.target.complete();
+          })
+      });
+    }
+  }
 
   /**
   * on click toggle button
@@ -153,9 +194,6 @@ export class DashboardPage implements OnInit, OnDestroy {
         return 'Calling Reliability';
       case ReportType.WEEKLY_VQ:
         return 'Voice Quality User Experience';
-      // case ReportType.DAILY_PESQ:
-      // case ReportType.WEEKLY_PESQ:
-      //   return 'PESQ'; disabling for now until mediastats are ready
     }
   }
 }

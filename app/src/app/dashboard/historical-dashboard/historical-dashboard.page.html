@@ -14,7 +14,7 @@
   </ion-refresher>
   <div id="container" class="ion-text-center">
     <div>
-      <ion-card class="ion-text-left ion-margin-top">
+      <ion-card *ngIf="note!==null" class="ion-text-left ion-margin-top">
         <ion-card-header>
           <ion-card-subtitle>
             <span>{{note.openDate.replace(" ", "T") | date:"medium"}}</span>
@@ -27,7 +27,7 @@
           <span id="note-author">{{note.openedBy.split("@")[0]}}</span>
         </ion-card-content>
       </ion-card>
-      
+
       <div id="toggle-buttons" [ngClass]="{'title': !isChartsDataLoading && hasDashboardDetails}">
         <div *ngIf="!isChartsDataLoading && hasDashboardDetails">
           <ion-button class="left" (click)="onClickToggleButton(DAILY)" [ngClass]="{'active':selectedPeriod===DAILY}">{{DAILY | titlecase}}</ion-button>
@@ -48,6 +48,6 @@
           </div>
         </ng-template>
       </ng-template>
-    </div>    
+    </div>
   </div>
 </ion-content>

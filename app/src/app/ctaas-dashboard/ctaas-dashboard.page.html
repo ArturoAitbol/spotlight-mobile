@@ -8,12 +8,8 @@
     <div *ngIf = "maintenance">
       <div class="banner" style="padding-bottom: 0px;">
         <div class="banner-container"> 
-          <strong>
-            WARNING
-          </strong> 
-          <p>
-            Spotlight service is under maintenance, the most recent data is shown until the service resumes. 
-          </p>
+          <strong> {{maintenanceAlert.title}} </strong> 
+          <p> {{maintenanceAlert.message}} </p>
         </div>
       </div>
     </div>

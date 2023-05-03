@@ -8,7 +8,7 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { ImageCardComponent } from './image-card/image-card.component';
 import { SharedModule } from '../shared/shared.module';
 import { HistoricalDashboardPage } from './historical-dashboard/historical-dashboard.page';
-
+import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   imports: [
@@ -16,7 +16,8 @@ import { HistoricalDashboardPage } from './historical-dashboard/historical-dashb
     FormsModule,
     IonicModule,
     DashboardPageRoutingModule,
-    SharedModule
+    SharedModule,
+    SwiperModule
   ],
   declarations: [DashboardPage,ImageCardComponent,HistoricalDashboardPage]
 })

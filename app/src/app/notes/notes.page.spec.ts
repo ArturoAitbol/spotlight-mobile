@@ -21,6 +21,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CtaasSetupService } from '../services/ctaasSetup.service';
 import { CTAASSETUP_SERVICE_MOCK } from 'src/test/services/ctaasSetup.service.mock';
 import { NotesPage } from './notes.page';
+import { CTAAS_DASHBOARD_SERVICE_MOCK } from 'src/test/services/ctaas-dashboard.service.mock';
 
 const dashboardService = new DashboardService();
 
@@ -86,28 +87,14 @@ describe('NotesPage', () => {
   });
 
   it('should get the notes and current reports when initializing',()=>{
-    dashboardService.setReports([{timestampId:'00',reportType:ReportType.DAILY_CALLING_RELIABILITY},
-                                {timestampId:'01',reportType:ReportType.DAILY_FEATURE_FUNCTIONALITY}]);
+    dashboardService.setReports(CTAAS_DASHBOARD_SERVICE_MOCK.ctaasHistoricalDashboard);
     spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
     spyOn(component,'fetchNotes').and.callThrough();
-    spyOn(component,'tagNotes').and.callThrough();
 
     fixture.detectChanges();
 
     expect(SUBACCOUNT_SERVICE_MOCK.getSubAccount).toHaveBeenCalled();
     expect(component.fetchNotes).toHaveBeenCalled();
-    expect(component.tagNotes).toHaveBeenCalled();
-  })
-
-  it('should tag the notes if dashboard was refreshed',()=>{
-    spyOn(SUBACCOUNT_SERVICE_MOCK,'getSubAccount').and.callThrough();
-    spyOn(component,'fetchNotes').and.callThrough();
-    spyOn(component,'tagNotes');
-    fixture.detectChanges();
-
-    dashboardService.announceDashboardRefresh();
-
-    expect(component.tagNotes).toHaveBeenCalledTimes(2);
   })
 
   it('should refresh the notes list when calling fetchNotes()',()=>{
@@ -172,19 +159,7 @@ describe('NotesPage', () => {
     expect(component.fetchNotes).not.toHaveBeenCalled();
   }))
 
-  it('should navigate to dashboard page if the selected note is referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
-    spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
-    spyOn(ROUTER_MOCK,'navigate').and.callThrough();
-    const note = {current:true};
-
-    component.seeHistoricalReports(note);
-    flush();
-
-    expect(ROUTER_MOCK.navigate).toHaveBeenCalled();
-    expect(MODAL_CONTROLLER_MOCK.create).not.toHaveBeenCalled();
-  }))
-
-  it('should open a modal with the HistoricalDashboard page if the selected note is NOT referring to the current dashboard when calling seeHistoricalReports()',fakeAsync(()=>{
+  it('should open a modal with the HistoricalDashboard page when calling seeHistoricalReports()',fakeAsync(()=>{
     spyOn(MODAL_CONTROLLER_MOCK,'create').and.callThrough();
     const note = {current:false};
 

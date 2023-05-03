@@ -12,7 +12,7 @@ env:
 jobs:
   android-test:
     runs-on: macos-latest
-#     timeout-minutes: 15
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: ./app
@@ -44,7 +44,7 @@ jobs:
           
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
-#         timeout-minutes: 1
+        timeout-minutes: 40
         with:
           api-level: 29
           target: google_apis
@@ -70,7 +70,7 @@ jobs:
 
   ios-test:
     runs-on: macos-latest
-#     timeout-minutes: 10
+    timeout-minutes: 35
     defaults:
       run:
         working-directory: ./app
@@ -101,8 +101,8 @@ jobs:
       - name: Set device_id
         run: echo "DEVICE_ID=$(ionic cap run ios --list |  grep 'iPhone 13' | grep -v 'mini' | grep -v 'Max' | grep -v '13 (' | cut -d "|" -f3 | cut -d " " -f2)" >> $GITHUB_ENV
 
-      - name: run emulator
-#         timeout-minutes: 1
+      - name: Run emulator
+        timeout-minutes: 30
         working-directory: ${{ env.WORKING_DIR }}
         run: ionic capacitor run ios --no-sync --target ${{ env.DEVICE_ID }}
 
