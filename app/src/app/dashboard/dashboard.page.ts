@@ -74,6 +74,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   ionViewWillEnter(){
     window.screen.orientation.lock('portrait');
+    window.screen.orientation.unlock();
     if(!this.firstLoad)
       this.fetchData();
   }
