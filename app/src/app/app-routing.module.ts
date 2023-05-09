@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'ctaas-dashboard',
     loadChildren: () => import('./ctaas-dashboard/ctaas-dashboard.module').then( m => m.CtaasDashboardPageModule)
+  },
+  {
+    path: 'image-modal',
+    loadChildren: () => import('./image-modal/image-modal.module').then( m => m.ImageModalPageModule)
   }
 ];
 
