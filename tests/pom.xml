@@ -23,17 +23,17 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
-        <dependency>
+<!--        <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>8.4.0</version>
-        </dependency>
-        <!--        <dependency>
+        </dependency>-->
+<!--                <dependency>
                     <groupId>com.github.appium</groupId>
                     <artifactId>java-client</artifactId>
                     <version>6bd82d6</version>
                 </dependency>-->
-<!--        <dependency>
+        <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>8.3.0</version>
@@ -51,13 +51,13 @@
                     <artifactId>selenium-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.6.0</version>
+            <version>4.8.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
         <dependency>
@@ -66,12 +66,14 @@
             <version>6.14.3</version>
             <scope>compile</scope>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-support -->
-        <dependency>
+<!--        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
             <version>4.6.0</version>
-        </dependency>
+        </dependency>-->
+
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
