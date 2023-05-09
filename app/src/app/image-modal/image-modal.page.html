@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-row>
+    <ion-col>
+      <ion-button class="close-button" (click)="closeModal()" fill="clear" color="light">
+        <ion-icon name="close" slot="end"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-header>
+
+<ion-content>
+  <swiper [zoom]="true">  
+    <ng-template swiperSlide>
+      <div class="swiper-zoom-container">
+        <img [src]="img" (ionSwipeDown)="closeModal()"/>
+      </div>
+    </ng-template>
+  </swiper>
+</ion-content>
