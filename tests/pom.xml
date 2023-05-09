@@ -14,25 +14,45 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
+<!--    <repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
 <!--        <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
         </dependency>-->
+        <!--        <dependency>
+                    <groupId>com.github.appium</groupId>
+                    <artifactId>java-client</artifactId>
+                    <version>6bd82d6</version>
+                </dependency>-->
         <dependency>
-            <groupId>com.github.appium</groupId>
+            <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
-            <version>6bd82d6</version>
+            <version>8.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-remote-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-support</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
