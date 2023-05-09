@@ -23,17 +23,17 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
-<!--        <dependency>
+        <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>8.4.0</version>
-        </dependency>-->
+        </dependency>
         <!--        <dependency>
                     <groupId>com.github.appium</groupId>
                     <artifactId>java-client</artifactId>
                     <version>6bd82d6</version>
                 </dependency>-->
-        <dependency>
+<!--        <dependency>
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>8.3.0</version>
@@ -51,7 +51,7 @@
                     <artifactId>selenium-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
