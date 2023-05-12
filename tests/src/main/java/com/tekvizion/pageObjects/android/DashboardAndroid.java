@@ -42,12 +42,15 @@ public class DashboardAndroid extends AndroidActions {
     public NotesAndroid goToNotes() throws IOException {
 //        boolean response = accessibilityNodeInfo(notesButton, "selected", "true");
         try {
+            takeScreenshot("1.0_notesView", driver);
             waitElement(notesButton, 300);
         } catch (Exception e) {
-            //NoSuchDriverException
             System.out.println("No such driver!");
             System.out.println(e);
             this.driver.terminateApp("com.tekvizion.spotlight");
+//            this.driver.removeApp("io.appium.settings");
+//            this.driver.removeApp("io.appium.uiautomator2.server");
+//            this.driver.removeApp("io.appium.uiautomator2.server.test");
             this.driver.quit();
             AutomatedAndroidDevice androidDevice = new AutomatedAndroidDevice("UIAutomator2","emulator-5554");
             boolean initialized = androidDevice.initializeIfNeeded();
@@ -59,9 +62,10 @@ public class DashboardAndroid extends AndroidActions {
                 this.driver.removeApp("io.appium.uiautomator2.server");
                 this.driver.removeApp("io.appium.uiautomator2.server.test");
                 this.driver.quit();
-                androidDevice.setDriver(null);
-                initialized = androidDevice.initializeIfNeeded();
-                this.driver = androidDevice.getDriver();
+                AutomatedAndroidDevice newAndroidDevice = new AutomatedAndroidDevice("UIAutomator2","emulator-5554");
+//                newAndroidDevice.setDriver(null);
+                initialized = newAndroidDevice.initializeIfNeeded();
+                this.driver = newAndroidDevice.getDriver();
                 System.out.println("Initialized: " + initialized);
             }
             Activity activity = new Activity("com.tekvizion.spotlight", "com.tekvizion.spotlight.MainActivity");
