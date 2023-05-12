@@ -43,16 +43,16 @@ public class Notes extends IOSActions {
             clickIOS(addButton, 337, 720);
             System.out.println("This user had notes already!");
         }
-        takeScreenshot("0_openModal", driver);
+        takeScreenshot("1.1_openModal", driver);
         clickSpecial(messageBox);
         noteText = addTimeStamp(text);
         messageBox.sendKeys(noteText);
         Rectangle rectangle = messageBox.getRect();
         int x = rectangle.getX() + rectangle.getWidth() - 50;
         int y = rectangle.getY() + rectangle.getHeight() + 60;
-        takeScreenshot("1_sendKeys", driver);
+        takeScreenshot("1.2_sendKeys", driver);
         tapWebElement(x, y);
-        takeScreenshot("2_clickAddNote", driver);
+        takeScreenshot("1.3_clickAddNote", driver);
         return noteText;
     }
 
